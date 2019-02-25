@@ -1,0 +1,63 @@
+<template>
+	<div class="container">
+		<StartEndPicker
+			title="Create new Schedule Block"
+			@picked="recordScheduleBlockData"
+		/>
+		<StartEndPicker
+			title="Create new Fiscal Year"
+			@picked="recordFiscalYearData"
+		/>
+		<div>
+			<v-btn @click="reportDates" color="success">Submit</v-btn>
+		</div>
+	</div>
+</template>
+
+<script>
+import StartEndPicker from "./StartEndPicker.vue";
+
+export default {
+	name: "InitializePickers",
+	components: { StartEndPicker },
+	data() {
+		const currentDate = new Date();
+		return {
+			scheduleBlockData: {
+				startDate: currentDate,
+				endDate: currentDate
+			},
+			fiscalYearData: {
+				startDate: currentDate,
+				endDate: currentDate
+			}
+		};
+	},
+	methods: {
+		reportDates() {
+			this.$store.commit("initialize", {
+				scheduleBlockData: {
+					startDate: this.scheduleBlockData.startDate,
+					endDate: this.scheduleBlockData.endDate
+				},
+				fiscalYearData: {
+					startDate: this.fiscalYearData.startDate,
+					endDate: this.fiscalYearData.endDate
+				}
+			});
+		},
+		recordScheduleBlockData(newData) {
+			this.scheduleBlockData = newData;
+		},
+		recordFiscalYearData(newData) {
+			this.fiscalYearData = newData;
+		}
+	}
+};
+</script>
+
+<style>
+.container {
+	padding: 20px;
+}
+</style>
