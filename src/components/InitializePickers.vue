@@ -45,6 +45,8 @@ export default {
 					endDate: this.fiscalYearData.endDate
 				}
 			});
+			// reroute once the changes are committed
+			this.$router.push("/");
 		},
 		recordScheduleBlockData(newData) {
 			this.scheduleBlockData = newData;

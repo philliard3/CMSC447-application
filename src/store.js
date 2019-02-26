@@ -34,17 +34,17 @@ export default new Vuex.Store({
 		 */
 		initialize(state, { scheduleBlockData, fiscalYearData }) {
 			const scheduleBlockToCreate = {
-				sbID: new Date(),
-				startDate: scheduleBlockData.startDate,
-				endDate: scheduleBlockData.endDate
+				sbID: new Date().getTime(),
+				startDate: scheduleBlockData.startDate.getTime(),
+				endDate: scheduleBlockData.endDate.getTime()
 			};
 			state.data.scheduleBlocks[0] = scheduleBlockToCreate;
 			state.data.currentScheduleBlock = scheduleBlockToCreate.sbID;
 
 			const fiscalYearToCreate = {
-				fyID: new Date(),
-				startDate: fiscalYearData.startDate,
-				endDate: fiscalYearData.endDate,
+				fyID: new Date().getTime(),
+				startDate: fiscalYearData.startDate.getTime(),
+				endDate: fiscalYearData.endDate.getTime(),
 				scheduleBlocks: [scheduleBlockToCreate.sbID]
 			};
 			state.data.fiscalYears[0] = fiscalYearToCreate;
@@ -60,9 +60,9 @@ export default new Vuex.Store({
 
 			// create schedule block
 			const scheduleBlockToCreate = {
-				sbID: new Date(),
-				startDate: scheduleBlockData.startDate,
-				endDate: scheduleBlockData.endDate
+				sbID: new Date().getTime(),
+				startDate: scheduleBlockData.startDate.getTime(),
+				endDate: scheduleBlockData.endDate.getTime()
 			};
 			state.data.scheduleBlocks.push(scheduleBlockToCreate);
 			state.data.currentScheduleBlock = scheduleBlockToCreate.sbID;
@@ -80,9 +80,9 @@ export default new Vuex.Store({
 
 			// create fiscal year
 			const fiscalYearToCreate = {
-				fyID: new Date(),
-				startDate: fiscalYearData.startDate,
-				endDate: fiscalYearData.endDate,
+				fyID: new Date().getTime(),
+				startDate: fiscalYearData.startDate.getTime(),
+				endDate: fiscalYearData.endDate.getTime(),
 				scheduleBlocks: []
 			};
 			state.data.fiscalYears.push(fiscalYearToCreate);
@@ -97,12 +97,17 @@ export default new Vuex.Store({
 		 */
 		currentScheduleBlock(state) {
 			const sbID = state.data.currentScheduleBlock;
-			const filteredScheduleBlocks = state.data.scheduleBlocks.map(
-				el => el.sbID.getTime() === sbID
+			if (state.data.scheduleBlocks[0].sbID === "empty") {
+				return null;
+			}
+			const filteredScheduleBlocks = state.data.scheduleBlocks.filter(
+				el => el.sbID === sbID
 			);
 			if (filteredScheduleBlocks.length < 1) {
+				return null;
 				// Error: stored current schedule block not found in stored schedule blocks
 			} else if (filteredScheduleBlocks.length > 1) {
+				return null;
 				// Error: stored current schedule block matches more than one stored schedule block
 			} else {
 				return filteredScheduleBlocks[0];
