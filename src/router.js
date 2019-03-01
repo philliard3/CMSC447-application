@@ -34,6 +34,18 @@ export default new Router({
 			// lazy-loaded route
 			component: () =>
 				import(/* webpackChunkName: "initialize" */ "./views/Initialize.vue")
+		},
+		{
+			path: "/createscheduleblock",
+			name: "createscheduleblock",
+			component: () =>
+				import(/* webpackChunkName: "createscheduleblock" */ "./views/CreateScheduleBlock.vue")
+		},
+		{
+			path: "/createfiscalyear",
+			name: "createfiscalyear",
+			component: () =>
+				import(/* webpackChunkName: "createfiscalyear" */ "./views/CreateFiscalYear.vue")
 		}
 	]
 });

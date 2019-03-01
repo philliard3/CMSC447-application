@@ -18,11 +18,11 @@
 import StartEndPicker from "./StartEndPicker.vue";
 
 /*
- * Component to initialize the data using a new fiscal year.
+ * Component to create a new fiscal year, which requires a new schedule block.
  */
 
 export default {
-	name: "InitializePickers",
+	name: "FiscalYearPickers",
 	components: { StartEndPicker },
 	data() {
 		const currentDate = new Date();
@@ -41,10 +41,12 @@ export default {
 		reportDates() {
 			this.$store.commit("initialize", {
 				scheduleBlockData: {
-					...this.scheduleBlockData
+					startDate: this.scheduleBlockData.startDate,
+					endDate: this.scheduleBlockData.endDate
 				},
 				fiscalYearData: {
-					...this.fiscalYearData
+					startDate: this.fiscalYearData.startDate,
+					endDate: this.fiscalYearData.endDate
 				}
 			});
 			// reroute once the changes are committed

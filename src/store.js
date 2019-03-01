@@ -36,7 +36,8 @@ export default new Vuex.Store({
 			const scheduleBlockToCreate = {
 				sbID: new Date().getTime(),
 				startDate: scheduleBlockData.startDate.getTime(),
-				endDate: scheduleBlockData.endDate.getTime()
+				endDate: scheduleBlockData.endDate.getTime(),
+				...scheduleBlockData
 			};
 			state.data.scheduleBlocks[0] = scheduleBlockToCreate;
 			state.data.currentScheduleBlock = scheduleBlockToCreate.sbID;
@@ -45,7 +46,8 @@ export default new Vuex.Store({
 				fyID: new Date().getTime(),
 				startDate: fiscalYearData.startDate.getTime(),
 				endDate: fiscalYearData.endDate.getTime(),
-				scheduleBlocks: [scheduleBlockToCreate.sbID]
+				scheduleBlocks: [scheduleBlockToCreate.sbID],
+				...fiscalYearData
 			};
 			state.data.fiscalYears[0] = fiscalYearToCreate;
 			state.data.currentFiscalYear = fiscalYearToCreate.fyID;
@@ -62,7 +64,8 @@ export default new Vuex.Store({
 			const scheduleBlockToCreate = {
 				sbID: new Date().getTime(),
 				startDate: scheduleBlockData.startDate.getTime(),
-				endDate: scheduleBlockData.endDate.getTime()
+				endDate: scheduleBlockData.endDate.getTime(),
+				...scheduleBlockData
 			};
 			state.data.scheduleBlocks.push(scheduleBlockToCreate);
 			state.data.currentScheduleBlock = scheduleBlockToCreate.sbID;
@@ -75,7 +78,17 @@ export default new Vuex.Store({
 		 * @param {object} scheduleBlockData
 		 * @param {object} fiscalYearData
 		 */
-		addFiscalYear(state, fiscalYearData) {
+		addFiscalYear(state, { scheduleBlockData, fiscalYearData }) {
+			// create schedule block
+			const scheduleBlockToCreate = {
+				sbID: new Date().getTime(),
+				startDate: scheduleBlockData.startDate.getTime(),
+				endDate: scheduleBlockData.endDate.getTime(),
+				...scheduleBlockData
+			};
+			state.data.scheduleBlocks.push(scheduleBlockToCreate);
+			state.data.currentScheduleBlock = scheduleBlockToCreate.sbID;
+
 			// first check that this fiscal year does not conflict with existing ones
 
 			// create fiscal year
@@ -83,7 +96,8 @@ export default new Vuex.Store({
 				fyID: new Date().getTime(),
 				startDate: fiscalYearData.startDate.getTime(),
 				endDate: fiscalYearData.endDate.getTime(),
-				scheduleBlocks: []
+				scheduleBlocks: [scheduleBlockToCreate.sbID],
+				...fiscalYearData
 			};
 			state.data.fiscalYears.push(fiscalYearToCreate);
 			state.data.currentFiscalYear = fiscalYearToCreate.fyID;

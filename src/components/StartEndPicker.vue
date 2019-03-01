@@ -6,6 +6,11 @@
 		<div>
 			<v-container>
 				<v-layout row wrap>
+					<v-flex xs12 sm6 md3>
+						<v-text-field v-model="name" label="Name"></v-text-field>
+					</v-flex>
+				</v-layout>
+				<v-layout row wrap>
 					<v-flex xs12 sm6 md4>
 						<v-menu
 							v-model="startDatePicker"
@@ -72,7 +77,8 @@ export default {
 			startDate: new Date().toISOString().substr(0, 10),
 			endDate: new Date().toISOString().substr(0, 10),
 			startDatePicker: false,
-			endDatePicker: false
+			endDatePicker: false,
+			name: ""
 		};
 	},
 	methods: {
@@ -94,17 +100,18 @@ export default {
 		},
 		closeStartDatePicker() {
 			this.startDatePicker = false;
-
 			this.$emit("picked", {
 				startDate: this.convertStringToLocalDate(this.startDate),
-				endDate: this.convertStringToLocalDate(this.endDate)
+				endDate: this.convertStringToLocalDate(this.endDate),
+				name: this.name
 			});
 		},
 		closeEndDatePicker() {
 			this.endDatePicker = false;
 			this.$emit("picked", {
 				startDate: this.convertStringToLocalDate(this.startDate),
-				endDate: this.convertStringToLocalDate(this.endDate)
+				endDate: this.convertStringToLocalDate(this.endDate),
+				name: this.name
 			});
 		}
 	}
