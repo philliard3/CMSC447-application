@@ -4,6 +4,18 @@ import Vuex from "vuex";
 Vue.use(Vuex);
 
 export default new Vuex.Store({
+	/**
+	 * @namespace
+	 *  @property {object} state
+	 * @property {object} state.settings
+	 * @property {string} [state.settings.activeFile]
+	 * @property {string} state.settings.exportFormat
+	 * @property {object} state.data
+	 * @property {array} state.data.scheduleBlocks
+	 * @property {array} state.data.fiscalYears
+	 * @property {any} state.data.currentScheduleBlock
+	 * @property {any} state.data.currentFiscalYear
+	 */
 	state: {
 		settings: {
 			activeFile: null,
@@ -11,7 +23,9 @@ export default new Vuex.Store({
 		},
 		data: {
 			scheduleBlocks: [{ sbID: "empty" }],
-			fiscalYears: [{ fyID: "empty", scheduleBlocks: ["empty"] }],
+			fiscalYears: [
+				{ fyID: "empty", scheduleBlocks: ["empty"], startDate: 0, endDate: 0 }
+			],
 			currentScheduleBlock: "empty",
 			currentFiscalYear: "empty"
 		}
@@ -108,6 +122,7 @@ export default new Vuex.Store({
 		/**
 		 * Returns the stored schedule block that matches the stored current block.
 		 * @param {object} state
+		 * @returns {object}
 		 */
 		currentScheduleBlock(state) {
 			const sbID = state.data.currentScheduleBlock;
@@ -126,6 +141,23 @@ export default new Vuex.Store({
 			} else {
 				return filteredScheduleBlocks[0];
 			}
+		},
+		fiscalYears(state) {
+			const years = state.data.fiscalYears.filter(fy => {
+				if (state.data.currentFiscalYear === fy.fyID) {
+					return Number.MIN_SAFE_INTEGER;
+				}
+				return fy.startDate;
+			});
+			return years.map(fy => fy.fyID);
+		},
+		fiscalYearExists(state, fyID) {
+			return state.data.fiscalYears.filter(fy => fyID === fy.fyID).length > 0;
+		},
+		scheduleBlockExists(state, sbID) {
+			return (
+				state.data.scheduleBlocks.filter(sb => sbID === sb.fyID).length > 0
+			);
 		}
 	}
 });

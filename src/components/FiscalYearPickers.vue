@@ -1,12 +1,12 @@
 <template>
 	<div class="container">
 		<StartEndPicker
-			title="Create new Schedule Block"
-			@picked="recordScheduleBlockData"
-		/>
-		<StartEndPicker
 			title="Create new Fiscal Year"
 			@picked="recordFiscalYearData"
+		/>
+		<StartEndPicker
+			title="Create new Schedule Block"
+			@picked="recordScheduleBlockData"
 		/>
 		<div>
 			<v-btn @click="reportDates" color="success">Submit</v-btn>
@@ -39,18 +39,18 @@ export default {
 	},
 	methods: {
 		reportDates() {
-			this.$store.commit("initialize", {
-				scheduleBlockData: {
-					startDate: this.scheduleBlockData.startDate,
-					endDate: this.scheduleBlockData.endDate
-				},
-				fiscalYearData: {
-					startDate: this.fiscalYearData.startDate,
-					endDate: this.fiscalYearData.endDate
-				}
-			});
-			// reroute once the changes are committed
-			this.$router.push("/");
+			// disallow repeat names on fiscal years and schedule blocks
+			if (
+				!this.$store.getters.fiscalYearExists(this.fiscalYearData.name) &&
+				!this.$store.getters.scheduleBlockExists(this.scheduleBlockData.name)
+			) {
+				this.$store.commit("initialize", {
+					scheduleBlockData: { ...this.scheduleBlockData },
+					fiscalYearData: { ...this.fiscalYearData }
+				});
+				// reroute once the changes are committed
+				this.$router.push("/");
+			}
 		},
 		recordScheduleBlockData(newData) {
 			this.scheduleBlockData = newData;
