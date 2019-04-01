@@ -16,6 +16,9 @@ protocol.registerStandardSchemes(["app"], { secure: true });
 function createWindow() {
 	// Create the browser window.
 	win = new BrowserWindow({ width: 1000, height: 600 });
+
+	// start Java server instance
+
 	win.setMenu(null);
 
 	if (process.env.WEBPACK_DEV_SERVER_URL) {
@@ -30,6 +33,7 @@ function createWindow() {
 
 	win.on("closed", () => {
 		win = null;
+		// close Java server instance
 	});
 }
 
