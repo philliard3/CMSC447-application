@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div class="shell">
 		<StartEndPicker
 			title="Create new Schedule Block"
 			@picked="recordScheduleBlockData"
@@ -43,3 +43,9 @@ export default {
 	}
 };
 </script>
+
+<style>
+.shell {
+	margin: 1%;
+}
+</style>
