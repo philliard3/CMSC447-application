@@ -4,11 +4,11 @@
 			<v-toolbar>
 				<v-toolbar-items>
 					<v-btn flat to="/">Home</v-btn>
-					<v-btn flat to="/about">About</v-btn>
 					<v-btn flat to="/jsx">JSX</v-btn>
 					<v-btn flat to="/initialize">New Calendar</v-btn>
 					<v-btn flat to="/createfiscalyear">New Fiscal Year</v-btn>
 					<v-btn flat to="/createscheduleblock">New Schedule Block</v-btn>
+					<v-btn flat to="/calendar">Calendar View</v-btn>
 				</v-toolbar-items>
 			</v-toolbar>
 			<router-view />
