@@ -86,17 +86,21 @@ export default {
 			const map = {};
 			this.events.forEach(e => {
 				(map[e.date] = map[e.date] || []).push(e);
-				let endMoment = moment(e.date + " " + e.time).add(
+
+				// calculate whether the event ends on the same day
+				const endMoment = moment(e.date + " " + e.time).add(
 					e.duration,
 					"minutes"
 				);
 
+				// handle events that last past midnight
 				if (endMoment.day() != moment(e.date).day()) {
-					let endArray = endMoment.format("YYYY-MM-DD HH:MM").split(" ");
+					const endArray = endMoment.format("YYYY-MM-DD HH:MM").split(" ");
 
-					let endDate = endArray[0];
+					const endDate = endArray[0];
 
-					let endDuration =
+					// calculate the correct duration after midnight
+					const endDuration =
 						e.duration -
 						(24 - moment((e.date + " " + (e.time || "")).trim()).hour()) * 60;
 
