@@ -143,21 +143,27 @@ export default new Vuex.Store({
 			}
 		},
 		fiscalYears(state) {
-			const years = state.data.fiscalYears.filter(fy => {
-				if (state.data.currentFiscalYear === fy.fyID) {
-					return Number.MIN_SAFE_INTEGER;
-				}
-				return fy.startDate;
-			});
-			return years.map(fy => fy.fyID);
+			const currentFiscalYear = state.data.currentFiscalYear;
+			const years = state.data.fiscalYears;
+
+			if (years[0].fyID === "empty") {
+				return [];
+			}
+
+			const newYears = years.map(fy => ({
+				current: fy.fyID === currentFiscalYear,
+				...fy
+			}));
+
+			return newYears;
 		},
-		fiscalYearExists(state, fyID) {
-			return state.data.fiscalYears.filter(fy => fyID === fy.fyID).length > 0;
+		fiscalYearExists(state) {
+			return fyID =>
+				state.data.fiscalYears.filter(fy => fyID === fy.fyID).length > 0;
 		},
-		scheduleBlockExists(state, sbID) {
-			return (
-				state.data.scheduleBlocks.filter(sb => sbID === sb.fyID).length > 0
-			);
+		scheduleBlockExists(state) {
+			return sbID =>
+				state.data.scheduleBlocks.filter(sb => sbID === sb.fyID).length > 0;
 		}
 	}
 });

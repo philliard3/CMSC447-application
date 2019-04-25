@@ -1,61 +1,37 @@
 <template>
 	<div class="container">
-		<StartEndPicker
-			title="Create new Fiscal Year"
-			@picked="recordFiscalYearData"
-		/>
-		<StartEndPicker
-			title="Create new Schedule Block"
-			@picked="recordScheduleBlockData"
-		/>
-		<div>
-			<v-btn @click="reportDates" color="success">Submit</v-btn>
-		</div>
+		<v-container grid-list-md text-xs-center>
+			<v-layout row wrap>
+				<v-flex xs2></v-flex>
+				<v-flex xs3>
+					<v-btn color="success" @click="loadFile"
+						>Load Calendar from File</v-btn
+					>
+				</v-flex>
+				<v-flex xs2></v-flex>
+				<v-flex xs3>
+					<v-btn color="info" to="/createfiscalyear">New Calendar</v-btn>
+				</v-flex>
+				<v-flex xs2></v-flex>
+			</v-layout>
+		</v-container>
 	</div>
 </template>
 
 <script>
-import StartEndPicker from "./StartEndPicker.vue";
-
 /*
  * Component to initialize the data using a new fiscal year.
  */
 
 export default {
 	name: "InitializePickers",
-	components: { StartEndPicker },
-	data() {
-		const currentDate = new Date();
-		return {
-			scheduleBlockData: {
-				startDate: currentDate,
-				endDate: currentDate
-			},
-			fiscalYearData: {
-				startDate: currentDate,
-				endDate: currentDate
-			}
-		};
-	},
+	data() {},
 	methods: {
-		reportDates() {
-			if (
-				!this.$store.getters.fiscalYearExists(this.fiscalYearData.name) &&
-				!this.$store.getters.scheduleBlockExists(this.scheduleBlockData.name)
-			) {
-				this.$store.commit("initialize", {
-					scheduleBlockData: { ...this.scheduleBlockData },
-					fiscalYearData: { ...this.fiscalYearData }
-				});
-				// reroute once the changes are committed
-				this.$router.push("/");
-			}
-		},
-		recordScheduleBlockData(newData) {
-			this.scheduleBlockData = newData;
-		},
-		recordFiscalYearData(newData) {
-			this.fiscalYearData = newData;
+		// This function loads a file from local storage.
+		// In the electron build, it should call to the main process.
+		// In the webapp build, it should use the browser's file upload API.
+		async loadFile() {
+			// console.log(process.env);
 		}
 	}
 };
