@@ -1,16 +1,19 @@
 <template>
 	<v-container grid-list-md text-xs-center align-center>
-		<v-layout row wrap>
-			<v-flex v-if="$mq > 'sm'" xs1></v-flex>
-			<v-flex xs3>
-				<v-btn color="success" @click="loadFile">Load Calendar from File</v-btn>
-			</v-flex>
-			<v-flex v-if="$mq <= 'sm'" xs2></v-flex>
-			<v-flex xs1></v-flex>
-			<v-flex xs3>
-				<v-btn color="info" to="/createfiscalyear">New Calendar</v-btn>
-			</v-flex>
-		</v-layout>
+		<div
+			id="loading-info"
+			class="title font-weight-medium"
+			v-if="currentBlock ? currentBlock.sbID : null === null"
+		>
+			It looks like you don't have anything loaded yet. Select an option below
+			to get started.
+		</div>
+		<div id="loading-info" class="title font-weight-medium" v-else>
+			You've already started on a calendar.
+		</div>
+		<v-btn color="success" @click="loadFile">Load Calendar from File</v-btn>
+		<p />
+		<v-btn color="info" to="/fiscalyear/create">New Calendar</v-btn>
 	</v-container>
 </template>
 
@@ -18,7 +21,9 @@
 export default {
 	name: "Start",
 	data() {
-		return {};
+		return {
+			currentBlock: this.$store.getters.currentScheduleBlock
+		};
 	},
 	methods: {
 		// This function loads a file from local storage.
@@ -30,3 +35,12 @@ export default {
 	}
 };
 </script>
+<style>
+#loading-info {
+	text-align: center;
+	max-width: 450px;
+	margin: auto;
+	margin-top: 7%;
+	margin-bottom: 20px;
+}
+</style>
