@@ -163,7 +163,7 @@ export default new Vuex.Store({
 		},
 		scheduleBlockExists(state) {
 			return sbID =>
-				state.data.scheduleBlocks.filter(sb => sbID === sb.fyID).length > 0;
+				state.data.scheduleBlocks.filter(sb => sbID === sb.sbID).length > 0;
 		}
 	}
 });
