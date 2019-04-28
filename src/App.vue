@@ -65,6 +65,13 @@
 				</v-toolbar-items>
 			</v-toolbar>
 			<router-view />
+			<v-container>
+				<v-flex xs6>
+					<v-btn @click="lastPage" color="primary">
+						<v-icon dark small>arrow_back_ios</v-icon>Last Page
+					</v-btn>
+				</v-flex>
+			</v-container>
 		</v-app>
 	</div>
 </template>
