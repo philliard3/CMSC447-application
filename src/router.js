@@ -39,6 +39,12 @@ export default new Router({
 				import(/* webpackChunkName: "createfiscalyear" */ "./views/CreateFiscalYear.vue")
 		},
 		{
+			path: "/manage",
+			name: "manage",
+			component: () =>
+				import(/* webpackChunkName: "createfiscalyear" */ "./views/ManagePage.vue")
+		},
+		{
 			path: "/calendar",
 			name: "calendar",
 			component: () =>
