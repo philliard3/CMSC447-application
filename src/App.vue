@@ -12,55 +12,24 @@
 								<v-icon>arrow_back_ios</v-icon>
 								<v-list-tile-title>Last Page</v-list-tile-title>
 							</v-list-tile>
-							<v-list-tile to="/">
-								<v-icon>home</v-icon>
-								<v-list-tile-title>Start</v-list-tile-title>
-							</v-list-tile>
-							<v-list-tile to="/createfiscalyear">
-								<v-icon>library_add</v-icon>
-								<v-list-tile-title>New FY</v-list-tile-title>
-							</v-list-tile>
-							<v-list-tile to="/fiscalyearconstraints">
-								<v-icon>ballot</v-icon>
-								<v-list-tile-title>FY Constraints</v-list-tile-title>
-							</v-list-tile>
-							<v-list-tile to="/createscheduleblock">
-								<v-icon>note_add</v-icon>
-								<v-list-tile-title>New Schedule Block</v-list-tile-title>
-							</v-list-tile>
-							<v-list-tile to="/manage">
-								<v-icon>people</v-icon>
-								<v-list-tile-title>Manage Employees</v-list-tile-title>
-							</v-list-tile>
-							<v-list-tile to="/calendar">
-								<v-icon>calendar_today</v-icon>
-								<v-list-tile-title>Calendar</v-list-tile-title>
+							<v-list-tile
+								v-for="link in navLinks"
+								:key="link.url"
+								:to="link.url"
+							>
+								<v-icon>{{ link.icon }}</v-icon>
+								<v-list-tile-title>{{ link.smallText }}</v-list-tile-title>
 							</v-list-tile>
 						</v-list>
 					</v-menu>
 				</v-toolbar-items>
 				<v-toolbar-items v-if="$mq === 'md' || $mq === 'lg'">
-					<v-btn flat @click="lastPage">
+					<v-btn v-if="electron" @click="lastPage" flat>
 						<v-icon size="18px">arrow_back_ios</v-icon>
 					</v-btn>
-					<v-btn flat to="/"> <v-icon dark>home</v-icon>Start </v-btn>
-					<v-btn flat to="/createfiscalyear">
-						<v-icon dark>library_add</v-icon>New Fiscal Year
-					</v-btn>
-					<v-btn flat to="/fiscalyearconstraints">
-						<v-icon dark>ballot</v-icon>FY Constraints
-					</v-btn>
-					<v-btn flat to="/createscheduleblock">
-						<v-icon dark>note_add</v-icon>New Schedule Block
-					</v-btn>
-					<v-btn flat to="/schedlueblockconstraints">
-						<v-icon dark>ballot</v-icon>Schedule Block Constraints
-					</v-btn>
-					<v-btn flat to="/manage">
-						<v-icon dark>people</v-icon>Manage Employees
-					</v-btn>
-					<v-btn flat to="/calendar">
-						<v-icon dark>calendar_today</v-icon>Calendar View
+					<v-btn v-for="link in navLinks" :key="link.url" :to="link.url" flat>
+						<v-icon dark>{{ link.icon }}</v-icon>
+						{{ link.text }}
 					</v-btn>
 				</v-toolbar-items>
 			</v-toolbar>
@@ -80,7 +49,53 @@
 export default {
 	name: "App",
 	data() {
-		return { electron: Boolean(process.env.browser) };
+		return {
+			electron: Boolean(process.env.browser),
+			navLinks: [
+				{
+					url: "/",
+					text: "Start",
+					smallText: "Start",
+					icon: "home"
+				},
+				{
+					url: "/fiscalyear/create",
+					text: "New Fiscal Year",
+					smallText: "New FY",
+					icon: "library_add"
+				},
+				{
+					url: "/fiscalyear/constraints",
+					text: "Fiscal Year Rules",
+					smallText: "FY Rules",
+					icon: "ballot"
+				},
+				{
+					url: "/scheduleblock/create",
+					text: "New Schedule Block",
+					smallText: "New Schedule Block",
+					icon: "note_add"
+				},
+				{
+					url: "/scheduleblock/constraints",
+					text: "Schedule Block Rules",
+					smallText: "Schedule Block Rules",
+					icon: "ballot"
+				},
+				{
+					url: "/manage",
+					text: "Manage Employees",
+					smallText: "Manage Employees",
+					icon: "people"
+				},
+				{
+					url: "/calendar",
+					text: "Review & Export",
+					smallText: "Review",
+					icon: "calendar_today"
+				}
+			]
+		};
 	},
 	methods: {
 		lastPage() {

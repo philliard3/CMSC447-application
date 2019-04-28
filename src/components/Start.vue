@@ -1,15 +1,15 @@
 <template>
-	<v-container grid-list-md text-xs-center>
+	<v-container grid-list-md text-xs-center align-center>
 		<v-layout row wrap>
-			<v-flex xs2></v-flex>
+			<v-flex v-if="$mq > 'sm'" xs1></v-flex>
 			<v-flex xs3>
 				<v-btn color="success" @click="loadFile">Load Calendar from File</v-btn>
 			</v-flex>
-			<v-flex xs2></v-flex>
+			<v-flex v-if="$mq <= 'sm'" xs2></v-flex>
+			<v-flex xs1></v-flex>
 			<v-flex xs3>
 				<v-btn color="info" to="/createfiscalyear">New Calendar</v-btn>
 			</v-flex>
-			<v-flex xs2></v-flex>
 		</v-layout>
 	</v-container>
 </template>

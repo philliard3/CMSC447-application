@@ -27,14 +27,26 @@ export default new Router({
 				import(/* webpackChunkName: "initialize" */ "./views/Initialize.vue")
 		},
 		{
-			path: "/createscheduleblock",
+			path: "/scheduleblock/create",
 			name: "createscheduleblock",
 			component: () =>
 				import(/* webpackChunkName: "createscheduleblock" */ "./views/CreateScheduleBlock.vue")
 		},
 		{
-			path: "/createfiscalyear",
+			path: "/scheduleblock/constraints",
+			name: "scheduleblockconstraints",
+			component: () =>
+				import(/* webpackChunkName: "createscheduleblock" */ "./views/CreateScheduleBlock.vue")
+		},
+		{
+			path: "/fiscalyear/create",
 			name: "createfiscalyear",
+			component: () =>
+				import(/* webpackChunkName: "createfiscalyear" */ "./views/CreateFiscalYear.vue")
+		},
+		{
+			path: "/fiscalyear/constraints",
+			name: "fiscalyearconstraints",
 			component: () =>
 				import(/* webpackChunkName: "createfiscalyear" */ "./views/CreateFiscalYear.vue")
 		},
@@ -45,12 +57,14 @@ export default new Router({
 				import(/* webpackChunkName: "manage" */ "./views/ManagePage.vue")
 		},
 		{
+			/** ManagePage used as a placeholder **/
 			path: "/manage/roles",
 			name: "manageroles",
 			component: () =>
 				import(/* webpackChunkName: "manage" */ "./views/ManagePage.vue")
 		},
 		{
+			/** ManagePage used as a placeholder **/
 			path: "/manage/employees",
 			name: "manageemployees",
 			component: () =>
