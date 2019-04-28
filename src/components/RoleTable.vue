@@ -3,7 +3,7 @@
 		<v-container>
 			<div class="display-1 font-weight-light" id="header-row-1">
 				Roles
-				<v-btn color="success" to="/manage/roles">
+				<v-btn color="success" @click="createRole">
 					<v-icon flat>add</v-icon>&nbsp;New Role
 				</v-btn>
 			</div>
@@ -53,13 +53,17 @@
 						></v-checkbox>
 					</td>
 					<td>
-						<router-link to="/manage/roles">{{ props.item.name }}</router-link>
+						<router-link :to="'/manage/roles/' + props.item.roleID">{{
+							props.item.name
+						}}</router-link>
 					</td>
 					<td class="text-xs-right">
 						<v-icon :color="props.item.color">work</v-icon>
 					</td>
 					<td class="text-xs-right">
-						<v-btn color="primary" to="/manage/roles">Edit</v-btn>
+						<v-btn color="primary" :to="'/manage/roles/' + props.item.roleID"
+							>Edit</v-btn
+						>
 					</td>
 				</tr>
 			</template>
@@ -84,20 +88,7 @@ export default {
 				},
 				{ text: "Color", value: "color" }
 			],
-			roles: [
-				{
-					name: "Doctor",
-					color: "#3cb371"
-				},
-				{
-					name: "Nurse",
-					color: "#ee82ee"
-				},
-				{
-					name: "Nurse Practitioner",
-					color: "#6a5acd"
-				}
-			]
+			roles: this.$store.getters.roles
 		};
 	},
 
@@ -113,6 +104,15 @@ export default {
 				this.pagination.sortBy = column;
 				this.pagination.descending = false;
 			}
+		},
+		createRole() {
+			// create new role and get ID
+			// const roleID = this.$store.dispatch("createEmployee")
+
+			// placeholder while store functions are implemented
+			const roleID = "doctor";
+
+			this.$router.push("/manage/roles/" + roleID);
 		}
 	}
 };

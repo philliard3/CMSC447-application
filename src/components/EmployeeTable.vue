@@ -3,7 +3,7 @@
 		<v-container>
 			<div class="display-1 font-weight-light" id="header-row-1">
 				Employees
-				<v-btn color="success" to="/manage/employees">
+				<v-btn color="success" @click="createEmployee">
 					<v-icon flat>person_add</v-icon>&nbsp;New Employee
 				</v-btn>
 			</div>
@@ -67,19 +67,25 @@
 						></v-checkbox>
 					</td>
 					<td>
-						<router-link to="/manage/employees">{{
+						<router-link :to="'/manage/employees/' + props.item.employeeID">{{
 							props.item.name
 						}}</router-link>
 					</td>
 					<td class="text-xs-right">
 						<span v-for="(role, index) in props.item.roles" :key="index">
-							<router-link to="/manage/roles">{{ role }}</router-link>
+							<router-link :to="'/manage/roles/' + role.roleID">{{
+								role.name
+							}}</router-link>
 							<span v-if="index < props.item.roles.length - 1">,&nbsp;</span>
 						</span>
 					</td>
 					<td class="text-xs-right">{{ props.item.hours }}</td>
 					<td class="text-xs-right">
-						<v-btn color="primary" to="/manage/employees">Edit</v-btn>
+						<v-btn
+							color="primary"
+							:to="'/manage/employees/' + props.item.employeeID"
+							>Edit</v-btn
+						>
 					</td>
 				</tr>
 			</template>
@@ -105,23 +111,7 @@ export default {
 				{ text: "Roles", value: "roles" },
 				{ text: "Hours this Pay Period", value: "hours" }
 			],
-			employees: [
-				{
-					name: "John Doe",
-					roles: ["Doctor"],
-					hours: 12
-				},
-				{
-					name: "Sam Smith",
-					roles: ["Nurse", "Nurse Practitioner"],
-					hours: 15
-				},
-				{
-					name: "Janet Mars",
-					roles: ["Nurse"],
-					hours: 20
-				}
-			],
+			employees: this.$store.getters.employees,
 			searchBy: "Name",
 			searchText: ""
 		};
@@ -163,6 +153,15 @@ export default {
 				this.pagination.sortBy = column;
 				this.pagination.descending = false;
 			}
+		},
+		createEmployee() {
+			// create new employee and get ID
+			// const employeeID = this.$store.dispatch("createEmployee")
+
+			// placeholder while store functions are implemented
+			const employeeID = "johndoe";
+
+			this.$router.push("/manage/employees/" + employeeID);
 		}
 	}
 };

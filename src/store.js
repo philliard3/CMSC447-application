@@ -27,7 +27,47 @@ export default new Vuex.Store({
 				{ fyID: "empty", scheduleBlocks: ["empty"], startDate: 0, endDate: 0 }
 			],
 			currentScheduleBlock: "empty",
-			currentFiscalYear: "empty"
+			currentFiscalYear: "empty",
+			employees: [
+				{
+					name: "John Doe",
+					employeeID: "johndoe",
+					roles: [{ name: "Doctor", roleID: "doctor" }],
+					hours: 12
+				},
+				{
+					name: "Sam Smith",
+					employeeID: "samsmith",
+					roles: [
+						{ name: "Nurse", roleID: "nurse" },
+						{ name: "Nurse Practitioner", roleID: "nursepractitioner" }
+					],
+					hours: 15
+				},
+				{
+					name: "Janet Mars",
+					employeeID: "janetmars",
+					roles: [{ name: "Nurse", roleID: "nurse" }],
+					hours: 20
+				}
+			],
+			roles: [
+				{
+					name: "Doctor",
+					color: "#3cb371",
+					roleID: "doctor"
+				},
+				{
+					name: "Nurse",
+					color: "#ee82ee",
+					roleID: "nurse"
+				},
+				{
+					name: "Nurse Practitioner",
+					color: "#6a5acd",
+					roleID: "nursepractitioner"
+				}
+			]
 		}
 	},
 	mutations: {
@@ -48,7 +88,7 @@ export default new Vuex.Store({
 		 */
 		initialize(state, { scheduleBlockData, fiscalYearData }) {
 			const scheduleBlockToCreate = {
-				sbID: new Date().getTime(),
+				sbID: scheduleBlockData.name || new Date().getTime(),
 				startDate: scheduleBlockData.startDate.getTime(),
 				endDate: scheduleBlockData.endDate.getTime(),
 				...scheduleBlockData
@@ -57,7 +97,7 @@ export default new Vuex.Store({
 			state.data.currentScheduleBlock = scheduleBlockToCreate.sbID;
 
 			const fiscalYearToCreate = {
-				fyID: new Date().getTime(),
+				fyID: fiscalYearData.name || new Date().getTime(),
 				startDate: fiscalYearData.startDate.getTime(),
 				endDate: fiscalYearData.endDate.getTime(),
 				scheduleBlocks: [scheduleBlockToCreate.sbID],
@@ -65,6 +105,10 @@ export default new Vuex.Store({
 			};
 			state.data.fiscalYears[0] = fiscalYearToCreate;
 			state.data.currentFiscalYear = fiscalYearToCreate.fyID;
+			return {
+				currentFiscalYear: { ...state.data.currentFiscalYear },
+				currentScheduleBlock: { ...state.data.currentScheduleBlock }
+			};
 		},
 		/**
 		 * Insert a schedule block into the current state.
@@ -76,15 +120,18 @@ export default new Vuex.Store({
 
 			// create schedule block
 			const scheduleBlockToCreate = {
-				sbID: new Date().getTime(),
+				sbID: scheduleBlockData.name || new Date().getTime(),
 				startDate: scheduleBlockData.startDate.getTime(),
 				endDate: scheduleBlockData.endDate.getTime(),
 				...scheduleBlockData
 			};
 			state.data.scheduleBlocks.push(scheduleBlockToCreate);
 			state.data.currentScheduleBlock = scheduleBlockToCreate.sbID;
+
 			// then update the fiscal year that the block should belong to
-			// const fiscalYearToUpdate = null;
+			state.data.fiscalYears
+				.filter(fy => fy.fyID === state.data.currentFiscalYear)[0]
+				.scheduleBlocks.push(scheduleBlockToCreate.sbID);
 		},
 		/**
 		 * Insert a fiscal year into the current state.
@@ -95,7 +142,7 @@ export default new Vuex.Store({
 		addFiscalYear(state, { scheduleBlockData, fiscalYearData }) {
 			// create schedule block
 			const scheduleBlockToCreate = {
-				sbID: new Date().getTime(),
+				sbID: scheduleBlockData.name || new Date().getTime(),
 				startDate: scheduleBlockData.startDate.getTime(),
 				endDate: scheduleBlockData.endDate.getTime(),
 				...scheduleBlockData
@@ -107,7 +154,7 @@ export default new Vuex.Store({
 
 			// create fiscal year
 			const fiscalYearToCreate = {
-				fyID: new Date().getTime(),
+				fyID: fiscalYearData.name || new Date().getTime(),
 				startDate: fiscalYearData.startDate.getTime(),
 				endDate: fiscalYearData.endDate.getTime(),
 				scheduleBlocks: [scheduleBlockToCreate.sbID],
@@ -119,6 +166,27 @@ export default new Vuex.Store({
 	},
 	actions: {},
 	getters: {
+		currentFiscalYear(state) {
+			const fyID = state.data.currentFiscalYear;
+			if (state.data.fiscalYears[0].fyID === "empty") {
+				return null;
+			}
+
+			const filteredFiscalYears = state.data.fiscalYears.filter(
+				fy => fy.fyID === fyID
+			);
+
+			if (filteredFiscalYears.length < 1) {
+				// Error: stored current fiscal year doesn't match any stored fiscal year
+				return null;
+			} else if (filteredFiscalYears.length > 1) {
+				// Error: stored current fiscal year matches more than one stored fiscal year
+				return null;
+			} else {
+				return filteredFiscalYears[0];
+			}
+		},
+
 		/**
 		 * Returns the stored schedule block that matches the stored current block.
 		 * @param {object} state
@@ -130,18 +198,23 @@ export default new Vuex.Store({
 				return null;
 			}
 			const filteredScheduleBlocks = state.data.scheduleBlocks.filter(
-				el => el.sbID === sbID
+				sb => sb.sbID === sbID
 			);
 			if (filteredScheduleBlocks.length < 1) {
-				return null;
 				// Error: stored current schedule block not found in stored schedule blocks
-			} else if (filteredScheduleBlocks.length > 1) {
 				return null;
+			} else if (filteredScheduleBlocks.length > 1) {
 				// Error: stored current schedule block matches more than one stored schedule block
+				return null;
 			} else {
 				return filteredScheduleBlocks[0];
 			}
 		},
+
+		employees(state) {
+			return state.data.employees.map(employee => ({ ...employee }));
+		},
+
 		fiscalYears(state) {
 			const currentFiscalYear = state.data.currentFiscalYear;
 			const years = state.data.fiscalYears;
@@ -157,13 +230,19 @@ export default new Vuex.Store({
 
 			return newYears;
 		},
+
 		fiscalYearExists(state) {
 			return fyID =>
 				state.data.fiscalYears.filter(fy => fyID === fy.fyID).length > 0;
 		},
+
 		scheduleBlockExists(state) {
 			return sbID =>
 				state.data.scheduleBlocks.filter(sb => sbID === sb.sbID).length > 0;
+		},
+
+		roles(state) {
+			return state.data.roles.map(role => ({ ...role }));
 		}
 	}
 });

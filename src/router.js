@@ -58,17 +58,17 @@ export default new Router({
 		},
 		{
 			/** ManagePage used as a placeholder **/
-			path: "/manage/roles",
+			path: "/manage/roles/:roleID",
 			name: "manageroles",
 			component: () =>
-				import(/* webpackChunkName: "manage" */ "./views/ManagePage.vue")
+				import(/* webpackChunkName: "manage" */ "./views/RolePage.vue")
 		},
 		{
 			/** ManagePage used as a placeholder **/
-			path: "/manage/employees",
+			path: "/manage/employees/:employeeID",
 			name: "manageemployees",
 			component: () =>
-				import(/* webpackChunkName: "manage" */ "./views/ManagePage.vue")
+				import(/* webpackChunkName: "manage" */ "./views/EmployeePage.vue")
 		},
 		{
 			path: "/calendar",
