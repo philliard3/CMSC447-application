@@ -42,7 +42,19 @@ export default new Router({
 			path: "/manage",
 			name: "manage",
 			component: () =>
-				import(/* webpackChunkName: "createfiscalyear" */ "./views/ManagePage.vue")
+				import(/* webpackChunkName: "manage" */ "./views/ManagePage.vue")
+		},
+		{
+			path: "/manage/roles",
+			name: "manageroles",
+			component: () =>
+				import(/* webpackChunkName: "manage" */ "./views/ManagePage.vue")
+		},
+		{
+			path: "/manage/employees",
+			name: "manageemployees",
+			component: () =>
+				import(/* webpackChunkName: "manage" */ "./views/ManagePage.vue")
 		},
 		{
 			path: "/calendar",

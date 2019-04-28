@@ -8,6 +8,10 @@
 							<v-icon v-on="on">menu</v-icon>
 						</template>
 						<v-list>
+							<v-list-tile @click="lastPage">
+								<v-icon>arrow_back_ios</v-icon>
+								<v-list-tile-title>Last Page</v-list-tile-title>
+							</v-list-tile>
 							<v-list-tile to="/">
 								<v-icon>home</v-icon>
 								<v-list-tile-title>Start</v-list-tile-title>
@@ -36,6 +40,9 @@
 					</v-menu>
 				</v-toolbar-items>
 				<v-toolbar-items v-if="$mq === 'md' || $mq === 'lg'">
+					<v-btn flat @click="lastPage">
+						<v-icon size="18px">arrow_back_ios</v-icon>
+					</v-btn>
 					<v-btn flat to="/"> <v-icon dark>home</v-icon>Start </v-btn>
 					<v-btn flat to="/createfiscalyear">
 						<v-icon dark>library_add</v-icon>New Fiscal Year
@@ -61,6 +68,20 @@
 		</v-app>
 	</div>
 </template>
+
+<script>
+export default {
+	name: "App",
+	data() {
+		return { electron: Boolean(process.env.browser) };
+	},
+	methods: {
+		lastPage() {
+			this.$router.go(-1);
+		}
+	}
+};
+</script>
 
 <style>
 #app {
