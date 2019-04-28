@@ -1,5 +1,5 @@
 <template>
-	<div class="container">
+	<v-container>
 		<StartEndPicker
 			title="Create new Fiscal Year"
 			@picked="recordFiscalYearData"
@@ -11,7 +11,7 @@
 		<div>
 			<v-btn @click="reportDates" color="success">Submit</v-btn>
 		</div>
-	</div>
+	</v-container>
 </template>
 
 <script>
@@ -61,9 +61,3 @@ export default {
 	}
 };
 </script>
-
-<style>
-.container {
-	padding: 20px;
-}
-</style>

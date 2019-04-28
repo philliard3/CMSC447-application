@@ -1,5 +1,5 @@
 <template>
-	<div class="shell">
+	<v-container>
 		<StartEndPicker
 			title="Create new Schedule Block"
 			@picked="recordScheduleBlockData"
@@ -7,7 +7,7 @@
 		<v-flex xs12 sm6 d-flex>
 			<v-select :items="fiscalYears" label="Select Fiscal Year" solo></v-select>
 		</v-flex>
-	</div>
+	</v-container>
 </template>
 
 <script>
@@ -43,9 +43,3 @@ export default {
 	}
 };
 </script>
-
-<style>
-.shell {
-	margin: 1%;
-}
-</style>

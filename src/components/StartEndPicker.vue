@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<v-container>
 		<div>
 			<h2 class="title">{{ title }}</h2>
 		</div>
@@ -62,7 +62,7 @@
 				</v-layout>
 			</v-container>
 		</div>
-	</div>
+	</v-container>
 </template>
 
 <script>
