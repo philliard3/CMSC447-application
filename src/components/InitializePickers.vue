@@ -10,7 +10,7 @@
 				</v-flex>
 				<v-flex xs2></v-flex>
 				<v-flex xs3>
-					<v-btn color="info" to="/createfiscalyear">New Calendar</v-btn>
+					<v-btn color="info" to="/fiscalyear/create">New Calendar</v-btn>
 				</v-flex>
 				<v-flex xs2></v-flex>
 			</v-layout>

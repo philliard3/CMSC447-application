@@ -5,7 +5,7 @@
 			@picked="recordScheduleBlockData"
 		/>
 		<v-flex xs12 sm6 d-flex>
-			<v-select :items="fiscalYears" label="Select Fiscal Year" solo></v-select>
+			<v-select :items="fiscalYears" label="Fiscal Year"></v-select>
 		</v-flex>
 	</v-container>
 </template>
@@ -35,7 +35,13 @@ export default {
 	},
 	methods: {
 		reportDates() {
-			this.$store.commit("initialize", this.scheduleBlockData);
+			// disallow repeat schedule blocks
+			if (
+				!this.$store.getters.scheduleBlockExists(this.scheduleBlockData.name)
+			) {
+				this.$store.commit("initialize", this.scheduleBlockData);
+				this.$router.push("/scheduleblock/constraints");
+			}
 		},
 		recordScheduleBlockData(newData) {
 			this.scheduleBlockData = newData;

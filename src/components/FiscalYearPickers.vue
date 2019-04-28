@@ -44,12 +44,27 @@ export default {
 				!this.$store.getters.fiscalYearExists(this.fiscalYearData.name) &&
 				!this.$store.getters.scheduleBlockExists(this.scheduleBlockData.name)
 			) {
-				this.$store.commit("initialize", {
-					scheduleBlockData: { ...this.scheduleBlockData },
-					fiscalYearData: { ...this.fiscalYearData }
-				});
-				// reroute once the changes are committed
-				this.$router.push("/");
+				const currentScheduleBlock = this.$store.getters.currentScheduleBlock;
+				if (
+					currentScheduleBlock === null ||
+					currentScheduleBlock.sbID !== "empty"
+				) {
+					// initialize vuex store data if there are no fiscal years
+					this.$store.commit("initialize", {
+						scheduleBlockData: { ...this.scheduleBlockData },
+						fiscalYearData: { ...this.fiscalYearData }
+					});
+					// reroute once the changes are committed
+					this.$router.push("/fiscalyear/constraints");
+				} else {
+					// make a new fiscal year if the store has been initialized
+					this.$store.commit("addFiscalYear", {
+						scheduleBlockData: { ...this.scheduleBlockData },
+						fiscalYearData: { ...this.fiscalYearData }
+					});
+					// reroute once the changes are committed
+					this.$router.push("/fiscalyear/constraints");
+				}
 			}
 		},
 		recordScheduleBlockData(newData) {
