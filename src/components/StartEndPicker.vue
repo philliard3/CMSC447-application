@@ -1,68 +1,71 @@
 <template>
-	<v-container>
-		<div>
-			<h2 class="title">{{ title }}</h2>
-		</div>
-		<div>
-			<v-container>
-				<v-layout row wrap>
-					<v-flex xs12 sm6 md3>
-						<v-text-field v-model="name" label="Name"></v-text-field>
-					</v-flex>
-				</v-layout>
-				<v-layout row wrap>
-					<v-flex xs12 sm6 md4>
-						<v-menu
-							v-model="startDatePicker"
-							:close-on-content-click="false"
-							:nudge-right="40"
-							lazy
-							transition="scale-transition"
-							offset-y
-							full-width
-							min-width="290px"
-						>
-							<v-text-field
-								slot="activator"
-								v-model="startDate"
-								label="Select start date"
-								prepend-icon="event"
-								readonly
-							></v-text-field>
-							<v-date-picker
-								v-model="startDate"
-								@input="closeStartDatePicker"
-							></v-date-picker>
-						</v-menu>
-					</v-flex>
-					<v-flex xs12 sm6 md4>
-						<v-menu
-							v-model="endDatePicker"
-							:close-on-content-click="false"
-							:nudge-right="40"
-							lazy
-							transition="scale-transition"
-							offset-y
-							full-width
-							min-width="290px"
-						>
-							<v-text-field
-								slot="activator"
-								v-model="endDate"
-								label="Select end date"
-								prepend-icon="event"
-								readonly
-							></v-text-field>
-							<v-date-picker
-								v-model="endDate"
-								@input="closeEndDatePicker"
-							></v-date-picker>
-						</v-menu>
-					</v-flex>
-				</v-layout>
-			</v-container>
-		</div>
-	</v-container>
+	<v-form v-model="valid">
+		<v-container>
+			<div>
+				<h2 class="title">{{ title }}</h2>
+			</div>
+			<v-layout row wrap>
+				<v-flex xs12 sm6 md3>
+					<v-text-field
+						v-model="name"
+						label="Name"
+						:rules="nameRules"
+						required
+					></v-text-field>
+				</v-flex>
+			</v-layout>
+			<v-layout row wrap>
+				<v-flex xs12 sm6 md4>
+					<v-menu
+						v-model="startDatePicker"
+						:close-on-content-click="false"
+						:nudge-right="40"
+						lazy
+						transition="scale-transition"
+						offset-y
+						full-width
+						min-width="290px"
+					>
+						<v-text-field
+							slot="activator"
+							v-model="startDate"
+							label="Select start date"
+							prepend-icon="event"
+							readonly
+						></v-text-field>
+						<v-date-picker
+							v-model="startDate"
+							@input="closeStartDatePicker"
+						></v-date-picker>
+					</v-menu>
+				</v-flex>
+				<v-flex xs12 sm6 md4>
+					<v-menu
+						v-model="endDatePicker"
+						:close-on-content-click="false"
+						:nudge-right="40"
+						lazy
+						transition="scale-transition"
+						offset-y
+						full-width
+						min-width="290px"
+					>
+						<v-text-field
+							slot="activator"
+							v-model="endDate"
+							label="Select end date"
+							prepend-icon="event"
+							readonly
+						></v-text-field>
+						<v-date-picker
+							v-model="endDate"
+							@input="closeEndDatePicker"
+						></v-date-picker>
+					</v-menu>
+				</v-flex>
+			</v-layout>
+		</v-container>
+	</v-form>
 </template>
 
 <script>
@@ -74,11 +77,13 @@ export default {
 	},
 	data() {
 		return {
+			valid: false,
 			startDate: new Date().toISOString().substr(0, 10),
 			endDate: new Date().toISOString().substr(0, 10),
 			startDatePicker: false,
 			endDatePicker: false,
-			name: ""
+			name: "",
+			nameRules: [v => Boolean(v) || "Name is required"]
 		};
 	},
 	methods: {

@@ -48,7 +48,7 @@ export default new Router({
 			path: "/fiscalyear/constraints",
 			name: "fiscalyearconstraints",
 			component: () =>
-				import(/* webpackChunkName: "createfiscalyear" */ "./views/CreateFiscalYear.vue")
+				import(/* webpackChunkName: "createfiscalyear" */ "./views/FiscalYearConstraintsPage.vue")
 		},
 		{
 			path: "/manage",

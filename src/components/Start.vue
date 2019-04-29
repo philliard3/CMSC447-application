@@ -3,17 +3,19 @@
 		<div
 			id="loading-info"
 			class="title font-weight-medium"
-			v-if="currentBlock ? currentBlock.sbID : null === null"
+			v-if="currentBlock === null || currentBlock.sbID === null"
 		>
 			It looks like you don't have anything loaded yet. Select an option below
 			to get started.
+			<p />
+			<v-btn color="success" @click="loadFile">Load Calendar from File</v-btn>
+			<p />
+			<v-btn color="info" to="/fiscalyear/create">New Calendar</v-btn>
 		</div>
 		<div id="loading-info" class="title font-weight-medium" v-else>
 			You've already started on a calendar.
+			<v-btn color="info" to="/fiscalyear/create">New Fiscal Year</v-btn>
 		</div>
-		<v-btn color="success" @click="loadFile">Load Calendar from File</v-btn>
-		<p />
-		<v-btn color="info" to="/fiscalyear/create">New Calendar</v-btn>
 	</v-container>
 </template>
 
