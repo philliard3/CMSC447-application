@@ -10,6 +10,7 @@
 		</v-container>
 		<v-data-table
 			v-model="selected"
+			v-on:input="$emit('input', selected.map(el => el.roleID))"
 			:headers="headers"
 			:items="roles"
 			:pagination.sync="pagination"
@@ -53,9 +54,9 @@
 						></v-checkbox>
 					</td>
 					<td>
-						<router-link :to="'/manage/roles/' + props.item.roleID">{{
-							props.item.name
-						}}</router-link>
+						<router-link :to="'/manage/roles/' + props.item.roleID">
+							{{ props.item.name }}
+						</router-link>
 					</td>
 					<td class="text-xs-right">
 						<v-icon :color="props.item.color">work</v-icon>
@@ -74,12 +75,19 @@
 <script>
 export default {
 	name: "RoleTable",
+	props: ["roleIDs"],
 	data() {
+		const roles = this.roleIDs
+			? this.$store.getters.roles.map(role => ({
+					assigned: this.roleIDs.includes(role.roleID),
+					...role
+			  }))
+			: this.$store.getters.roles;
 		return {
 			pagination: {
 				sortBy: "name"
 			},
-			selected: [],
+			selected: roles.filter(role => role.assigned),
 			headers: [
 				{
 					text: "Name",
@@ -88,7 +96,7 @@ export default {
 				},
 				{ text: "Color", value: "color" }
 			],
-			roles: this.$store.getters.roles
+			roles
 		};
 	},
 

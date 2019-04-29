@@ -3,6 +3,8 @@ import Vuex from "vuex";
 
 Vue.use(Vuex);
 
+const initial = "sample"; /*"empty"*/
+
 export default new Vuex.Store({
 	/**
 	 * @namespace
@@ -22,12 +24,68 @@ export default new Vuex.Store({
 			exportFormat: "ICS"
 		},
 		data: {
-			scheduleBlocks: [{ sbID: "empty" }],
-			fiscalYears: [
-				{ fyID: "empty", scheduleBlocks: ["empty"], startDate: 0, endDate: 0 }
+			scheduleBlocks: [
+				{
+					sbID: initial,
+					startDate: 0,
+					endDate: 0,
+					shifts: [
+						{
+							name: "Morning Weekday",
+							startDays: [
+								"Monday",
+								"Tuesday",
+								"Wednesday",
+								"Thursday",
+								"Friday"
+							],
+							startTime: "07:00",
+							duration: 480
+						},
+						{
+							name: "Afternoon Weekday",
+							startDays: [
+								"Monday",
+								"Tuesday",
+								"Wednesday",
+								"Thursday",
+								"Friday"
+							],
+							startTime: "15:00",
+							duration: 480
+						},
+						{
+							name: "Night Weekday",
+							startDays: [
+								"Monday",
+								"Tuesday",
+								"Wednesday",
+								"Thursday",
+								"Friday"
+							],
+							startTime: "23:00",
+							duration: 480
+						},
+						{
+							name: "Day Weekend",
+							startDays: ["Saturday", "Sunday"],
+							startTime: "07:00",
+							duration: 720
+						},
+						{
+							name: "Night Weekend",
+							startDays: ["Saturday", "Sunday"],
+							startTime: "19:00",
+							duration: 720
+						}
+					]
+				}
 			],
-			currentScheduleBlock: "empty",
-			currentFiscalYear: "empty",
+			fiscalYears: [
+				{ fyID: initial, scheduleBlocks: [initial], startDate: 0, endDate: 0 }
+			],
+			currentScheduleBlock: initial,
+			currentFiscalYear: initial,
 			employees: [
 				{
 					name: "John Doe",
