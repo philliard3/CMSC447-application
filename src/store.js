@@ -3,7 +3,10 @@ import Vuex from "vuex";
 
 Vue.use(Vuex);
 
-const initial = "sample"; /*"empty"*/
+// set this as an environment variable in later iterations
+const IS_TEST = true;
+
+const initial = "sample" || "empty";
 
 export default new Vuex.Store({
 	/**
@@ -18,116 +21,183 @@ export default new Vuex.Store({
 	 * @property {any} state.data.currentScheduleBlock
 	 * @property {any} state.data.currentFiscalYear
 	 */
-	state: {
-		settings: {
-			activeFile: null,
-			exportFormat: "ICS"
-		},
-		data: {
-			scheduleBlocks: [
-				{
-					sbID: initial,
-					startDate: 0,
-					endDate: 0,
-					shifts: [
+	state: IS_TEST
+		? require("./SampleState.json")
+		: {
+				settings: {
+					activeFile: null,
+					exportFormat: "ICS"
+				},
+				data: {
+					scheduleBlocks: [
 						{
-							name: "Morning Weekday",
-							startDays: [
-								"Monday",
-								"Tuesday",
-								"Wednesday",
-								"Thursday",
-								"Friday"
+							sbID: initial,
+							startDate: 0,
+							endDate: 0,
+							name: initial
+						}
+					],
+					fiscalYears: [
+						{
+							fyID: initial,
+							name: initial,
+							scheduleBlocks: [initial],
+							startDate: 0,
+							endDate: 0,
+							shifts: [
+								{
+									name: "Morning Weekday",
+									startDays: [
+										"Monday",
+										"Tuesday",
+										"Wednesday",
+										"Thursday",
+										"Friday"
+									],
+									startTime: "07:00",
+									location: "Nursery",
+									duration: 480
+								},
+								{
+									name: "Afternoon Weekday",
+									startDays: [
+										"Monday",
+										"Tuesday",
+										"Wednesday",
+										"Thursday",
+										"Friday"
+									],
+									startTime: "15:00",
+									location: "Nursery",
+									duration: 480
+								},
+								{
+									name: "Night Weekday",
+									startDays: [
+										"Monday",
+										"Tuesday",
+										"Wednesday",
+										"Thursday",
+										"Friday"
+									],
+									startTime: "23:00",
+									location: "Nursery",
+									duration: 480
+								},
+								{
+									name: "Day Weekend",
+									startDays: ["Saturday", "Sunday"],
+									startTime: "07:00",
+									location: "Nursery",
+									duration: 720
+								},
+								{
+									name: "Night Weekend",
+									startDays: ["Saturday", "Sunday"],
+									startTime: "19:00",
+									location: "Nursery",
+									duration: 720
+								},
+								{
+									name: "Morning Weekday",
+									startDays: [
+										"Monday",
+										"Tuesday",
+										"Wednesday",
+										"Thursday",
+										"Friday"
+									],
+									startTime: "07:00",
+									location: "ICU",
+									duration: 480
+								},
+								{
+									name: "Afternoon Weekday",
+									startDays: [
+										"Monday",
+										"Tuesday",
+										"Wednesday",
+										"Thursday",
+										"Friday"
+									],
+									startTime: "15:00",
+									location: "ICU",
+									duration: 480
+								},
+								{
+									name: "Night Weekday",
+									startDays: [
+										"Monday",
+										"Tuesday",
+										"Wednesday",
+										"Thursday",
+										"Friday"
+									],
+									startTime: "23:00",
+									location: "ICU",
+									duration: 480
+								},
+								{
+									name: "Day Weekend",
+									startDays: ["Saturday", "Sunday"],
+									startTime: "07:00",
+									location: "ICU",
+									duration: 720
+								},
+								{
+									name: "Night Weekend",
+									startDays: ["Saturday", "Sunday"],
+									startTime: "19:00",
+									location: "ICU",
+									duration: 720
+								}
+							]
+						}
+					],
+					currentScheduleBlock: initial,
+					currentFiscalYear: initial,
+					employees: [
+						{
+							name: "John Doe",
+							employeeID: "johndoe",
+							roles: [{ name: "Doctor", roleID: "doctor" }],
+							hours: 12
+						},
+						{
+							name: "Sam Smith",
+							employeeID: "samsmith",
+							roles: [
+								{ name: "Nurse", roleID: "nurse" },
+								{ name: "Nurse Practitioner", roleID: "nursepractitioner" }
 							],
-							startTime: "07:00",
-							duration: 480
+							hours: 15
 						},
 						{
-							name: "Afternoon Weekday",
-							startDays: [
-								"Monday",
-								"Tuesday",
-								"Wednesday",
-								"Thursday",
-								"Friday"
-							],
-							startTime: "15:00",
-							duration: 480
+							name: "Janet Mars",
+							employeeID: "janetmars",
+							roles: [{ name: "Nurse", roleID: "nurse" }],
+							hours: 20
+						}
+					],
+					roles: [
+						{
+							name: "Doctor",
+							color: "#3cb371",
+							roleID: "doctor"
 						},
 						{
-							name: "Night Weekday",
-							startDays: [
-								"Monday",
-								"Tuesday",
-								"Wednesday",
-								"Thursday",
-								"Friday"
-							],
-							startTime: "23:00",
-							duration: 480
+							name: "Nurse",
+							color: "#ee82ee",
+							roleID: "nurse"
 						},
 						{
-							name: "Day Weekend",
-							startDays: ["Saturday", "Sunday"],
-							startTime: "07:00",
-							duration: 720
-						},
-						{
-							name: "Night Weekend",
-							startDays: ["Saturday", "Sunday"],
-							startTime: "19:00",
-							duration: 720
+							name: "Nurse Practitioner",
+							color: "#6a5acd",
+							roleID: "nursepractitioner"
 						}
 					]
 				}
-			],
-			fiscalYears: [
-				{ fyID: initial, scheduleBlocks: [initial], startDate: 0, endDate: 0 }
-			],
-			currentScheduleBlock: initial,
-			currentFiscalYear: initial,
-			employees: [
-				{
-					name: "John Doe",
-					employeeID: "johndoe",
-					roles: [{ name: "Doctor", roleID: "doctor" }],
-					hours: 12
-				},
-				{
-					name: "Sam Smith",
-					employeeID: "samsmith",
-					roles: [
-						{ name: "Nurse", roleID: "nurse" },
-						{ name: "Nurse Practitioner", roleID: "nursepractitioner" }
-					],
-					hours: 15
-				},
-				{
-					name: "Janet Mars",
-					employeeID: "janetmars",
-					roles: [{ name: "Nurse", roleID: "nurse" }],
-					hours: 20
-				}
-			],
-			roles: [
-				{
-					name: "Doctor",
-					color: "#3cb371",
-					roleID: "doctor"
-				},
-				{
-					name: "Nurse",
-					color: "#ee82ee",
-					roleID: "nurse"
-				},
-				{
-					name: "Nurse Practitioner",
-					color: "#6a5acd",
-					roleID: "nursepractitioner"
-				}
-			]
-		}
-	},
+		  },
 	mutations: {
 		/**
 		 * Inserts into the current application state a past state, usually loaded from a file.
@@ -173,7 +243,7 @@ export default new Vuex.Store({
 		 * @param {object} state
 		 * @param {object} scheduleBlockData
 		 */
-		addScheduleBlock(state, scheduleBlockData) {
+		addScheduleBlock(state, { scheduleBlockData, fiscalYear }) {
 			// first check that this schedule block does not conflict with existing ones
 
 			// create schedule block
@@ -186,9 +256,10 @@ export default new Vuex.Store({
 			state.data.scheduleBlocks.push(scheduleBlockToCreate);
 			state.data.currentScheduleBlock = scheduleBlockToCreate.sbID;
 
+			const fiscalYearToUpdate = fiscalYear || state.data.currentFiscalYear;
 			// then update the fiscal year that the block should belong to
 			state.data.fiscalYears
-				.filter(fy => fy.fyID === state.data.currentFiscalYear)[0]
+				.filter(fy => fy.fyID === fiscalYearToUpdate)[0]
 				.scheduleBlocks.push(scheduleBlockToCreate.sbID);
 		},
 		/**
