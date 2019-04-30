@@ -1,13 +1,28 @@
 <template>
-	<v-container>
-		<StartEndPicker
-			title="Create new Schedule Block"
-			@picked="recordScheduleBlockData"
-		/>
-		<v-flex xs12 sm6 d-flex>
-			<v-select :items="fiscalYears" label="Fiscal Year"></v-select>
-		</v-flex>
-	</v-container>
+	<v-form>
+		<v-container>
+			<v-card>
+				<v-card-text>
+					<StartEndPicker
+						title="Create new Schedule Block"
+						@picked="recordScheduleBlockData"
+					/>
+					<v-container>
+						<v-flex xs12 sm6 d-flex>
+							<v-select
+								label="Fiscal Year"
+								v-model="selectedFiscalYear"
+								:items="fiscalYears"
+								:rules="[v => !!v || 'Fiscal Year is required']"
+								required
+							></v-select>
+						</v-flex>
+					</v-container>
+					<v-btn @click="reportDates" color="success">Submit</v-btn>
+				</v-card-text>
+			</v-card>
+		</v-container>
+	</v-form>
 </template>
 
 <script>
@@ -30,16 +45,21 @@ export default {
 			scheduleBlockData: {
 				startDate: currentDate,
 				endDate: currentDate
-			}
+			},
+			selectedFiscalYear: null
 		};
 	},
 	methods: {
 		reportDates() {
-			// disallow repeat schedule blocks
+			// disallow repeat schedule blocks or schedule blocks without a home
 			if (
-				!this.$store.getters.scheduleBlockExists(this.scheduleBlockData.name)
+				!this.$store.getters.scheduleBlockExists(this.scheduleBlockData.name) &&
+				this.selectedFiscalYear
 			) {
-				this.$store.commit("initialize", this.scheduleBlockData);
+				this.$store.commit("addScheduleBlock", {
+					scheduleBlockData: this.scheduleBlockData,
+					fiscalYear: this.selectedFiscalYear
+				});
 				this.$router.push("/scheduleblock/constraints");
 			}
 		},

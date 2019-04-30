@@ -1,17 +1,21 @@
 <template>
-	<v-container>
-		<StartEndPicker
-			title="Create new Fiscal Year"
-			@picked="recordFiscalYearData"
-		/>
-		<StartEndPicker
-			title="Create new Schedule Block"
-			@picked="recordScheduleBlockData"
-		/>
-		<div>
-			<v-btn @click="reportDates" color="success">Submit</v-btn>
-		</div>
-	</v-container>
+	<v-form>
+		<v-container>
+			<v-card>
+				<v-card-text>
+					<StartEndPicker
+						title="Create new Fiscal Year"
+						@picked="recordFiscalYearData"
+					/>
+					<StartEndPicker
+						title="Create new Schedule Block"
+						@picked="recordScheduleBlockData"
+					/>
+					<v-btn @click="reportDates" color="success">Submit</v-btn>
+				</v-card-text>
+			</v-card>
+		</v-container>
+	</v-form>
 </template>
 
 <script>

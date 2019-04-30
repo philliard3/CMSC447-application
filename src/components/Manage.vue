@@ -24,15 +24,13 @@ export default {
 
 <style>
 .col1 {
-	width: 50%;
-	min-width: 700px;
-	margin-right: 2%;
+	min-width: 50%;
 	display: inline-block;
 	vertical-align: top;
 }
 
 .col2 {
-	width: 45%;
+	min-width: 45%;
 	display: inline-block;
 	vertical-align: top;
 }

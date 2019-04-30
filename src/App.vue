@@ -24,6 +24,7 @@
 					</v-menu>
 				</v-toolbar-items>
 				<v-toolbar-items v-if="$mq === 'md' || $mq === 'lg'">
+					<!-- add an extra back button in the Electron mode -->
 					<v-btn v-if="electron" @click="lastPage" flat>
 						<v-icon size="18px">arrow_back_ios</v-icon>
 					</v-btn>
@@ -98,6 +99,8 @@ export default {
 		};
 	},
 	methods: {
+		// This is a back command, which is helpful in the Electron app
+		// because the users may not be aware that they can use web-based navigation functionality
 		lastPage() {
 			this.$router.go(-1);
 		}

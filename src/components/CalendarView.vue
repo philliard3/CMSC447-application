@@ -1,49 +1,57 @@
 <template>
-	<v-layout>
-		<v-flex>
-			<v-sheet height="400">
-				<!-- now is normally calculated by itself, but to keep the calendar in this date range to view events -->
-				<v-calendar
-					ref="calendar"
-					:now="today"
-					:value="today"
-					color="primary"
-					type="week"
-				>
-					<!-- the events at the top (all-day) -->
-					<template v-slot:dayHeader="{ date }">
-						<template v-for="event in eventsMap[date]">
-							<!-- all day events don't have time -->
-							<div
-								v-if="!event.time"
-								:key="event.title"
-								class="my-event"
-								@click="open(event)"
-								v-html="event.title"
-							></div>
-						</template>
-					</template>
-					<!-- the events at the bottom (timed) -->
-					<template v-slot:dayBody="{ date, timeToY, minutesToPixels }">
-						<template v-for="event in eventsMap[date]">
-							<!-- timed events -->
-							<div
-								v-if="event.time"
-								:key="event.title"
-								:style="{
-									top: timeToY(event.time) + 'px',
-									height: minutesToPixels(event.duration) - 3 + 'px'
-								}"
-								class="my-event with-time"
-								@click="open(event)"
-								v-html="event.title"
-							></div>
-						</template>
-					</template>
-				</v-calendar>
-			</v-sheet>
-		</v-flex>
-	</v-layout>
+	<v-form>
+		<v-container>
+			<v-card>
+				<v-card-text>
+					<v-layout>
+						<v-flex>
+							<v-sheet height="400">
+								<!-- now is normally calculated by itself, but to keep the calendar in this date range to view events -->
+								<v-calendar
+									ref="calendar"
+									:now="today"
+									:value="today"
+									color="primary"
+									type="week"
+								>
+									<!-- the events at the top (all-day) -->
+									<template v-slot:dayHeader="{ date }">
+										<template v-for="event in eventsMap[date]">
+											<!-- all day events don't have time -->
+											<div
+												v-if="!event.time"
+												:key="event.title"
+												class="my-event"
+												@click="open(event)"
+												v-html="event.title"
+											></div>
+										</template>
+									</template>
+									<!-- the events at the bottom (timed) -->
+									<template v-slot:dayBody="{ date, timeToY, minutesToPixels }">
+										<template v-for="event in eventsMap[date]">
+											<!-- timed events -->
+											<div
+												v-if="event.time"
+												:key="event.title"
+												:style="{
+													top: timeToY(event.time) + 'px',
+													height: minutesToPixels(event.duration) - 3 + 'px'
+												}"
+												class="my-event with-time"
+												@click="open(event)"
+												v-html="event.title"
+											></div>
+										</template>
+									</template>
+								</v-calendar>
+							</v-sheet>
+						</v-flex>
+					</v-layout>
+				</v-card-text>
+			</v-card>
+		</v-container>
+	</v-form>
 </template>
 
 <script>
