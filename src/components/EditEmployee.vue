@@ -39,7 +39,7 @@ export default {
 			roleIDs: employee.roles.map(role => role.roleID),
 			shifts:
 				employee.preferredShifts ||
-				this.$store.getters.currentFiscalYear.shifts.map(shift => {
+				this.$store.getters.currentScheduleBlock.shifts.map(shift => {
 					const selected = employee.preferredShifts
 						? employee.preferredShifts.filter(s => s.name === shift.name)
 						: null;

@@ -9,39 +9,349 @@
 				"sbID": "scheduleBlock1",
 				"startDate": 1530421200000,
 				"endDate": 1538370000000,
-				"name": "Q1 2019"
+				"name": "Q1 2019",
+				"shifts": [
+					{
+						"name": "Morning Weekday",
+						"startDays": [
+							"Monday",
+							"Tuesday",
+							"Wednesday",
+							"Thursday",
+							"Friday"
+						],
+						"startTime": "07:00",
+						"location": "Nursery",
+						"duration": 480
+					},
+					{
+						"name": "Afternoon Weekday",
+						"startDays": [
+							"Monday",
+							"Tuesday",
+							"Wednesday",
+							"Thursday",
+							"Friday"
+						],
+						"startTime": "15:00",
+						"location": "Nursery",
+						"duration": 480
+					},
+					{
+						"name": "Night Weekday",
+						"startDays": [
+							"Monday",
+							"Tuesday",
+							"Wednesday",
+							"Thursday",
+							"Friday"
+						],
+						"startTime": "23:00",
+						"location": "Nursery",
+						"duration": 480
+					},
+					{
+						"name": "Day Weekend",
+						"startDays": ["Saturday", "Sunday"],
+						"startTime": "07:00",
+						"location": "Nursery",
+						"duration": 720
+					},
+					{
+						"name": "Night Weekend",
+						"startDays": ["Saturday", "Sunday"],
+						"startTime": "19:00",
+						"location": "Nursery",
+						"duration": 720
+					},
+					{
+						"name": "Morning Weekday",
+						"startDays": [
+							"Monday",
+							"Tuesday",
+							"Wednesday",
+							"Thursday",
+							"Friday"
+						],
+						"startTime": "07:00",
+						"location": "ICU",
+						"duration": 480
+					},
+					{
+						"name": "Afternoon Weekday",
+						"startDays": [
+							"Monday",
+							"Tuesday",
+							"Wednesday",
+							"Thursday",
+							"Friday"
+						],
+						"startTime": "15:00",
+						"location": "ICU",
+						"duration": 480
+					},
+					{
+						"name": "Night Weekday",
+						"startDays": [
+							"Monday",
+							"Tuesday",
+							"Wednesday",
+							"Thursday",
+							"Friday"
+						],
+						"startTime": "23:00",
+						"location": "ICU",
+						"duration": 480
+					},
+					{
+						"name": "Day Weekend",
+						"startDays": ["Saturday", "Sunday"],
+						"startTime": "07:00",
+						"location": "ICU",
+						"duration": 720
+					},
+					{
+						"name": "Night Weekend",
+						"startDays": ["Saturday", "Sunday"],
+						"startTime": "19:00",
+						"location": "ICU",
+						"duration": 720
+					}
+				]
 			},
 			{
 				"sbID": "scheduleBlock2",
 				"startDate": 1538370000000,
 				"endDate": 1546318800000,
-				"name": "Q2 2019"
+				"name": "Q2 2019",
+				"shifts": [
+					{
+						"name": "Morning Weekday",
+						"startDays": [
+							"Monday",
+							"Tuesday",
+							"Wednesday",
+							"Thursday",
+							"Friday"
+						],
+						"startTime": "07:00",
+						"location": "Nursery",
+						"duration": 480
+					},
+					{
+						"name": "Afternoon Weekday",
+						"startDays": [
+							"Monday",
+							"Tuesday",
+							"Wednesday",
+							"Thursday",
+							"Friday"
+						],
+						"startTime": "15:00",
+						"location": "Nursery",
+						"duration": 480
+					},
+					{
+						"name": "Night Weekday",
+						"startDays": [
+							"Monday",
+							"Tuesday",
+							"Wednesday",
+							"Thursday",
+							"Friday"
+						],
+						"startTime": "23:00",
+						"location": "Nursery",
+						"duration": 480
+					},
+					{
+						"name": "Day Weekend",
+						"startDays": ["Saturday", "Sunday"],
+						"startTime": "07:00",
+						"location": "Nursery",
+						"duration": 720
+					},
+					{
+						"name": "Night Weekend",
+						"startDays": ["Saturday", "Sunday"],
+						"startTime": "19:00",
+						"location": "Nursery",
+						"duration": 720
+					},
+					{
+						"name": "Morning Weekday",
+						"startDays": [
+							"Monday",
+							"Tuesday",
+							"Wednesday",
+							"Thursday",
+							"Friday"
+						],
+						"startTime": "07:00",
+						"location": "ICU",
+						"duration": 480
+					},
+					{
+						"name": "Afternoon Weekday",
+						"startDays": [
+							"Monday",
+							"Tuesday",
+							"Wednesday",
+							"Thursday",
+							"Friday"
+						],
+						"startTime": "15:00",
+						"location": "ICU",
+						"duration": 480
+					},
+					{
+						"name": "Night Weekday",
+						"startDays": [
+							"Monday",
+							"Tuesday",
+							"Wednesday",
+							"Thursday",
+							"Friday"
+						],
+						"startTime": "23:00",
+						"location": "ICU",
+						"duration": 480
+					},
+					{
+						"name": "Day Weekend",
+						"startDays": ["Saturday", "Sunday"],
+						"startTime": "07:00",
+						"location": "ICU",
+						"duration": 720
+					},
+					{
+						"name": "Night Weekend",
+						"startDays": ["Saturday", "Sunday"],
+						"startTime": "19:00",
+						"location": "ICU",
+						"duration": 720
+					}
+				]
 			},
 			{
 				"sbID": "scheduleBlock3",
 				"startDate": 1546318800000,
 				"endDate": 1554094800000,
-				"name": "Q3 2019"
+				"name": "Q3 2019",
+				"shifts": [
+					{
+						"name": "Morning Weekday",
+						"startDays": [
+							"Monday",
+							"Tuesday",
+							"Wednesday",
+							"Thursday",
+							"Friday"
+						],
+						"startTime": "07:00",
+						"location": "Nursery",
+						"duration": 480
+					},
+					{
+						"name": "Afternoon Weekday",
+						"startDays": [
+							"Monday",
+							"Tuesday",
+							"Wednesday",
+							"Thursday",
+							"Friday"
+						],
+						"startTime": "15:00",
+						"location": "Nursery",
+						"duration": 480
+					},
+					{
+						"name": "Night Weekday",
+						"startDays": [
+							"Monday",
+							"Tuesday",
+							"Wednesday",
+							"Thursday",
+							"Friday"
+						],
+						"startTime": "23:00",
+						"location": "Nursery",
+						"duration": 480
+					},
+					{
+						"name": "Day Weekend",
+						"startDays": ["Saturday", "Sunday"],
+						"startTime": "07:00",
+						"location": "Nursery",
+						"duration": 720
+					},
+					{
+						"name": "Night Weekend",
+						"startDays": ["Saturday", "Sunday"],
+						"startTime": "19:00",
+						"location": "Nursery",
+						"duration": 720
+					},
+					{
+						"name": "Morning Weekday",
+						"startDays": [
+							"Monday",
+							"Tuesday",
+							"Wednesday",
+							"Thursday",
+							"Friday"
+						],
+						"startTime": "07:00",
+						"location": "ICU",
+						"duration": 480
+					},
+					{
+						"name": "Afternoon Weekday",
+						"startDays": [
+							"Monday",
+							"Tuesday",
+							"Wednesday",
+							"Thursday",
+							"Friday"
+						],
+						"startTime": "15:00",
+						"location": "ICU",
+						"duration": 480
+					},
+					{
+						"name": "Night Weekday",
+						"startDays": [
+							"Monday",
+							"Tuesday",
+							"Wednesday",
+							"Thursday",
+							"Friday"
+						],
+						"startTime": "23:00",
+						"location": "ICU",
+						"duration": 480
+					},
+					{
+						"name": "Day Weekend",
+						"startDays": ["Saturday", "Sunday"],
+						"startTime": "07:00",
+						"location": "ICU",
+						"duration": 720
+					},
+					{
+						"name": "Night Weekend",
+						"startDays": ["Saturday", "Sunday"],
+						"startTime": "19:00",
+						"location": "ICU",
+						"duration": 720
+					}
+				]
 			},
 			{
 				"sbID": "scheduleBlock4",
 				"startDate": 1546318800000,
 				"endDate": 1561957200000,
-				"name": "Q4 2019"
-			}
-		],
-		"fiscalYears": [
-			{
-				"fyID": "fiscalYear1",
-				"name": "FY19",
-				"scheduleBlocks": [
-					"scheduleBlock1",
-					"scheduleBlock2",
-					"scheduleBlock3",
-					"scheduleBlock4"
-				],
-				"startDate": 1530421200000,
-				"endDate": 1561957200000,
+				"name": "Q4 2019",
 				"shifts": [
 					{
 						"name": "Morning Weekday",
@@ -152,6 +462,20 @@
 				]
 			}
 		],
+		"fiscalYears": [
+			{
+				"fyID": "fiscalYear1",
+				"name": "FY19",
+				"scheduleBlocks": [
+					"scheduleBlock1",
+					"scheduleBlock2",
+					"scheduleBlock3",
+					"scheduleBlock4"
+				],
+				"startDate": 1530421200000,
+				"endDate": 1561957200000
+			}
+		],
 		"currentScheduleBlock": "scheduleBlock1",
 		"currentFiscalYear": "fiscalYear1",
 		"employees": [
@@ -180,17 +504,17 @@
 		"roles": [
 			{
 				"name": "Doctor",
-				"color": "green",
+				"color": "#27AF60",
 				"roleID": "doctor"
 			},
 			{
 				"name": "Nurse",
-				"color": "pink",
+				"color": "#3398DB",
 				"roleID": "nurse"
 			},
 			{
 				"name": "Nurse Practitioner",
-				"color": "purple",
+				"color": "#8E43AD",
 				"roleID": "nursepractitioner"
 			},
 			{

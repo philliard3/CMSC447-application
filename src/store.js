@@ -291,6 +291,14 @@ export default new Vuex.Store({
 			};
 			state.data.fiscalYears.push(fiscalYearToCreate);
 			state.data.currentFiscalYear = fiscalYearToCreate.fyID;
+		},
+
+		/** **/
+		createRole(state, roleData) {
+			if (!roleData.roleID) {
+				return;
+			}
+			state.data.roles.push({ roleData });
 		}
 	},
 	actions: {},

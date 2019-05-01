@@ -75,15 +75,14 @@
 								<td>
 									<router-link
 										:to="'/manage/employees/' + props.item.employeeID"
+										>{{ props.item.name }}</router-link
 									>
-										{{ props.item.name }}
-									</router-link>
 								</td>
 								<td class="text-xs-right">
 									<span v-for="(role, index) in props.item.roles" :key="index">
-										<router-link :to="'/manage/roles/' + role.roleID">
-											{{ role.name }}
-										</router-link>
+										<router-link :to="'/manage/roles/' + role.roleID">{{
+											role.name
+										}}</router-link>
 										<span v-if="index < props.item.roles.length - 1"
 											>,&nbsp;</span
 										>
@@ -141,7 +140,7 @@ export default {
 			if (searchTerm === "roles") {
 				return this.employees.filter(employee =>
 					employee.roles.some(role =>
-						role.toUpperCase().includes(this.searchText.toUpperCase())
+						role.name.toUpperCase().includes(this.searchText.toUpperCase())
 					)
 				);
 			}
