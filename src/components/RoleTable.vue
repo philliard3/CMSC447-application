@@ -60,9 +60,9 @@
 									></v-checkbox>
 								</td>
 								<td>
-									<router-link :to="'/manage/roles/' + props.item.roleID">{{
-										props.item.name
-									}}</router-link>
+									<router-link :to="'/manage/roles/' + props.item.roleID">
+										{{ props.item.name }}
+									</router-link>
 								</td>
 								<td class="text-xs-right">
 									<v-icon :color="props.item.color">work</v-icon>
@@ -86,7 +86,7 @@
 <script>
 export default {
 	name: "RoleTable",
-	props: ["roleIDs"],
+	props: { roleIDs: Array },
 	data() {
 		const roles = this.roleIDs
 			? this.$store.getters.roles.map(role => ({

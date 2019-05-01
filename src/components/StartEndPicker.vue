@@ -73,7 +73,6 @@ export default {
 	name: "StartEndPicker",
 	props: {
 		title: String
-		// passDataUp: Function
 	},
 	data() {
 		return {
