@@ -1,12 +1,50 @@
 import Vue from "vue";
 import Vuex from "vuex";
+import moment from "moment";
 
 Vue.use(Vuex);
 
 // set this as an environment variable in later iterations
 const IS_TEST = true;
-
 const initial = "sample" || "empty";
+
+const createShifts = (shift, startDate, endDate) => {
+	let current = moment(startDate);
+	const end = moment(endDate);
+	const days = [];
+
+	while (current.isBefore(end)) {
+		days.push(current);
+		current = moment(current.toDate()).add(1, "days");
+	}
+
+	const daysOfWeek = [
+		"Sunday",
+		"Monday",
+		"Tuesday",
+		"Wednesday",
+		"Thursday",
+		"Friday",
+		"Saturday"
+	];
+
+	const shifts = days
+		.filter(day => shift.startDays.includes(daysOfWeek[day.day()]))
+		.map(day => {
+			const [hours, minutes] = shift.startTime.split(":");
+			const startTime = day.hours(Number(hours)).minutes(Number(minutes));
+			return {
+				shiftTypes: shift.name,
+				location: shift.location,
+				startTime: startTime.format("mm/dd/yy hh:mm"),
+				endTime: startTime
+					.add(shift.duration, "minutes")
+					.format("mm/dd/yy hh:mm")
+			};
+		});
+
+	return shifts;
+};
 
 export default new Vuex.Store({
 	/**
@@ -44,160 +82,16 @@ export default new Vuex.Store({
 							scheduleBlocks: [initial],
 							startDate: 0,
 							endDate: 0,
-							shifts: [
-								{
-									name: "Morning Weekday",
-									startDays: [
-										"Monday",
-										"Tuesday",
-										"Wednesday",
-										"Thursday",
-										"Friday"
-									],
-									startTime: "07:00",
-									location: "Nursery",
-									duration: 480
-								},
-								{
-									name: "Afternoon Weekday",
-									startDays: [
-										"Monday",
-										"Tuesday",
-										"Wednesday",
-										"Thursday",
-										"Friday"
-									],
-									startTime: "15:00",
-									location: "Nursery",
-									duration: 480
-								},
-								{
-									name: "Night Weekday",
-									startDays: [
-										"Monday",
-										"Tuesday",
-										"Wednesday",
-										"Thursday",
-										"Friday"
-									],
-									startTime: "23:00",
-									location: "Nursery",
-									duration: 480
-								},
-								{
-									name: "Day Weekend",
-									startDays: ["Saturday", "Sunday"],
-									startTime: "07:00",
-									location: "Nursery",
-									duration: 720
-								},
-								{
-									name: "Night Weekend",
-									startDays: ["Saturday", "Sunday"],
-									startTime: "19:00",
-									location: "Nursery",
-									duration: 720
-								},
-								{
-									name: "Morning Weekday",
-									startDays: [
-										"Monday",
-										"Tuesday",
-										"Wednesday",
-										"Thursday",
-										"Friday"
-									],
-									startTime: "07:00",
-									location: "ICU",
-									duration: 480
-								},
-								{
-									name: "Afternoon Weekday",
-									startDays: [
-										"Monday",
-										"Tuesday",
-										"Wednesday",
-										"Thursday",
-										"Friday"
-									],
-									startTime: "15:00",
-									location: "ICU",
-									duration: 480
-								},
-								{
-									name: "Night Weekday",
-									startDays: [
-										"Monday",
-										"Tuesday",
-										"Wednesday",
-										"Thursday",
-										"Friday"
-									],
-									startTime: "23:00",
-									location: "ICU",
-									duration: 480
-								},
-								{
-									name: "Day Weekend",
-									startDays: ["Saturday", "Sunday"],
-									startTime: "07:00",
-									location: "ICU",
-									duration: 720
-								},
-								{
-									name: "Night Weekend",
-									startDays: ["Saturday", "Sunday"],
-									startTime: "19:00",
-									location: "ICU",
-									duration: 720
-								}
-							]
+							shifts: []
 						}
 					],
 					currentScheduleBlock: initial,
 					currentFiscalYear: initial,
-					employees: [
-						{
-							name: "John Doe",
-							employeeID: "johndoe",
-							roles: [{ name: "Doctor", roleID: "doctor" }],
-							hours: 12
-						},
-						{
-							name: "Sam Smith",
-							employeeID: "samsmith",
-							roles: [
-								{ name: "Nurse", roleID: "nurse" },
-								{ name: "Nurse Practitioner", roleID: "nursepractitioner" }
-							],
-							hours: 15
-						},
-						{
-							name: "Janet Mars",
-							employeeID: "janetmars",
-							roles: [{ name: "Nurse", roleID: "nurse" }],
-							hours: 20
-						}
-					],
-					roles: [
-						{
-							name: "Doctor",
-							color: "#3cb371",
-							roleID: "doctor"
-						},
-						{
-							name: "Nurse",
-							color: "#ee82ee",
-							roleID: "nurse"
-						},
-						{
-							name: "Nurse Practitioner",
-							color: "#6a5acd",
-							roleID: "nursepractitioner"
-						}
-					]
+					employees: [],
+					roles: []
 				}
 		  },
+
 	mutations: {
 		/**
 		 * Inserts into the current application state a past state, usually loaded from a file.
@@ -294,14 +188,55 @@ export default new Vuex.Store({
 		},
 
 		/** **/
-		createRole(state, roleData) {
+		addRole(state, roleData) {
 			if (!roleData.roleID) {
 				return;
 			}
-			state.data.roles.push({ roleData });
+			state.data.roles.push({ ...roleData });
+		},
+
+		/** **/
+		addShift(state, shiftData) {
+			if (!shiftData.shiftID) {
+				return;
+			}
+
+			if (
+				!state.data.currentScheduleBlock ||
+				state.data.currentScheduleBlock === "empty"
+			) {
+				return;
+			}
+
+			const currentScheduleBlock = state.data.fiscalYears.filter(
+				fy => fy.fyID === state.data.currentScheduleBlock
+			)[0];
+
+			currentScheduleBlock.shifts.push({ ...shiftData });
+		},
+
+		/** **/
+		addEmployee(state, employeeData) {
+			if (!employeeData.employeeID) {
+				return;
+			}
+			state.data.employees.push({ ...employeeData });
+		},
+
+		/** **/
+		createSchedule(state, schedule) {
+			state.schedule = schedule;
 		}
 	},
-	actions: {},
+
+	actions: {
+		async generateSchedule(state) {
+			this.commit("createSchedule", {
+				shifts: state.shifts.map(shift => createShifts(shift, 0, 0))
+			});
+		}
+	},
+
 	getters: {
 		currentFiscalYear(state) {
 			const fyID = state.data.currentFiscalYear;
