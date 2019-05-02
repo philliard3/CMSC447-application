@@ -6,7 +6,7 @@
 	"data": {
 		"scheduleBlocks": [
 			{
-				"sbID": "scheduleBlock1",
+				"sbID": 1,
 				"startDate": 1530421200000,
 				"endDate": 1538370000000,
 				"name": "Q1 2019",
@@ -120,7 +120,7 @@
 				]
 			},
 			{
-				"sbID": "scheduleBlock2",
+				"sbID": 2,
 				"startDate": 1538370000000,
 				"endDate": 1546318800000,
 				"name": "Q2 2019",
@@ -234,7 +234,7 @@
 				]
 			},
 			{
-				"sbID": "scheduleBlock3",
+				"sbID": 3,
 				"startDate": 1546318800000,
 				"endDate": 1554094800000,
 				"name": "Q3 2019",
@@ -348,7 +348,7 @@
 				]
 			},
 			{
-				"sbID": "scheduleBlock4",
+				"sbID": 4,
 				"startDate": 1546318800000,
 				"endDate": 1561957200000,
 				"name": "Q4 2019",
@@ -464,40 +464,35 @@
 		],
 		"fiscalYears": [
 			{
-				"fyID": "fiscalYear1",
+				"fyID": 1,
 				"name": "FY19",
-				"scheduleBlocks": [
-					"scheduleBlock1",
-					"scheduleBlock2",
-					"scheduleBlock3",
-					"scheduleBlock4"
-				],
+				"scheduleBlocks": [1, 2, 3, 4],
 				"startDate": 1530421200000,
 				"endDate": 1561957200000
 			}
 		],
-		"currentScheduleBlock": "scheduleBlock1",
-		"currentFiscalYear": "fiscalYear1",
+		"currentScheduleBlock": 1,
+		"currentFiscalYear": 1,
 		"employees": [
 			{
 				"name": "John Doe",
-				"employeeID": "employee1",
-				"roles": [{ "name": "Doctor", "roleID": "doctor" }],
+				"employeeID": 1,
+				"roles": [{ "name": "Doctor", "roleID": 1 }],
 				"hours": 12
 			},
 			{
 				"name": "Sam Smith",
-				"employeeID": "employee2",
+				"employeeID": 2,
 				"roles": [
-					{ "name": "Nurse", "roleID": "nurse" },
-					{ "name": "Nurse Practitioner", "roleID": "nursepractitioner" }
+					{ "name": "Nurse", "roleID": 2 },
+					{ "name": "Nurse Practitioner", "roleID": 3 }
 				],
 				"hours": 15
 			},
 			{
 				"name": "Janet Mars",
-				"employeeID": "employee3",
-				"roles": [{ "name": "Nurse", "roleID": "nurse" }],
+				"employeeID": 3,
+				"roles": [{ "name": "Nurse", "roleID": 2 }],
 				"hours": 20
 			}
 		],
@@ -505,22 +500,22 @@
 			{
 				"name": "Doctor",
 				"color": "#27AF60",
-				"roleID": "doctor"
+				"roleID": 1
 			},
 			{
 				"name": "Nurse",
 				"color": "#3398DB",
-				"roleID": "nurse"
+				"roleID": 2
 			},
 			{
 				"name": "Nurse Practitioner",
 				"color": "#8E43AD",
-				"roleID": "nursepractitioner"
+				"roleID": 3
 			},
 			{
 				"name": "Full Time",
 				"color": "blue",
-				"roleID": "1FT",
+				"roleID": 4,
 				"requiredHours": {
 					"per": "week",
 					"amount": "40"
@@ -529,7 +524,7 @@
 			{
 				"name": "Part Time",
 				"color": "teal",
-				"roleID": "0.75FT",
+				"roleID": 5,
 				"requiredHours": {
 					"per": "week",
 					"amount": "30"
