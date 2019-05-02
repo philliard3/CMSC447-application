@@ -5,31 +5,67 @@ const { execFileSync } = require("child_process");
 
 /**
  * inputs: {schedule, employees}
- * schedule is an object in the form
+ * schedule is an object in the form provided as output by the Java process
+ * employees is an array of objects in the form stored in the Vuex store
  * **/
 async function generateICal({ schedule, employees }) {
+	// create events from schedule object
 	const events = schedule.assignments.map(assignment => {
 		// get the corresponding employee
 		const employee = employees.filter(
 			employee => employee.employeeID === assignment.employee
 		)[0];
 
-		const startTime = moment(assignment.startTime);
+		// Google will automatically center it on our timezone, so we need to assume a neutral timezone.
+		const offset = 0;
+		const startTime = moment(
+			assignment.shift.startTime,
+			"MM/DD/YYYY HH:mm"
+		).utcOffset(offset);
+
+		const endTime = moment(
+			assignment.shift.endTime,
+			"MM/DD/YYYY HH:mm"
+		).utcOffset(offset);
+
 		return {
 			// title of the form "John Doe @ICU"
 			title: `${employee.name} @${assignment.shift.location}`,
-			start: startTime.toArray().slice(0, 6),
+			start: [
+				startTime.year(),
+				startTime.month() + 1,
+				startTime.date(),
+				startTime.hour(),
+				startTime.minute()
+			],
+			end: [
+				endTime.year(),
+				endTime.month() + 1,
+				endTime.date(),
+				endTime.hour(),
+				endTime.minute()
+			],
 			// description of the form "John Doe (Doctor, Full Time) working Morning Shift, Weekdays at ICU"
 			description: `${employee.name} (${employee.roles
 				.map(role => role.name)
 				.join(", ")}) working ${assignment.shift.shiftTypes.join(", ")} at ${
 				assignment.shift.location
-			}`,
-			duration: {
-				minutes: startTime.diff(moment(assignment.endTime), "minutes")
-			},
-			categories: assignment.shift.shiftTypes,
-			attendees: [{ name: employee.name, email: employee.email }]
+			}${employee.email ? `\nemployee's email: ${employee.email}` : ""}`,
+			categories: assignment.shift.shiftTypes
+
+			/*
+            // Attendees currently don't show up on Google Calendar so this has been commented out so it won't cause any trouble
+			attendees: employee.email
+				? [
+						{
+							name: employee.name,
+							email: employee.email,
+							rsvp: true,
+							role: "REQ-PARTICIPANT"
+						}
+				  ]
+                : undefined
+            */
 		};
 	});
 
@@ -48,37 +84,26 @@ async function generateICal({ schedule, employees }) {
 }
 
 async function generateSchedule(data) {
+	// provide input data for the scheduling program
 	const fileToWrite = `input_constraints${new Date().getTime()}.json`;
-	// provide
 	writeFileSync(`${__dirname}/inputs/${fileToWrite}.json`, data);
-	const inputTime = moment(new Date());
+
+	// Run the scheduling program and wait for results
+	// It may be necessary to use a .bat batch file instead of directly running the .jar
+	// in the case of process.platform === "win32"
 	execFileSync(`create_schedule.jar`, [fileToWrite]);
+
+	// get all files in the schedules folder
 	const files = readdirSync(`${__dirname}/schedules/`);
-	let correctFile = files.filter(filename => {
-		if (moment(new Date(statSync(filename).mtime)).isAfter(inputTime)) {
-			return true;
-		}
-		return false;
+
+	// get the last file edited
+	let correctFile = files.sort((f1, f2) => {
+		return (
+			new Date(statSync(`${__dirname}/${f2}`).mtime).getTime() -
+			new Date(statSync(`${__dirname}/${f1}`).mtime).getTime()
+		);
 	})[0];
-
-	/*
-    execFile(`create_schedule.jar`, [fileToWrite]);
-	// loop through until a new calendar has been created
-	let correctFile = null;
-	let cont = true;
-	while (cont) {
-		// get the list of files
-		const files = readdirSync(`${__dirname}/schedules/`);
-		cont = files.some(filename => {
-			if (moment(new Date(statSync(filename).mtime)).isAfter(inputTime)) {
-				correctFile = filename;
-				return true;
-			}
-			return false;
-		});
-    }
-    */
-
+	// return evaluated JSON
 	return require(`${__dirname}/schedules/${correctFile}`);
 }
 
