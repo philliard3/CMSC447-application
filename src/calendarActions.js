@@ -1,4 +1,4 @@
-import { writeFileSync, readdirSync, statSync } from "fs";
+const { writeFileSync, readdirSync, statSync } = require("fs");
 const moment = require("moment");
 const ics = require("ics");
 const { execFileSync } = require("child_process");
@@ -17,28 +17,31 @@ async function generateICal({ schedule, employees }) {
 		const startTime = moment(assignment.startTime);
 		return {
 			// title of the form "John Doe @ICU"
-			title: `${employee.name} @${assignment.location}`,
-			start: [startTime.toArray()],
+			title: `${employee.name} @${assignment.shift.location}`,
+			start: startTime.toArray().slice(0, 6),
 			// description of the form "John Doe (Doctor, Full Time) working Morning Shift, Weekdays at ICU"
 			description: `${employee.name} (${employee.roles
 				.map(role => role.name)
-				.join(", ")}) working ${assignment.shiftTypes.join(", ")} at ${
-				assignment.location
+				.join(", ")}) working ${assignment.shift.shiftTypes.join(", ")} at ${
+				assignment.shift.location
 			}`,
 			duration: {
 				minutes: startTime.diff(moment(assignment.endTime), "minutes")
 			},
-			categories: assignment.shiftTypes,
-			attendees: { name: employee.name, email: employee.email }
+			categories: assignment.shift.shiftTypes,
+			attendees: [{ name: employee.name, email: employee.email }]
 		};
 	});
 
 	try {
+		const { err, value } = await ics.createEvents(events);
+		if (err) {
+			throw err;
+		}
 		// write it to the ics file
-		writeFileSync(
-			`${__dirname}/calendar${new Date().getTime()}.ics`,
-			await ics.createEvents(events)
-		);
+		const filename = `${__dirname}/calendar${new Date().getTime()}.ics`;
+		writeFileSync(filename, value);
+		return filename;
 	} catch (err) {
 		console.error(err);
 	}
@@ -79,4 +82,4 @@ async function generateSchedule(data) {
 	return require(`${__dirname}/schedules/${correctFile}`);
 }
 
-export default { generateICal, generateSchedule };
+module.exports = { generateICal, generateSchedule };
