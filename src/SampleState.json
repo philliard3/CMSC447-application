@@ -478,7 +478,146 @@
 				"name": "John Doe",
 				"employeeID": 1,
 				"roles": [{ "name": "Doctor", "roleID": 1 }],
-				"hours": 12
+				"email": "johndoe@example.com",
+				"hours": 12,
+				"preferredDays": [
+					{
+						"name": "Christmas Day",
+						"dayID": 1,
+						"date": "12/25/2019",
+						"isPositivePreference": false
+					},
+					{
+						"name": "4th of July",
+						"dayID": 2,
+						"date": "07/04/2019",
+						"isPositivePreference": null
+					},
+					{
+						"name": "John is filling in for Sam",
+						"dayID": 3,
+						"date": "07/05/2019",
+						"isPositivePreference": null
+					}
+				],
+				"shifts": [
+					{
+						"selected": ["Monday", "Wednesday"],
+						"name": "Morning Weekday",
+						"startDays": [
+							"Monday",
+							"Tuesday",
+							"Wednesday",
+							"Thursday",
+							"Friday"
+						],
+						"startTime": "07:00",
+						"location": "Nursery",
+						"duration": 480
+					},
+					{
+						"selected": [],
+						"name": "Afternoon Weekday",
+						"startDays": [
+							"Monday",
+							"Tuesday",
+							"Wednesday",
+							"Thursday",
+							"Friday"
+						],
+						"startTime": "15:00",
+						"location": "Nursery",
+						"duration": 480
+					},
+					{
+						"selected": [],
+						"name": "Night Weekday",
+						"startDays": [
+							"Monday",
+							"Tuesday",
+							"Wednesday",
+							"Thursday",
+							"Friday"
+						],
+						"startTime": "23:00",
+						"location": "Nursery",
+						"duration": 480
+					},
+					{
+						"selected": [],
+						"name": "Day Weekend",
+						"startDays": ["Saturday", "Sunday"],
+						"startTime": "07:00",
+						"location": "Nursery",
+						"duration": 720
+					},
+					{
+						"selected": [],
+						"name": "Night Weekend",
+						"startDays": ["Saturday", "Sunday"],
+						"startTime": "19:00",
+						"location": "Nursery",
+						"duration": 720
+					},
+					{
+						"selected": [],
+						"name": "Morning Weekday",
+						"startDays": [
+							"Monday",
+							"Tuesday",
+							"Wednesday",
+							"Thursday",
+							"Friday"
+						],
+						"startTime": "07:00",
+						"location": "ICU",
+						"duration": 480
+					},
+					{
+						"selected": [],
+						"name": "Afternoon Weekday",
+						"startDays": [
+							"Monday",
+							"Tuesday",
+							"Wednesday",
+							"Thursday",
+							"Friday"
+						],
+						"startTime": "15:00",
+						"location": "ICU",
+						"duration": 480
+					},
+					{
+						"selected": [],
+						"name": "Night Weekday",
+						"startDays": [
+							"Monday",
+							"Tuesday",
+							"Wednesday",
+							"Thursday",
+							"Friday"
+						],
+						"startTime": "23:00",
+						"location": "ICU",
+						"duration": 480
+					},
+					{
+						"selected": [],
+						"name": "Day Weekend",
+						"startDays": ["Saturday", "Sunday"],
+						"startTime": "07:00",
+						"location": "ICU",
+						"duration": 720
+					},
+					{
+						"selected": [],
+						"name": "Night Weekend",
+						"startDays": ["Saturday", "Sunday"],
+						"startTime": "19:00",
+						"location": "ICU",
+						"duration": 720
+					}
+				]
 			},
 			{
 				"name": "Sam Smith",
