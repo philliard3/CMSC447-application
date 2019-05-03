@@ -2,7 +2,32 @@
 	<v-form v-model="valid">
 		<v-container class="display-2 font-weight-light">
 			{{ employeeData.name }}
-			<v-text-field v-model="employeeData.name" name="Name"></v-text-field>
+			<v-container>
+				<v-card>
+					<v-card-text></v-card-text>
+					<v-layout xs12>
+						<v-flex xs5>
+							<v-container>
+								<v-text-field
+									v-model="employeeData.name"
+									label="Name"
+									name="Name"
+								></v-text-field>
+							</v-container>
+						</v-flex>
+						<v-flex xs1></v-flex>
+						<v-flex xs5>
+							<v-container>
+								<v-text-field
+									v-model="employeeData.email"
+									label="Email"
+									name="Email"
+								></v-text-field>
+							</v-container>
+						</v-flex>
+					</v-layout>
+				</v-card>
+			</v-container>
 
 			<RoleTable :roleIDs="roleIDs" @input="roleIDs = $event" />
 
@@ -22,6 +47,19 @@ import WorkPreferenceTable from "./WorkPreferenceTable";
 
 const holidays = [{ name: "Christmas", selected: false, preferred: false }];
 
+holidays.forEach(day => {
+	day.dayID = Number(
+		day.name
+			.split("")
+			.splice(0, 5)
+			.reduce((total, chr) => {
+				total.push(chr.charCodeAt(0));
+				return total;
+			}, [])
+			.join("") + String(new Date().getTime() % 1000000)
+	);
+});
+
 export default {
 	name: "EditEmployee",
 	components: {
@@ -31,17 +69,17 @@ export default {
 	},
 	data() {
 		const employee = this.$store.getters.employees.filter(
-			e => e.employeeID === this.$route.params.employeeID
+			e => e.employeeID === Number(this.$route.params.employeeID)
 		)[0];
 		return {
 			valid: false,
 			employeeData: { ...employee },
 			roleIDs: employee.roles.map(role => role.roleID),
 			shifts:
-				employee.preferredShifts ||
+				employee.shifts ||
 				this.$store.getters.currentScheduleBlock.shifts.map(shift => {
-					const selected = employee.preferredShifts
-						? employee.preferredShifts.filter(s => s.name === shift.name)
+					const selected = employee.shifts
+						? employee.shifts.filter(s => s.name === shift.name)
 						: null;
 					return {
 						selected: selected && selected.length > 0 ? selected[0] : [],
