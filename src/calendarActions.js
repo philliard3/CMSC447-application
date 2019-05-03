@@ -114,7 +114,10 @@ function createSchedulingShifts(shiftData, startDate, endDate) {
 			const startTime = day.hours(Number(hours)).minutes(Number(minutes));
 			shiftData.roles.forEach(roleRestriction => {
 				const shiftObj = {
-					shiftTypes: shiftData.name,
+					shiftTypes: [
+						shiftData.name
+						// other tags would go in this array
+					],
 					permittedRoles: roleRestriction.permittedRoles,
 					location: shiftData.location,
 					startTime: startTime.format("MM/DD/YYYY HH:mm"),
@@ -318,4 +321,11 @@ async function generateSchedule(
 	return require(`${__dirname}/schedules/${correctFile}`);
 }
 
-module.exports = { generateICal, generateSchedule };
+module.exports = {
+	generateICal,
+	generateSchedule,
+	createSchedulingRole,
+	createSchedulingShifts,
+	createSchedulingEmployee,
+	createSchedulingGlobalConstraint
+};
