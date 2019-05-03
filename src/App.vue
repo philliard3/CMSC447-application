@@ -5,7 +5,12 @@
 				<v-toolbar-items>
 					<v-menu offset-y>
 						<template v-slot:activator="{ on }">
-							<v-icon v-on="on">menu</v-icon>
+							<v-btn v-on="on" flat>
+								<v-icon>menu</v-icon>
+								<v-list-tile-title v-if="$mq === 'md' || $mq === 'sm'"
+									>Menu</v-list-tile-title
+								>
+							</v-btn>
 						</template>
 						<v-list>
 							<v-list-tile @click="lastPage">
@@ -28,9 +33,15 @@
 					<v-btn v-if="electron" @click="lastPage" flat>
 						<v-icon size="18px">arrow_back_ios</v-icon>
 					</v-btn>
+				</v-toolbar-items>
+				<v-toolbar-items v-if="$mq === 'md' || $mq === 'lg'">
 					<v-btn v-for="link in navLinks" :key="link.url" :to="link.url" flat>
 						<v-icon dark>{{ link.icon }}</v-icon>
-						{{ link.text }}
+						<!-- adjust the size of the navigation bar text when smaller than fullscreen -->
+						<v-list-tile-title
+							:class="$mq === 'md' ? 'text-uppercase .subheading' : ''"
+							>{{ link.text }}</v-list-tile-title
+						>
 					</v-btn>
 				</v-toolbar-items>
 			</v-toolbar>
