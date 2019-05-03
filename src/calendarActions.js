@@ -83,10 +83,99 @@ async function generateICal({ schedule, employees }) {
 	}
 }
 
-async function generateSchedule(data) {
+function createSchedulingShifts(shift, startDate, endDate) {
+	let current = moment(startDate);
+	const end = moment(endDate);
+	const days = [];
+
+	while (current.isBefore(end)) {
+		days.push(current);
+		current = moment(current.toDate()).add(1, "days");
+	}
+
+	const daysOfWeek = [
+		"Sunday",
+		"Monday",
+		"Tuesday",
+		"Wednesday",
+		"Thursday",
+		"Friday",
+		"Saturday"
+	];
+
+	const shifts = days
+		.filter(day => shift.startDays.includes(daysOfWeek[day.day()]))
+		.map(day => {
+			const [hours, minutes] = shift.startTime.split(":");
+			const startTime = day.hours(Number(hours)).minutes(Number(minutes));
+			return {
+				shiftTypes: shift.name,
+				location: shift.location,
+				startTime: startTime.format("MM/DD/YYYY HH:mm"),
+				endTime: startTime
+					.add(shift.duration, "minutes")
+					.format("MM/DD/YYYY HH:mm")
+			};
+		});
+
+	return shifts;
+}
+
+function createSchedulingEmployee(employeeData) {
+	return employeeData;
+}
+
+function createSchedulingRole(constraintData) {
+	return constraintData;
+}
+
+function createSchedulingGlobalConstraint(constraintData) {
+	return constraintData;
+}
+
+async function generateSchedule(
+	state,
+	{ forCurrentFiscalYear, forCurrentScheduleBlock }
+) {
+	let periodOfInterest;
+	if (forCurrentFiscalYear) {
+		periodOfInterest = state.data.fiscalYears.map(
+			fy => state.data.currentFiscalYear === fy.fyID
+		);
+	} else if (forCurrentScheduleBlock) {
+		periodOfInterest = state.data.scheduleBlocks.map(
+			sb => state.data.currentScheduleBlock.sbID === sb.sbID
+		);
+	} else {
+		throw new Error(
+			"forCurrentFiscalYear or forCurrentScheduleBlock are required arguments"
+		);
+	}
+
+	const shifts = state.data.shifts.reduce((total, shift) => {
+		const newShifts = createSchedulingShifts(
+			shift,
+			periodOfInterest.startTime,
+			periodOfInterest.endTime
+		);
+		return total.concat(newShifts);
+	}, []);
+	const employees = state.data.employees.map(employee =>
+		createSchedulingEmployee(employee)
+	);
+	const roles = state.data.role.map(role => createSchedulingRole(role));
+	const scheduleConstraints = state.data.scheduleConstraints.map(constraint =>
+		createSchedulingGlobalConstraint(constraint)
+	);
+
 	// provide input data for the scheduling program
 	const fileToWrite = `input_constraints${new Date().getTime()}.json`;
-	writeFileSync(`${__dirname}/inputs/${fileToWrite}.json`, data);
+	writeFileSync(`${__dirname}/inputs/${fileToWrite}.json`, {
+		shifts,
+		roles,
+		employees,
+		scheduleConstraints
+	});
 
 	// Run the scheduling program and wait for results
 	// It may be necessary to use a .bat batch file instead of directly running the .jar
