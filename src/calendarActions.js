@@ -83,7 +83,10 @@ async function generateICal({ schedule, employees }) {
 	}
 }
 
-function createSchedulingShifts(shift, startDate, endDate) {
+/**
+ * Transforms state data for general shift structure into individual shifts for Optaplanner input
+ **/
+function createSchedulingShifts(shiftData, startDate, endDate) {
 	let current = moment(startDate);
 	const end = moment(endDate);
 	const days = [];
@@ -103,32 +106,147 @@ function createSchedulingShifts(shift, startDate, endDate) {
 		"Saturday"
 	];
 
-	const shifts = days
-		.filter(day => shift.startDays.includes(daysOfWeek[day.day()]))
-		.map(day => {
-			const [hours, minutes] = shift.startTime.split(":");
+	const shifts = [];
+	days
+		.filter(day => shiftData.startDays.includes(daysOfWeek[day.day()]))
+		.forEach(day => {
+			const [hours, minutes] = shiftData.startTime.split(":");
 			const startTime = day.hours(Number(hours)).minutes(Number(minutes));
-			return {
-				shiftTypes: shift.name,
-				location: shift.location,
-				startTime: startTime.format("MM/DD/YYYY HH:mm"),
-				endTime: startTime
-					.add(shift.duration, "minutes")
-					.format("MM/DD/YYYY HH:mm")
-			};
+			shiftData.roles.forEach(roleRestriction => {
+				const shiftObj = {
+					shiftTypes: shiftData.name,
+					permittedRoles: roleRestriction.permittedRoles,
+					location: shiftData.location,
+					startTime: startTime.format("MM/DD/YYYY HH:mm"),
+					endTime: startTime
+						.add(shiftData.duration, "minutes")
+						.format("MM/DD/YYYY HH:mm")
+				};
+				for (let i = 0; i < roleRestriction.amount; i++) {
+					shifts.push({ ...shiftObj });
+				}
+			});
 		});
 
 	return shifts;
 }
 
+/**
+ * Transforms state data for employees into Optaplanner input for employees
+ **/
 function createSchedulingEmployee(employeeData) {
-	return employeeData;
+	const id = employeeData.employeeID;
+
+	const roles = employeeData.roles.map(role => role.roleID);
+
+	const constraints = [];
+
+	employeeData.shifts.forEach(shift => {
+		shift.startDays.forEach(day => {
+			constraints.push({
+				day,
+				// positive if it's checked, negative if not
+				// we can work on a neutral option at a later point in time
+				isPositivePreference: shift.selected.includes(day),
+				startTime: shift.startTime,
+				endTime: moment(shift.startTime, "HH:mm")
+					.add(shift.duration, "minutes")
+					.format("HH:mm"),
+				location: shift.location
+			});
+		});
+	});
+
+	employeeData.preferredDays.forEach(day => {
+		// don't include neutral dates
+		if (
+			day.isPositivePreference !== undefined &&
+			day.isPositivePreference !== null
+		) {
+			constraints.push({
+				id: day.dayID,
+				isHard: false,
+				isSchedule: false,
+				type: "DatePreference",
+				parameters: {
+					isPositivePreference: day.isPositivePreference,
+					priority: day.priority,
+					startDate: day.date,
+					endDate: day.date,
+					location: day.location // location is probably undefined
+				}
+			});
+		}
+	});
+
+	return { id, constraints, roles };
 }
 
-function createSchedulingRole(constraintData) {
-	return constraintData;
+/**
+ * Transforms state data for roles into Optaplanner input for roles
+ **/
+function createSchedulingRole(roleData) {
+	const constraints = [];
+
+	roleData.requirements.forEach(requirement => {
+		switch (requirement.type) {
+			case "hours worked":
+				constraints.push({
+					id: requirement.requirementID,
+					type: "HoursRequired",
+					parameters: {
+						amount: requirement.amount,
+						per: requirement.per
+					}
+				});
+				break;
+
+			case "attending weeks":
+				constraints.push({
+					id: requirement.requirementID,
+					type: "AttendWeeksRequired",
+					parameters: {
+						amount: requirement.amount,
+						per: requirement.per
+					}
+				});
+				break;
+
+			case "nursing weeks":
+				constraints.push({
+					id: requirement.requirementID,
+					type: "NursingWeeksRequired",
+					parameters: {
+						amount: requirement.amount,
+						per: requirement.per
+					}
+				});
+				break;
+		}
+	});
+
+	roleData.shifts.forEach(shift => {
+		shift.startDays.forEach(day => {
+			constraints.push({
+				day,
+				// positive if it's checked, negative if not
+				// we can work on a neutral option at a later point in time
+				isPositivePreference: shift.selected.includes(day),
+				startTime: shift.startTime,
+				endTime: moment(shift.startTime, "HH:mm")
+					.add(shift.duration, "minutes")
+					.format("HH:mm"),
+				location: shift.location
+			});
+		});
+	});
+
+	return { id: roleData.roleID, constraints };
 }
 
+/**
+ * Transforms state data for roles into Optaplanner input for roles
+ **/
 function createSchedulingGlobalConstraint(constraintData) {
 	return constraintData;
 }
@@ -160,10 +278,14 @@ async function generateSchedule(
 		);
 		return total.concat(newShifts);
 	}, []);
+
 	const employees = state.data.employees.map(employee =>
 		createSchedulingEmployee(employee)
 	);
+
 	const roles = state.data.role.map(role => createSchedulingRole(role));
+
+	// there is currently no scheduleConstraints property for UI state
 	const scheduleConstraints = state.data.scheduleConstraints.map(constraint =>
 		createSchedulingGlobalConstraint(constraint)
 	);

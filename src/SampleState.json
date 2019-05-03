@@ -22,7 +22,13 @@
 						],
 						"startTime": "07:00",
 						"location": "Nursery",
-						"duration": 480
+						"duration": 480,
+						"roles": [
+							{
+								"permittedRoles": [1, 2, 3, 4, 5],
+								"amount": 1
+							}
+						]
 					},
 					{
 						"name": "Afternoon Weekday",
@@ -35,7 +41,13 @@
 						],
 						"startTime": "15:00",
 						"location": "Nursery",
-						"duration": 480
+						"duration": 480,
+						"roles": [
+							{
+								"permittedRoles": [1, 2, 3, 4, 5],
+								"amount": 1
+							}
+						]
 					},
 					{
 						"name": "Night Weekday",
@@ -48,21 +60,39 @@
 						],
 						"startTime": "23:00",
 						"location": "Nursery",
-						"duration": 480
+						"duration": 480,
+						"roles": [
+							{
+								"permittedRoles": [1, 2, 3, 4, 5],
+								"amount": 1
+							}
+						]
 					},
 					{
 						"name": "Day Weekend",
 						"startDays": ["Saturday", "Sunday"],
 						"startTime": "07:00",
 						"location": "Nursery",
-						"duration": 720
+						"duration": 720,
+						"roles": [
+							{
+								"permittedRoles": [1, 2, 3, 4, 5],
+								"amount": 1
+							}
+						]
 					},
 					{
 						"name": "Night Weekend",
 						"startDays": ["Saturday", "Sunday"],
 						"startTime": "19:00",
 						"location": "Nursery",
-						"duration": 720
+						"duration": 720,
+						"roles": [
+							{
+								"permittedRoles": [1, 2, 3, 4, 5],
+								"amount": 1
+							}
+						]
 					},
 					{
 						"name": "Morning Weekday",
@@ -75,7 +105,13 @@
 						],
 						"startTime": "07:00",
 						"location": "ICU",
-						"duration": 480
+						"duration": 480,
+						"roles": [
+							{
+								"permittedRoles": [1, 2, 3, 4, 5],
+								"amount": 1
+							}
+						]
 					},
 					{
 						"name": "Afternoon Weekday",
@@ -88,7 +124,13 @@
 						],
 						"startTime": "15:00",
 						"location": "ICU",
-						"duration": 480
+						"duration": 480,
+						"roles": [
+							{
+								"permittedRoles": [1, 2, 3, 4, 5],
+								"amount": 1
+							}
+						]
 					},
 					{
 						"name": "Night Weekday",
@@ -101,21 +143,39 @@
 						],
 						"startTime": "23:00",
 						"location": "ICU",
-						"duration": 480
+						"duration": 480,
+						"roles": [
+							{
+								"permittedRoles": [1, 2, 3, 4, 5],
+								"amount": 1
+							}
+						]
 					},
 					{
 						"name": "Day Weekend",
 						"startDays": ["Saturday", "Sunday"],
 						"startTime": "07:00",
 						"location": "ICU",
-						"duration": 720
+						"duration": 720,
+						"roles": [
+							{
+								"permittedRoles": [1, 2, 3, 4, 5],
+								"amount": 1
+							}
+						]
 					},
 					{
 						"name": "Night Weekend",
 						"startDays": ["Saturday", "Sunday"],
 						"startTime": "19:00",
 						"location": "ICU",
-						"duration": 720
+						"duration": 720,
+						"roles": [
+							{
+								"permittedRoles": [1, 2, 3, 4, 5],
+								"amount": 1
+							}
+						]
 					}
 				]
 			},
@@ -136,7 +196,13 @@
 						],
 						"startTime": "07:00",
 						"location": "Nursery",
-						"duration": 480
+						"duration": 480,
+						"roles": [
+							{
+								"permittedRoles": [1, 2, 3, 4, 5],
+								"amount": 1
+							}
+						]
 					},
 					{
 						"name": "Afternoon Weekday",
@@ -149,7 +215,13 @@
 						],
 						"startTime": "15:00",
 						"location": "Nursery",
-						"duration": 480
+						"duration": 480,
+						"roles": [
+							{
+								"permittedRoles": [1, 2, 3, 4, 5],
+								"amount": 1
+							}
+						]
 					},
 					{
 						"name": "Night Weekday",
@@ -162,21 +234,39 @@
 						],
 						"startTime": "23:00",
 						"location": "Nursery",
-						"duration": 480
+						"duration": 480,
+						"roles": [
+							{
+								"permittedRoles": [1, 2, 3, 4, 5],
+								"amount": 1
+							}
+						]
 					},
 					{
 						"name": "Day Weekend",
 						"startDays": ["Saturday", "Sunday"],
 						"startTime": "07:00",
 						"location": "Nursery",
-						"duration": 720
+						"duration": 720,
+						"roles": [
+							{
+								"permittedRoles": [1, 2, 3, 4, 5],
+								"amount": 1
+							}
+						]
 					},
 					{
 						"name": "Night Weekend",
 						"startDays": ["Saturday", "Sunday"],
 						"startTime": "19:00",
 						"location": "Nursery",
-						"duration": 720
+						"duration": 720,
+						"roles": [
+							{
+								"permittedRoles": [1, 2, 3, 4, 5],
+								"amount": 1
+							}
+						]
 					},
 					{
 						"name": "Morning Weekday",
@@ -189,7 +279,13 @@
 						],
 						"startTime": "07:00",
 						"location": "ICU",
-						"duration": 480
+						"duration": 480,
+						"roles": [
+							{
+								"permittedRoles": [1, 2, 3, 4, 5],
+								"amount": 1
+							}
+						]
 					},
 					{
 						"name": "Afternoon Weekday",
@@ -202,7 +298,13 @@
 						],
 						"startTime": "15:00",
 						"location": "ICU",
-						"duration": 480
+						"duration": 480,
+						"roles": [
+							{
+								"permittedRoles": [1, 2, 3, 4, 5],
+								"amount": 1
+							}
+						]
 					},
 					{
 						"name": "Night Weekday",
@@ -215,21 +317,39 @@
 						],
 						"startTime": "23:00",
 						"location": "ICU",
-						"duration": 480
+						"duration": 480,
+						"roles": [
+							{
+								"permittedRoles": [1, 2, 3, 4, 5],
+								"amount": 1
+							}
+						]
 					},
 					{
 						"name": "Day Weekend",
 						"startDays": ["Saturday", "Sunday"],
 						"startTime": "07:00",
 						"location": "ICU",
-						"duration": 720
+						"duration": 720,
+						"roles": [
+							{
+								"permittedRoles": [1, 2, 3, 4, 5],
+								"amount": 1
+							}
+						]
 					},
 					{
 						"name": "Night Weekend",
 						"startDays": ["Saturday", "Sunday"],
 						"startTime": "19:00",
 						"location": "ICU",
-						"duration": 720
+						"duration": 720,
+						"roles": [
+							{
+								"permittedRoles": [1, 2, 3, 4, 5],
+								"amount": 1
+							}
+						]
 					}
 				]
 			},
@@ -250,7 +370,13 @@
 						],
 						"startTime": "07:00",
 						"location": "Nursery",
-						"duration": 480
+						"duration": 480,
+						"roles": [
+							{
+								"permittedRoles": [1, 2, 3, 4, 5],
+								"amount": 1
+							}
+						]
 					},
 					{
 						"name": "Afternoon Weekday",
@@ -263,7 +389,13 @@
 						],
 						"startTime": "15:00",
 						"location": "Nursery",
-						"duration": 480
+						"duration": 480,
+						"roles": [
+							{
+								"permittedRoles": [1, 2, 3, 4, 5],
+								"amount": 1
+							}
+						]
 					},
 					{
 						"name": "Night Weekday",
@@ -276,21 +408,39 @@
 						],
 						"startTime": "23:00",
 						"location": "Nursery",
-						"duration": 480
+						"duration": 480,
+						"roles": [
+							{
+								"permittedRoles": [1, 2, 3, 4, 5],
+								"amount": 1
+							}
+						]
 					},
 					{
 						"name": "Day Weekend",
 						"startDays": ["Saturday", "Sunday"],
 						"startTime": "07:00",
 						"location": "Nursery",
-						"duration": 720
+						"duration": 720,
+						"roles": [
+							{
+								"permittedRoles": [1, 2, 3, 4, 5],
+								"amount": 1
+							}
+						]
 					},
 					{
 						"name": "Night Weekend",
 						"startDays": ["Saturday", "Sunday"],
 						"startTime": "19:00",
 						"location": "Nursery",
-						"duration": 720
+						"duration": 720,
+						"roles": [
+							{
+								"permittedRoles": [1, 2, 3, 4, 5],
+								"amount": 1
+							}
+						]
 					},
 					{
 						"name": "Morning Weekday",
@@ -303,7 +453,13 @@
 						],
 						"startTime": "07:00",
 						"location": "ICU",
-						"duration": 480
+						"duration": 480,
+						"roles": [
+							{
+								"permittedRoles": [1, 2, 3, 4, 5],
+								"amount": 1
+							}
+						]
 					},
 					{
 						"name": "Afternoon Weekday",
@@ -316,7 +472,13 @@
 						],
 						"startTime": "15:00",
 						"location": "ICU",
-						"duration": 480
+						"duration": 480,
+						"roles": [
+							{
+								"permittedRoles": [1, 2, 3, 4, 5],
+								"amount": 1
+							}
+						]
 					},
 					{
 						"name": "Night Weekday",
@@ -329,21 +491,39 @@
 						],
 						"startTime": "23:00",
 						"location": "ICU",
-						"duration": 480
+						"duration": 480,
+						"roles": [
+							{
+								"permittedRoles": [1, 2, 3, 4, 5],
+								"amount": 1
+							}
+						]
 					},
 					{
 						"name": "Day Weekend",
 						"startDays": ["Saturday", "Sunday"],
 						"startTime": "07:00",
 						"location": "ICU",
-						"duration": 720
+						"duration": 720,
+						"roles": [
+							{
+								"permittedRoles": [1, 2, 3, 4, 5],
+								"amount": 1
+							}
+						]
 					},
 					{
 						"name": "Night Weekend",
 						"startDays": ["Saturday", "Sunday"],
 						"startTime": "19:00",
 						"location": "ICU",
-						"duration": 720
+						"duration": 720,
+						"roles": [
+							{
+								"permittedRoles": [1, 2, 3, 4, 5],
+								"amount": 1
+							}
+						]
 					}
 				]
 			},
@@ -364,7 +544,13 @@
 						],
 						"startTime": "07:00",
 						"location": "Nursery",
-						"duration": 480
+						"duration": 480,
+						"roles": [
+							{
+								"permittedRoles": [1, 2, 3, 4, 5],
+								"amount": 1
+							}
+						]
 					},
 					{
 						"name": "Afternoon Weekday",
@@ -377,7 +563,13 @@
 						],
 						"startTime": "15:00",
 						"location": "Nursery",
-						"duration": 480
+						"duration": 480,
+						"roles": [
+							{
+								"permittedRoles": [1, 2, 3, 4, 5],
+								"amount": 1
+							}
+						]
 					},
 					{
 						"name": "Night Weekday",
@@ -390,21 +582,39 @@
 						],
 						"startTime": "23:00",
 						"location": "Nursery",
-						"duration": 480
+						"duration": 480,
+						"roles": [
+							{
+								"permittedRoles": [1, 2, 3, 4, 5],
+								"amount": 1
+							}
+						]
 					},
 					{
 						"name": "Day Weekend",
 						"startDays": ["Saturday", "Sunday"],
 						"startTime": "07:00",
 						"location": "Nursery",
-						"duration": 720
+						"duration": 720,
+						"roles": [
+							{
+								"permittedRoles": [1, 2, 3, 4, 5],
+								"amount": 1
+							}
+						]
 					},
 					{
 						"name": "Night Weekend",
 						"startDays": ["Saturday", "Sunday"],
 						"startTime": "19:00",
 						"location": "Nursery",
-						"duration": 720
+						"duration": 720,
+						"roles": [
+							{
+								"permittedRoles": [1, 2, 3, 4, 5],
+								"amount": 1
+							}
+						]
 					},
 					{
 						"name": "Morning Weekday",
@@ -417,7 +627,13 @@
 						],
 						"startTime": "07:00",
 						"location": "ICU",
-						"duration": 480
+						"duration": 480,
+						"roles": [
+							{
+								"permittedRoles": [1, 2, 3, 4, 5],
+								"amount": 1
+							}
+						]
 					},
 					{
 						"name": "Afternoon Weekday",
@@ -430,7 +646,13 @@
 						],
 						"startTime": "15:00",
 						"location": "ICU",
-						"duration": 480
+						"duration": 480,
+						"roles": [
+							{
+								"permittedRoles": [1, 2, 3, 4, 5],
+								"amount": 1
+							}
+						]
 					},
 					{
 						"name": "Night Weekday",
@@ -443,21 +665,39 @@
 						],
 						"startTime": "23:00",
 						"location": "ICU",
-						"duration": 480
+						"duration": 480,
+						"roles": [
+							{
+								"permittedRoles": [1, 2, 3, 4, 5],
+								"amount": 1
+							}
+						]
 					},
 					{
 						"name": "Day Weekend",
 						"startDays": ["Saturday", "Sunday"],
 						"startTime": "07:00",
 						"location": "ICU",
-						"duration": 720
+						"duration": 720,
+						"roles": [
+							{
+								"permittedRoles": [1, 2, 3, 4, 5],
+								"amount": 1
+							}
+						]
 					},
 					{
 						"name": "Night Weekend",
 						"startDays": ["Saturday", "Sunday"],
 						"startTime": "19:00",
 						"location": "ICU",
-						"duration": 720
+						"duration": 720,
+						"roles": [
+							{
+								"permittedRoles": [1, 2, 3, 4, 5],
+								"amount": 1
+							}
+						]
 					}
 				]
 			}
