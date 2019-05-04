@@ -1,50 +1,11 @@
 import Vue from "vue";
 import Vuex from "vuex";
-import moment from "moment";
 
 Vue.use(Vuex);
 
 // set this as an environment variable in later iterations
 const IS_TEST = true;
 const initial = "sample" || "empty";
-
-const createShifts = (shift, startDate, endDate) => {
-	let current = moment(startDate);
-	const end = moment(endDate);
-	const days = [];
-
-	while (current.isBefore(end)) {
-		days.push(current);
-		current = moment(current.toDate()).add(1, "days");
-	}
-
-	const daysOfWeek = [
-		"Sunday",
-		"Monday",
-		"Tuesday",
-		"Wednesday",
-		"Thursday",
-		"Friday",
-		"Saturday"
-	];
-
-	const shifts = days
-		.filter(day => shift.startDays.includes(daysOfWeek[day.day()]))
-		.map(day => {
-			const [hours, minutes] = shift.startTime.split(":");
-			const startTime = day.hours(Number(hours)).minutes(Number(minutes));
-			return {
-				shiftTypes: shift.name,
-				location: shift.location,
-				startTime: startTime.format("mm/dd/yy hh:mm"),
-				endTime: startTime
-					.add(shift.duration, "minutes")
-					.format("mm/dd/yy hh:mm")
-			};
-		});
-
-	return shifts;
-};
 
 export default new Vuex.Store({
 	/**
@@ -89,7 +50,10 @@ export default new Vuex.Store({
 					currentFiscalYear: initial,
 					employees: [],
 					roles: []
-				}
+				},
+				generatedSchedule: IS_TEST
+					? require("./SamplePlanningOutput.json")
+					: undefined
 		  },
 
 	mutations: {
@@ -225,19 +189,42 @@ export default new Vuex.Store({
 
 		/** **/
 		createSchedule(state, schedule) {
-			state.schedule = schedule;
+			state.generatedSchedule = schedule;
 		}
 	},
 
 	actions: {
 		async generateSchedule(state) {
-			this.commit("createSchedule", {
-				shifts: state.shifts.map(shift => createShifts(shift, 0, 0))
-			});
+			const isElectron = !(process.title === "browser");
+			if (isElectron) {
+				// There are two feasible locations that the executables could be stored, both of which can be reached programmatically
+				// location 1
+				const distDirectory = process.execPath.split(/[\\/]electron\.exe/)[0];
+				// location 2
+				// const distDirectory = require("electron").remote.app.getAppPath()
+
+				// establish connection between background (Electron) and render (Vue) processes
+				const remote = require("electron").remote;
+
+				const fs = remote.require("fs");
+				const cp = remote.require("child_process");
+				const schedule = await require("./calendarActions.js").generateSchedule(
+					state,
+					{ forCurrentFiscalYear: true, forCurrentScheduleBlock: false },
+					distDirectory,
+					fs,
+					cp
+				);
+				this.commit("createSchedule", schedule);
+			}
 		}
 	},
 
 	getters: {
+		fullState(state) {
+			return { ...state };
+		},
+
 		currentFiscalYear(state) {
 			const fyID = state.data.currentFiscalYear;
 			if (state.data.fiscalYears[0].fyID === "empty") {
@@ -315,6 +302,16 @@ export default new Vuex.Store({
 
 		roles(state) {
 			return state.data.roles.map(role => ({ ...role }));
+		},
+
+		generatedSchedule(state) {
+			if (IS_TEST) {
+				return require("./SamplePlanningOutput.json");
+			}
+
+			if (state.generatedSchedule) {
+				return state.generatedSchedule;
+			}
 		}
 	}
 });
