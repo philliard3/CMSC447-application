@@ -62,7 +62,7 @@ export default {
 	name: "App",
 	data() {
 		return {
-			electron: Boolean(process.env.browser),
+			electron: !(process.title === "browser"),
 			navLinks: [
 				{
 					url: "/",
