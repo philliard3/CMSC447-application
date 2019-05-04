@@ -50,6 +50,12 @@
 					</v-layout>
 				</v-card-text>
 			</v-card>
+			<v-card v-if="electron">
+				<v-card-text>
+					<v-btn @click="saveAsICal">Export Calendar</v-btn>
+					<v-btn @click="generateSchedule">Generate Schedule</v-btn>
+				</v-card-text>
+			</v-card>
 		</v-container>
 	</v-form>
 </template>
@@ -60,6 +66,7 @@ import moment from "moment";
 export default {
 	name: "CalendarView",
 	data: () => ({
+		electron: !(process.title === "browser"),
 		today: "2019-01-08",
 		events: [
 			{
@@ -129,6 +136,37 @@ export default {
 	methods: {
 		open(event) {
 			alert(event.assignee || "No one assigned yet.");
+		},
+
+		async saveAsICal() {
+			if (this.electron) {
+				// There are two feasible locations that the executables could be stored, both of which can be reached programmatically
+				// location 1
+				const distDirectory = process.execPath.split(/[\\/]electron\.exe/)[0];
+				// location 2
+				// const distDirectory = require("electron").remote.app.getAppPath()
+
+				// establish connection between background (Electron) and render (Vue) processes
+				const remote = require("electron").remote;
+
+				const fs = remote.require("fs");
+
+				const fileCreated = await require("../calendarActions.js").generateICal(
+					{
+						schedule: this.$store.getters.generatedSchedule,
+						employees: this.$store.getters.employees
+					},
+					distDirectory,
+					fs
+				);
+				this.calendarFile = fileCreated;
+			}
+		},
+
+		async generateSchedule() {
+			if (this.electron) {
+				await this.$store.dispatch("generateSchedule");
+			}
 		}
 	}
 };
