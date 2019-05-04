@@ -4,8 +4,8 @@ import Vuex from "vuex";
 Vue.use(Vuex);
 
 // set this as an environment variable in later iterations
-const IS_TEST = true;
-const initial = "sample" || "empty";
+const IS_TEST = false;
+const initial = /** "sample" || **/ "empty";
 
 export default new Vuex.Store({
 	/**
@@ -65,6 +65,8 @@ export default new Vuex.Store({
 		insertLoadedState(state, loadedState) {
 			state.data = loadedState.data || state.data;
 			state.settings = loadedState.settings || state.settings;
+			state.generatedSchedule =
+				loadedState.generatedSchedule || state.generatedSchedule;
 		},
 		/**
 		 * Insert an initial schedule block and fiscal year to start the schedule.

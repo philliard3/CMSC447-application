@@ -10,9 +10,18 @@
 					It looks like you don't have anything loaded yet. Select an option
 					below to get started.
 					<p />
-					<v-btn color="success" @click="loadFile"
+					<v-btn
+						color="success"
+						type="files"
+						@click="$refs.fileUploadField.click()"
 						>Load Calendar from File</v-btn
 					>
+					<input
+						id="fileUploadField"
+						ref="fileUploadField"
+						type="file"
+						@change="loadFile"
+					/>
 					<p />
 					<v-btn color="info" to="/fiscalyear/create">New Calendar</v-btn>
 				</v-container>
@@ -38,7 +47,24 @@ export default {
 		// In the electron build, it should call to the main process.
 		// In the webapp build, it should use the browser's file upload API.
 		async loadFile() {
-			// console.log(process.env);
+			const files = this.$refs.fileUploadField.files;
+			const fileOfInterest = files[files.length - 1];
+			if (
+				fileOfInterest.name.substring(
+					fileOfInterest.name.length - 5,
+					fileOfInterest.name.length
+				) !== ".json"
+			) {
+				return "The File was of";
+			}
+
+			const reader = new FileReader();
+			reader.onload = () => {
+				const fileJSON = reader.result;
+				this.$store.commit("insertLoadedState", JSON.parse(fileJSON));
+				this.$router.push("/manage");
+			};
+			reader.readAsText(files[files.length - 1]);
 		}
 	}
 };
@@ -48,5 +74,8 @@ export default {
 	text-align: center;
 	max-width: 450px;
 	margin: auto;
+}
+#fileUploadField {
+	display: none;
 }
 </style>
