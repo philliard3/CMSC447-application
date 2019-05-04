@@ -1,14 +1,18 @@
-const { writeFileSync, readdirSync, statSync } = require("fs");
+const fileSystem = require("fs");
 const moment = require("moment");
 const ics = require("ics");
-const { execFileSync } = require("child_process");
+const childProcess = require("child_process");
 
 /**
  * inputs: {schedule, employees}
- * schedule is an object in the form provided as output by the Java process
+ * schedule is an object in the form provided as output by the Java Optaplanner process
  * employees is an array of objects in the form stored in the Vuex store
  * **/
-async function generateICal({ schedule, employees }) {
+async function generateICal(
+	{ schedule, employees },
+	directory = __dirname,
+	fs = fileSystem
+) {
 	// create events from schedule object
 	const events = schedule.assignments.map(assignment => {
 		// get the corresponding employee
@@ -74,12 +78,20 @@ async function generateICal({ schedule, employees }) {
 		if (err) {
 			throw err;
 		}
+
+		const wd = `${directory}/calendars`;
+
+		if (!fs.existsSync(wd)) {
+			fs.mkdirSync(wd);
+		}
+
 		// write it to the ics file
-		const filename = `${__dirname}/calendar${new Date().getTime()}.ics`;
-		writeFileSync(filename, value);
+		const filename = `${wd}/calendar${new Date().getTime()}.ics`;
+		await fs.writeFileSync(filename, value);
 		return filename;
 	} catch (err) {
 		console.error(err);
+		return err;
 	}
 }
 
@@ -256,7 +268,10 @@ function createSchedulingGlobalConstraint(constraintData) {
 
 async function generateSchedule(
 	state,
-	{ forCurrentFiscalYear, forCurrentScheduleBlock }
+	{ forCurrentFiscalYear, forCurrentScheduleBlock },
+	directory = __dirname,
+	fs = fileSystem,
+	cp = childProcess
 ) {
 	let periodOfInterest;
 	if (forCurrentFiscalYear) {
@@ -295,7 +310,13 @@ async function generateSchedule(
 
 	// provide input data for the scheduling program
 	const fileToWrite = `input_constraints${new Date().getTime()}.json`;
-	writeFileSync(`${__dirname}/inputs/${fileToWrite}.json`, {
+	let wd = `${directory}/inputs`;
+
+	if (!fs.existsSync(wd)) {
+		fs.mkdirSync(wd);
+	}
+
+	fs.writeFileSync(`${wd}/${fileToWrite}.json`, {
 		shifts,
 		roles,
 		employees,
@@ -305,23 +326,29 @@ async function generateSchedule(
 	// Run the scheduling program and wait for results
 	// It may be necessary to use a .bat batch file instead of directly running the .jar
 	// in the case of process.platform === "win32"
-	execFileSync(`create_schedule.jar`, [fileToWrite]);
+	cp.execSync(`create_schedule.jar`, [fileToWrite]);
 
 	// get all files in the schedules folder
-	const files = readdirSync(`${__dirname}/schedules/`);
+	wd = `${directory}/schedules/`;
+
+	if (!fs.existsSync(wd)) {
+		fs.mkdirSync(wd);
+	}
+
+	const files = fs.readdirSync(wd);
 
 	// get the last file edited
 	let correctFile = files.sort((f1, f2) => {
 		return (
-			new Date(statSync(`${__dirname}/${f2}`).mtime).getTime() -
-			new Date(statSync(`${__dirname}/${f1}`).mtime).getTime()
+			new Date(fs.statSync(`${wd}/${f2}`).mtime).getTime() -
+			new Date(fs.statSync(`${wd}/${f1}`).mtime).getTime()
 		);
 	})[0];
 	// return evaluated JSON
-	return require(`${__dirname}/schedules/${correctFile}`);
+	return require(`${wd}/${correctFile}`);
 }
 
-module.exports = {
+export {
 	generateICal,
 	generateSchedule,
 	createSchedulingRole,
