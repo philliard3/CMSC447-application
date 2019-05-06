@@ -44,8 +44,7 @@ export default {
 	},
 	methods: {
 		// This function loads a file from local storage.
-		// In the electron build, it should call to the main process.
-		// In the webapp build, it should use the browser's file upload API.
+		// In both builds, this uses the browser's file upload API.
 		async loadFile() {
 			const files = this.$refs.fileUploadField.files;
 			const fileOfInterest = files[files.length - 1];
@@ -55,13 +54,16 @@ export default {
 					fileOfInterest.name.length
 				) !== ".json"
 			) {
-				return "The File was of";
+				return "The file was of incorrect file type";
 			}
 
 			const reader = new FileReader();
 			reader.onload = () => {
 				const fileJSON = reader.result;
-				this.$store.commit("insertLoadedState", JSON.parse(fileJSON));
+				this.$store.commit("insertLoadedState", {
+					loadedState: JSON.parse(fileJSON),
+					sourceFile: fileOfInterest.name
+				});
 				this.$router.push("/manage");
 			};
 			reader.readAsText(files[files.length - 1]);
