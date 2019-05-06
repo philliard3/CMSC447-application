@@ -4,8 +4,8 @@ import Vuex from "vuex";
 Vue.use(Vuex);
 
 // set this as an environment variable in later iterations
-const IS_TEST = false;
-const initial = /** "sample" || **/ "empty";
+const USE_TEST_DATA = false;
+const initial = /** "sample" || **/ 1;
 
 export default new Vuex.Store({
 	/**
@@ -20,7 +20,7 @@ export default new Vuex.Store({
 	 * @property {any} state.data.currentScheduleBlock
 	 * @property {any} state.data.currentFiscalYear
 	 */
-	state: IS_TEST
+	state: USE_TEST_DATA
 		? require("./SampleState.json")
 		: {
 				settings: {
@@ -49,9 +49,10 @@ export default new Vuex.Store({
 					currentScheduleBlock: initial,
 					currentFiscalYear: initial,
 					employees: [],
-					roles: []
+					roles: [],
+					locations: []
 				},
-				generatedSchedule: IS_TEST
+				generatedSchedule: USE_TEST_DATA
 					? require("./SamplePlanningOutput.json")
 					: undefined
 		  },
@@ -62,9 +63,12 @@ export default new Vuex.Store({
 		 * @param {object} state
 		 * @param {object} loadedState
 		 */
-		insertLoadedState(state, loadedState) {
+		insertLoadedState(state, { loadedState, sourceFile }) {
 			state.data = loadedState.data || state.data;
+
 			state.settings = loadedState.settings || state.settings;
+			state.settings.activeFile = sourceFile;
+
 			state.generatedSchedule =
 				loadedState.generatedSchedule || state.generatedSchedule;
 		},
@@ -76,7 +80,8 @@ export default new Vuex.Store({
 		 */
 		initialize(state, { scheduleBlockData, fiscalYearData }) {
 			const scheduleBlockToCreate = {
-				sbID: scheduleBlockData.name || new Date().getTime(),
+				name: scheduleBlockData.name,
+				sbID: new Date().getTime(),
 				startDate: scheduleBlockData.startDate.getTime(),
 				endDate: scheduleBlockData.endDate.getTime(),
 				...scheduleBlockData
@@ -85,7 +90,8 @@ export default new Vuex.Store({
 			state.data.currentScheduleBlock = scheduleBlockToCreate.sbID;
 
 			const fiscalYearToCreate = {
-				fyID: fiscalYearData.name || new Date().getTime(),
+				name: fiscalYearData.name,
+				fyID: new Date().getTime(),
 				startDate: fiscalYearData.startDate.getTime(),
 				endDate: fiscalYearData.endDate.getTime(),
 				scheduleBlocks: [scheduleBlockToCreate.sbID],
@@ -105,12 +111,21 @@ export default new Vuex.Store({
 		 */
 		addScheduleBlock(state, { scheduleBlockData, fiscalYear }) {
 			// first check that this schedule block does not conflict with existing ones
+			if (
+				state.data.scheduleBlocks.filter(
+					sb => scheduleBlockData.sbID === sb.sbID
+				).length > 0
+			) {
+				return;
+			}
 
 			// create schedule block
 			const scheduleBlockToCreate = {
-				sbID: scheduleBlockData.name || new Date().getTime(),
+				name: scheduleBlockData.name,
+				sbID: new Date().getTime(),
 				startDate: scheduleBlockData.startDate.getTime(),
 				endDate: scheduleBlockData.endDate.getTime(),
+				shifts: [],
 				...scheduleBlockData
 			};
 			state.data.scheduleBlocks.push(scheduleBlockToCreate);
@@ -122,6 +137,41 @@ export default new Vuex.Store({
 				.filter(fy => fy.fyID === fiscalYearToUpdate)[0]
 				.scheduleBlocks.push(scheduleBlockToCreate.sbID);
 		},
+
+		removeScheduleBlock(state, { scheduleBlockData }) {
+			const matchingBlocks = state.data.scheduleBlocks.map(
+				sb => sb.sbID === scheduleBlockData.sbID
+			);
+			if (matchingBlocks.includes(true)) {
+				// remove the block
+				const newBlocks = [...state.data.scheduleBlocks];
+				newBlocks.splice(matchingBlocks.indexOf(true), 1);
+				state.data.scheduleBlocks = newBlocks;
+
+				// Remove the schedule block from any fiscal years that reference it.
+				state.data.fiscalYears.forEach(fy => {
+					if (fy.scheduleBlocks.includes(scheduleBlockData.sbID)) {
+						const newBlocks = [...fy.scheduleBlocks];
+						newBlocks.splice(
+							fy.scheduleBlocks.indexOf(scheduleBlockData.sbID),
+							1
+						);
+
+						fy.scheduleBlocks = newBlocks;
+					}
+				});
+
+				// address the case that the removed block was the current schedule block
+				if (state.data.currentScheduleBlocks === scheduleBlockData.sbID) {
+					if (state.data.scheduleBlocks.length > 0) {
+						state.data.currentScheduleBlock = state.data.scheduleBlocks[0].sbID;
+					} else {
+						state.data.currentScheduleBlock = null;
+					}
+				}
+			}
+		},
+
 		/**
 		 * Insert a fiscal year into the current state.
 		 * @param {object} state
@@ -129,11 +179,20 @@ export default new Vuex.Store({
 		 * @param {object} fiscalYearData
 		 */
 		addFiscalYear(state, { scheduleBlockData, fiscalYearData }) {
+			if (
+				state.data.fiscalYears.filter(fy => fiscalYearData.fyID === fy.fyID)
+					.length > 0
+			) {
+				return;
+			}
+
 			// create schedule block
 			const scheduleBlockToCreate = {
-				sbID: scheduleBlockData.name || new Date().getTime(),
+				name: scheduleBlockData.name,
+				sbID: new Date().getTime(),
 				startDate: scheduleBlockData.startDate.getTime(),
 				endDate: scheduleBlockData.endDate.getTime(),
+				shifts: [],
 				...scheduleBlockData
 			};
 			state.data.scheduleBlocks.push(scheduleBlockToCreate);
@@ -153,32 +212,104 @@ export default new Vuex.Store({
 			state.data.currentFiscalYear = fiscalYearToCreate.fyID;
 		},
 
+		removeFiscalYear(state, { fiscalYearData }) {
+			const matchingYears = state.data.fiscalYears.map(
+				fy => fy.fyID === fiscalYearData.fyID
+			);
+			if (matchingYears.includes(true)) {
+				const newYears = [...state.data.fiscalYears].splice(
+					matchingYears.indexOf(true),
+					1
+				);
+
+				state.data.fiscalYears = newYears;
+
+				// address the case that the removed year was the current fiscal year
+				if (state.data.currentFiscalYear === fiscalYearData.fyID) {
+					if (state.data.fiscalYears.length > 0) {
+						state.data.currentFiscalYear = state.data.fiscalYears[0].fyID;
+					} else {
+						state.data.currentFiscalYear = null;
+					}
+				}
+			}
+		},
+
 		/** **/
 		addRole(state, roleData) {
 			if (!roleData.roleID) {
 				return;
 			}
+			if (state.data.roles.some(role => role.roleID === roleData.roleID)) {
+				return;
+			}
 			state.data.roles.push({ ...roleData });
 		},
 
+		removeRole(state, { roleData }) {
+			const matchingRoles = state.data.roles.map(
+				role => role.roleID === roleData.roleID
+			);
+			if (matchingRoles.includes(true)) {
+				const newRoles = [...state.data.roles];
+				newRoles.splice(matchingRoles.indexOf(true), 1);
+				state.data.roles = newRoles;
+
+				// Remove the role from any employees that reference it.
+				state.data.employees.forEach(employee => {
+					employee.roles = employee.roles.filter(
+						role => role.roleID !== roleData.roleID
+					);
+				});
+
+				// Remove the role from any constraints that reference it
+			}
+		},
+
 		/** **/
-		addShift(state, shiftData) {
+		addShift(state, { shiftData, scheduleBlock }) {
 			if (!shiftData.shiftID) {
+				return;
+			}
+			// disallow repeat shiftID values
+			if (
+				state.data.shifts.some(shift => shift.shiftID === shiftData.shiftID)
+			) {
 				return;
 			}
 
 			if (
 				!state.data.currentScheduleBlock ||
-				state.data.currentScheduleBlock === "empty"
+				state.data.currentScheduleBlock === initial
 			) {
 				return;
 			}
 
-			const currentScheduleBlock = state.data.fiscalYears.filter(
-				fy => fy.fyID === state.data.currentScheduleBlock
+			const scheduleBlockIDToUpdate =
+				scheduleBlock || state.data.currentScheduleBlock;
+
+			const scheduleBlockToUpdate = state.data.fiscalYears.filter(
+				fy => fy.fyID === scheduleBlockIDToUpdate
 			)[0];
 
-			currentScheduleBlock.shifts.push({ ...shiftData });
+			scheduleBlockToUpdate.shifts.push({ ...shiftData });
+		},
+
+		removeShift(state, { shiftData, scheduleBlock }) {
+			const filteredBlocks = state.data.scheduleBlocks.filter(
+				sb => scheduleBlock.sbID === sb.sbID
+			);
+			if (filteredBlocks.length > 0) {
+				const scheduleBlockOfInterest = filteredBlocks[0];
+				const matchingShifts = scheduleBlockOfInterest.shifts.map(
+					shift => shift.shiftID === shiftData.shiftID
+				);
+				if (matchingShifts.includes(true)) {
+					const newShifts = [...scheduleBlockOfInterest.shifts];
+					newShifts.splice(matchingShifts.indexOf(true), 1);
+					scheduleBlockOfInterest.shifts = newShifts;
+				}
+			}
 		},
 
 		/** **/
@@ -186,11 +317,32 @@ export default new Vuex.Store({
 			if (!employeeData.employeeID) {
 				return;
 			}
+			// disallow repeat employeeID values
+			if (
+				state.data.employees.some(
+					employee => employee.employeeID === employeeData.employeeID
+				)
+			) {
+				return;
+			}
 			state.data.employees.push({ ...employeeData });
 		},
 
-		/** **/
-		createSchedule(state, schedule) {
+		removeEmployee(state, { employeeData }) {
+			// make sure the employee exists
+			const matchingEmployees = state.data.employees.map(
+				employee => employee.employeeID === employeeData.employeeID
+			);
+			if (matchingEmployees.includes(true)) {
+				// remove the employee
+				const newEmployees = [...state.data.employees];
+				newEmployees.splice(matchingEmployees.indexOf(true), 1);
+				state.data.employees = newEmployees;
+			}
+		},
+
+		/** schedule gets replaced every time the Java process is called **/
+		replaceSchedule(state, schedule) {
 			state.generatedSchedule = schedule;
 		}
 	},
@@ -217,7 +369,7 @@ export default new Vuex.Store({
 					fs,
 					cp
 				);
-				this.commit("createSchedule", schedule);
+				this.commit("replaceSchedule", schedule);
 			}
 		}
 	},
@@ -229,7 +381,10 @@ export default new Vuex.Store({
 
 		currentFiscalYear(state) {
 			const fyID = state.data.currentFiscalYear;
-			if (state.data.fiscalYears[0].fyID === "empty") {
+			if (
+				state.data.fiscalYears.length === 0 ||
+				state.data.fiscalYears[0].fyID === initial
+			) {
 				return null;
 			}
 
@@ -255,7 +410,10 @@ export default new Vuex.Store({
 		 */
 		currentScheduleBlock(state) {
 			const sbID = state.data.currentScheduleBlock;
-			if (state.data.scheduleBlocks[0].sbID === "empty") {
+			if (
+				state.data.scheduleBlocks.length === 0 ||
+				state.data.scheduleBlocks[0].sbID === initial
+			) {
 				return null;
 			}
 			const filteredScheduleBlocks = state.data.scheduleBlocks.filter(
@@ -280,7 +438,7 @@ export default new Vuex.Store({
 			const currentFiscalYear = state.data.currentFiscalYear;
 			const years = state.data.fiscalYears;
 
-			if (years[0].fyID === "empty") {
+			if (years.length > 0 && years[0].fyID === initial) {
 				return [];
 			}
 
@@ -290,6 +448,22 @@ export default new Vuex.Store({
 			}));
 
 			return newYears;
+		},
+
+		scheduleBlocks(state) {
+			const currentScheduleBlock = state.data.currentScheduleBlock;
+			const scheduleBlocks = state.data.scheduleBlocks;
+
+			if (scheduleBlocks.length > 0 && scheduleBlocks.sbID === initial) {
+				return [];
+			}
+
+			const newScheduleBLocks = scheduleBlocks.map(sb => ({
+				current: sb.sbID === currentScheduleBlock,
+				...sb
+			}));
+
+			return newScheduleBLocks;
 		},
 
 		fiscalYearExists(state) {
@@ -302,18 +476,22 @@ export default new Vuex.Store({
 				state.data.scheduleBlocks.filter(sb => sbID === sb.sbID).length > 0;
 		},
 
+		roleExists(state) {
+			return roleID => state.data.roles.filter(r => r.roleID === roleID) > 0;
+		},
+
 		roles(state) {
 			return state.data.roles.map(role => ({ ...role }));
 		},
 
 		generatedSchedule(state) {
-			if (IS_TEST) {
-				return require("./SamplePlanningOutput.json");
-			}
-
 			if (state.generatedSchedule) {
-				return state.generatedSchedule;
+				return { ...state.generatedSchedule };
 			}
+		},
+
+		settings(state) {
+			return { ...state.settings };
 		}
 	}
 });
