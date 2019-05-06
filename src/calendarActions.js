@@ -316,7 +316,7 @@ async function generateSchedule(
 		fs.mkdirSync(wd);
 	}
 
-	fs.writeFileSync(`${wd}/${fileToWrite}.json`, {
+	fs.writeFileSync(`${wd}/${fileToWrite}`, {
 		shifts,
 		roles,
 		employees,
@@ -326,7 +326,9 @@ async function generateSchedule(
 	// Run the scheduling program and wait for results
 	// It may be necessary to use a .bat batch file instead of directly running the .jar
 	// in the case of process.platform === "win32"
-	cp.execSync(`create_schedule.jar`, [fileToWrite]);
+	const executable = "create_schedule.jar";
+	// command line execution of the form "c:downloads/create_schedule.jar input_constraints1255556850.json"
+	cp.execSync(`${directory}/${executable} ${fileToWrite}`);
 
 	// get all files in the schedules folder
 	wd = `${directory}/schedules/`;
