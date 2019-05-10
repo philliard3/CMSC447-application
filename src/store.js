@@ -4,7 +4,7 @@ import Vuex from "vuex";
 Vue.use(Vuex);
 
 // set this as an environment variable in later iterations
-const USE_TEST_DATA = false;
+const USE_TEST_DATA = true;
 const initial = /** "sample" || **/ 1;
 
 export default new Vuex.Store({
@@ -134,7 +134,9 @@ export default new Vuex.Store({
 			const fiscalYearToUpdate = fiscalYear || state.data.currentFiscalYear;
 			// then update the fiscal year that the block should belong to
 			state.data.fiscalYears
-				.filter(fy => fy.fyID === fiscalYearToUpdate)[0]
+				.filter(
+					fy => fy.fyID === fiscalYearToUpdate || fy.name === fiscalYearToUpdate
+				)[0]
 				.scheduleBlocks.push(scheduleBlockToCreate.sbID);
 		},
 
@@ -383,7 +385,7 @@ export default new Vuex.Store({
 			const fyID = state.data.currentFiscalYear;
 			if (
 				state.data.fiscalYears.length === 0 ||
-				state.data.fiscalYears[0].fyID === initial
+				(!USE_TEST_DATA && state.data.fiscalYears[0].fyID === initial)
 			) {
 				return null;
 			}
@@ -412,7 +414,7 @@ export default new Vuex.Store({
 			const sbID = state.data.currentScheduleBlock;
 			if (
 				state.data.scheduleBlocks.length === 0 ||
-				state.data.scheduleBlocks[0].sbID === initial
+				(!USE_TEST_DATA && state.data.scheduleBlocks[0].sbID === initial)
 			) {
 				return null;
 			}
@@ -438,7 +440,7 @@ export default new Vuex.Store({
 			const currentFiscalYear = state.data.currentFiscalYear;
 			const years = state.data.fiscalYears;
 
-			if (years.length > 0 && years[0].fyID === initial) {
+			if (years.length > 0 && years[0].fyID === initial && !USE_TEST_DATA) {
 				return [];
 			}
 
@@ -454,7 +456,11 @@ export default new Vuex.Store({
 			const currentScheduleBlock = state.data.currentScheduleBlock;
 			const scheduleBlocks = state.data.scheduleBlocks;
 
-			if (scheduleBlocks.length > 0 && scheduleBlocks.sbID === initial) {
+			if (
+				scheduleBlocks.length > 0 &&
+				scheduleBlocks.sbID === initial &&
+				!USE_TEST_DATA
+			) {
 				return [];
 			}
 
@@ -471,9 +477,32 @@ export default new Vuex.Store({
 				state.data.fiscalYears.filter(fy => fyID === fy.fyID).length > 0;
 		},
 
+		fiscalYearExistsWithName(state) {
+			return name =>
+				state.data.fiscalYears.filter(fy => name === fy.name).length > 0;
+		},
+
 		scheduleBlockExists(state) {
 			return sbID =>
 				state.data.scheduleBlocks.filter(sb => sbID === sb.sbID).length > 0;
+		},
+
+		scheduleBlockExistsWithName(state) {
+			return (name, fyName) => {
+				const filteredYears = state.data.fiscalYears.filter(
+					fy => fy.name === fyName
+				);
+				if (filteredYears.length === 1) {
+					return (
+						state.data.scheduleBlocks.filter(
+							sb =>
+								filteredYears[0].scheduleBlocks.includes(sb.sbID) &&
+								sb.name === name
+						).length > 0
+					);
+				}
+				return null;
+			};
 		},
 
 		roleExists(state) {

@@ -52,12 +52,18 @@ export default {
 	methods: {
 		reportDates() {
 			// disallow repeat schedule blocks or schedule blocks without a home
+			const sbID = new Date().getTime();
 			if (
-				!this.$store.getters.scheduleBlockExists(this.scheduleBlockData.name) &&
-				this.selectedFiscalYear
+				this.$store.getters.scheduleBlockExists(sbID) === false &&
+				this.$store.getters.scheduleBlockExistsWithName(
+					this.scheduleBlockData.name,
+					this.selectedFiscalYear
+				) === false &&
+				this.selectedFiscalYear &&
+				this.scheduleBlockData.name
 			) {
 				this.$store.commit("addScheduleBlock", {
-					scheduleBlockData: this.scheduleBlockData,
+					scheduleBlockData: { sbID, ...this.scheduleBlockData },
 					fiscalYear: this.selectedFiscalYear
 				});
 				this.$router.push("/scheduleblock/constraints");

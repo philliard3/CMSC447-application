@@ -44,9 +44,14 @@ export default {
 	methods: {
 		reportDates() {
 			// disallow repeat names on fiscal years and schedule blocks
+			const fyID = new Date().getTime();
+			const sbID = new Date().getTime();
 			if (
-				!this.$store.getters.fiscalYearExists(this.fiscalYearData.name) &&
-				!this.$store.getters.scheduleBlockExists(this.scheduleBlockData.name)
+				this.$store.getters.fiscalYearExists(fyID) === false &&
+				this.$store.getters.fiscalYearExistsWithName(
+					this.fiscalYearData.name
+				) === false &&
+				this.$store.getters.scheduleBlockExists(sbID) === false
 			) {
 				const currentScheduleBlock = this.$store.getters.currentScheduleBlock;
 				if (
@@ -55,16 +60,16 @@ export default {
 				) {
 					// initialize vuex store data if there are no fiscal years
 					this.$store.commit("initialize", {
-						scheduleBlockData: { ...this.scheduleBlockData },
-						fiscalYearData: { ...this.fiscalYearData }
+						scheduleBlockData: { sbID, ...this.scheduleBlockData },
+						fiscalYearData: { fyID, ...this.fiscalYearData }
 					});
 					// reroute once the changes are committed
 					this.$router.push("/fiscalyear/constraints");
 				} else {
 					// make a new fiscal year if the store has been initialized
 					this.$store.commit("addFiscalYear", {
-						scheduleBlockData: { ...this.scheduleBlockData },
-						fiscalYearData: { ...this.fiscalYearData }
+						scheduleBlockData: { sbID, ...this.scheduleBlockData },
+						fiscalYearData: { fyID, ...this.fiscalYearData }
 					});
 					// reroute once the changes are committed
 					this.$router.push("/fiscalyear/constraints");

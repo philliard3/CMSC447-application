@@ -1,6 +1,137 @@
 <template>
 	<v-form v-model="valid">
-		<v-container>hello</v-container>
+		<v-container>
+			<v-card>
+				<v-card-text>
+					<div class="display-1 font-weight-light" id="header-row-1">
+						Fiscal Year: {{ fiscalYears.filter(fy => fy.current)[0].name }}
+					</div>
+					<div class="display-1 font-weight-light" id="header-row-1">
+						Fiscal Year: {{ $store.getters.currentFiscalYear.name }}
+					</div>
+					<v-select
+						:items="fiscalYears.map(fy => fy.name)"
+						v-model="currentFiscalYear.name"
+						label="Fiscal Year to Edit"
+					></v-select>
+					<v-select
+						:items="$store.getters.scheduleBlocks.map(sb => sb.name)"
+						:value="$store.getters.currentScheduleBlock.name"
+						label="Schedule Block to edit"
+					></v-select>
+				</v-card-text>
+			</v-card>
+		</v-container>
+		<v-container>
+			<v-card>
+				<v-card-text>
+					<div class="display-1 font-weight-light" id="header-row-1">
+						Shifts
+					</div>
+					<v-layout>
+						<v-flex xs11 sm5>
+							<v-text-field
+								name="Shift Nickname"
+								label="Shift Nickname"
+								v-model="newShiftData.name"
+							></v-text-field>
+						</v-flex>
+						<v-flex xs11 sm5>
+							<v-menu
+								ref="menu1"
+								v-model="menu1"
+								:close-on-content-click="false"
+								:nudge-right="40"
+								:return-value.sync="newShiftData.startTime"
+								lazy
+								transition="scale-transition"
+								offset-y
+								full-width
+								max-width="290px"
+								min-width="290px"
+							>
+								<template v-slot:activator="{ on }">
+									<v-text-field
+										v-model="newShiftData.startTime"
+										label="Shift Start Time"
+										prepend-icon="access_time"
+										readonly
+										v-on="on"
+									></v-text-field>
+								</template>
+								<v-time-picker
+									v-if="menu1"
+									v-model="newShiftData.startTime"
+									full-width
+									@click:minute="$refs.menu1.save(newShiftData.startTime)"
+								></v-time-picker>
+							</v-menu>
+						</v-flex>
+						<v-flex xs11 sm5>
+							<v-menu
+								ref="menu2"
+								v-model="menu2"
+								:close-on-content-click="false"
+								:nudge-right="40"
+								:return-value.sync="newShiftData.endTime"
+								lazy
+								transition="scale-transition"
+								offset-y
+								full-width
+								max-width="290px"
+								min-width="290px"
+							>
+								<template v-slot:activator="{ on }">
+									<v-text-field
+										v-model="newShiftData.endTime"
+										label="Shift End Time"
+										prepend-icon="access_time"
+										readonly
+										v-on="on"
+									></v-text-field>
+								</template>
+								<v-time-picker
+									v-if="menu2"
+									v-model="newShiftData.endTime"
+									full-width
+									@click:minute="$refs.menu2.save(newShiftData.endTime)"
+								></v-time-picker>
+							</v-menu>
+						</v-flex>
+					</v-layout>
+					<div>
+						<v-btn color="success" @click="createShift">
+							<v-icon flat>calendar_view_day</v-icon>&nbsp;New Shift
+						</v-btn>
+					</div>
+					<!--- shift table -->
+				</v-card-text>
+			</v-card>
+		</v-container>
+		<v-container>
+			<v-card>
+				<v-card-text>
+					<div class="display-1 font-weight-light" id="header-row-1">
+						Locations
+					</div>
+					<v-layout>
+						<v-flex>
+							<v-text-field
+								v-model="newLocationData.name"
+								name="Location Name"
+								label="Location Name"
+							></v-text-field>
+						</v-flex>
+						<v-flex>
+							<v-btn color="success">
+								<v-icon>add_location</v-icon>&nbsp;New Location
+							</v-btn>
+						</v-flex>
+						<!--- location table -->
+					</v-layout>
+				</v-card-text>
+			</v-card>
+		</v-container>
 	</v-form>
 </template>
 
@@ -8,8 +139,37 @@
 export default {
 	data() {
 		return {
-			valid: false
+			valid: false,
+			menu1: false,
+			menu2: false,
+			currentFiscalYear: this.$store.getters.currentFiscalYear,
+			newShiftData: {
+				name: "",
+				startTime: null,
+				endTime: null
+			},
+			newLocationData: {
+				name: ""
+			},
+			locations: []
 		};
+	},
+	computed: {
+		fiscalYears() {
+			return this.$store.getters.fiscalYears;
+		}
+	},
+	methods: {
+		createShift() {
+			const newShiftData = { ...this.newShiftData };
+			for (let value of Object.values(newShiftData)) {
+				if (!value) {
+					return;
+				}
+			}
+			// console.log(newShiftData);
+		},
+		createLocation() {}
 	}
 };
 </script>
