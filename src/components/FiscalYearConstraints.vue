@@ -6,17 +6,14 @@
 					<div class="display-1 font-weight-light" id="header-row-1">
 						Fiscal Year: {{ fiscalYears.filter(fy => fy.current)[0].name }}
 					</div>
-					<div class="display-1 font-weight-light" id="header-row-1">
-						Fiscal Year: {{ $store.getters.currentFiscalYear.name }}
-					</div>
 					<v-select
 						:items="fiscalYears.map(fy => fy.name)"
-						v-model="currentFiscalYear.name"
+						v-model="selectedFiscalYear"
 						label="Fiscal Year to Edit"
 					></v-select>
 					<v-select
-						:items="$store.getters.scheduleBlocks.map(sb => sb.name)"
-						:value="$store.getters.currentScheduleBlock.name"
+						:items="scheduleBlocks.map(sb => sb.name)"
+						v-model="selectedScheduleBlock"
 						label="Schedule Block to edit"
 					></v-select>
 				</v-card-text>
@@ -142,7 +139,6 @@ export default {
 			valid: false,
 			menu1: false,
 			menu2: false,
-			currentFiscalYear: this.$store.getters.currentFiscalYear,
 			newShiftData: {
 				name: "",
 				startTime: null,
@@ -155,13 +151,45 @@ export default {
 		};
 	},
 	computed: {
+		selectedFiscalYear: {
+			get() {
+				return this.$store.getters.currentFiscalYear.name;
+			},
+			set(newValue) {
+				this.$store.commit("setCurrentFiscalYear", {
+					fiscalYearData: { name: newValue }
+				});
+				return this.$store.getters.currentFiscalYear.name;
+			}
+		},
+		selectedScheduleBlock: {
+			get() {
+				return this.$store.getters.currentScheduleBlock.name;
+			},
+			set(newValue) {
+				this.$store.commit("setCurrentScheduleBlock", {
+					fiscalYearData: { name: this.selectedFiscalYear },
+					scheduleBlockData: { name: newValue }
+				});
+				return this.$store.getters.currentScheduleBlock.name;
+			}
+		},
+		scheduleBlocks() {
+			return this.$store.getters.scheduleBlocks;
+		},
 		fiscalYears() {
 			return this.$store.getters.fiscalYears;
+		},
+		currentFiscalYear() {
+			return this.$store.getters.currentFiscalYear;
 		}
 	},
 	methods: {
 		createShift() {
-			const newShiftData = { ...this.newShiftData };
+			const newShiftData = {
+				shiftID: new Date().getTime(),
+				...this.newShiftData
+			};
 			for (let value of Object.values(newShiftData)) {
 				if (!value) {
 					return;

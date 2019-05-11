@@ -174,6 +174,33 @@ export default new Vuex.Store({
 			}
 		},
 
+		setCurrentScheduleBlock(state, { scheduleBlockData, fiscalYearData }) {
+			if (fiscalYearData) {
+				const filteredFiscalYears = state.data.fiscalYears.filter(
+					fy =>
+						fy.fyID === fiscalYearData.fyID || fy.name === fiscalYearData.name
+				);
+				if (filteredFiscalYears.length === 1) {
+					const filteredBlocks = state.data.scheduleBlocks.filter(
+						sb =>
+							filteredFiscalYears[0].scheduleBlocks.includes(sb.sbID) &&
+							(sb.sbID === scheduleBlockData.sbID ||
+								sb.name === scheduleBlockData.name)
+					);
+					if (filteredBlocks.length === 1) {
+						state.data.currentScheduleBlock = filteredBlocks[0].sbID;
+					}
+				}
+			} else {
+				const filteredBlocks = state.data.scheduleBlocks.filter(
+					sb => sb.sbID === scheduleBlockData.sbID
+				);
+				if (filteredBlocks.length === 1) {
+					state.data.currentScheduleBlock = filteredBlocks[0].sbID;
+				}
+			}
+		},
+
 		/**
 		 * Insert a fiscal year into the current state.
 		 * @param {object} state
@@ -234,6 +261,15 @@ export default new Vuex.Store({
 						state.data.currentFiscalYear = null;
 					}
 				}
+			}
+		},
+
+		setCurrentFiscalYear(state, { fiscalYearData }) {
+			const filteredFiscalYears = state.data.fiscalYears.filter(
+				fy => fy.fyID === fiscalYearData.fyID || fy.name === fiscalYearData.name
+			);
+			if (filteredFiscalYears.length === 1) {
+				state.data.currentFiscalYear = filteredFiscalYears[0].fyID;
 			}
 		},
 
