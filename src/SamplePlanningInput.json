@@ -14,7 +14,6 @@
 					"id": 1,
 					"priority": 2,
 					"type": "DatePreference",
-					"isSchedule": false,
 					"parameters": {
 						"startDate": "12/25/2019",
 						"endDate": "12/25/2019",
@@ -25,7 +24,6 @@
 					"id": 3,
 					"priority": 2,
 					"type": "DatePreference",
-					"isSchedule": false,
 					"parameters": {
 						"startDate": "07/05/2019",
 						"endDate": "07/05/2019",
@@ -36,7 +34,6 @@
 					"id": 671041141051152800,
 					"priority": 2,
 					"type": "GeneralShiftPreference",
-					"isSchedule": false,
 					"parameters": {
 						"isPositivePreference": true,
 						"day": "Monday",
@@ -49,7 +46,6 @@
 					"id": 671041141051152801,
 					"priority": 2,
 					"type": "GeneralShiftPreference",
-					"isSchedule": false,
 					"parameters": {
 						"isPositivePreference": true,
 						"day": "Wednesday",
