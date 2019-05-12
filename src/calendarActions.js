@@ -1,7 +1,6 @@
-const fileSystem = require("fs");
+// The Moment and ICS packages are universal in their Node and web implementations.
 const moment = require("moment");
 const ics = require("ics");
-const childProcess = require("child_process");
 
 /**
  * inputs: {schedule, employees}
@@ -11,7 +10,7 @@ const childProcess = require("child_process");
 async function generateICal(
 	{ schedule, employees },
 	directory = __dirname,
-	fs = fileSystem
+	fs = require("fs")
 ) {
 	// create events from schedule object
 	const events = schedule.assignments.map(assignment => {
@@ -125,11 +124,13 @@ function createSchedulingShifts(shiftData, startDate, endDate) {
 			const [hours, minutes] = shiftData.startTime.split(":");
 			const startTime = day.hours(Number(hours)).minutes(Number(minutes));
 			shiftData.roles.forEach(roleRestriction => {
+				let shiftTypes = [shiftData.name];
+				// add other tags
+				if (shiftData.tags && shiftData.tags.length > 0) {
+					shiftTypes = shiftTypes.concat(shiftData.tags);
+				}
 				const shiftObj = {
-					shiftTypes: [
-						shiftData.name
-						// other tags would go in this array
-					],
+					shiftTypes,
 					permittedRoles: roleRestriction.permittedRoles,
 					location: shiftData.location,
 					startTime: startTime.format("MM/DD/YYYY HH:mm"),
@@ -137,8 +138,9 @@ function createSchedulingShifts(shiftData, startDate, endDate) {
 						.add(shiftData.duration, "minutes")
 						.format("MM/DD/YYYY HH:mm")
 				};
-				for (let i = 0; i < roleRestriction.amount; i++) {
-					shifts.push({ ...shiftObj });
+				for (let i = 0; i < roleRestriction.max; i++) {
+					const mandatory = i < roleRestriction.min;
+					shifts.push({ mandatory, ...shiftObj });
 				}
 			});
 		});
@@ -181,7 +183,6 @@ function createSchedulingEmployee(employeeData) {
 			constraints.push({
 				id: day.dayID,
 				isHard: false,
-				isSchedule: false,
 				type: "DatePreference",
 				parameters: {
 					isPositivePreference: day.isPositivePreference,
@@ -270,8 +271,8 @@ async function generateSchedule(
 	state,
 	{ forCurrentFiscalYear, forCurrentScheduleBlock },
 	directory = __dirname,
-	fs = fileSystem,
-	cp = childProcess
+	fs = require("fs"),
+	cp = require("child_process")
 ) {
 	let periodOfInterest;
 	if (forCurrentFiscalYear) {
