@@ -1,0 +1,87 @@
+{
+	"roles": [
+		{
+			"id": 1,
+			"constraints": []
+		}
+	],
+	"employees": [
+		{
+			"id": 1,
+			"roles": [1],
+			"constraints": [
+				{
+					"id": 1,
+					"priority": 2,
+					"type": "DatePreference",
+					"parameters": {
+						"startDate": "12/25/2019",
+						"endDate": "12/25/2019",
+						"isPositivePreference": false
+					}
+				},
+				{
+					"id": 3,
+					"priority": 2,
+					"type": "DatePreference",
+					"parameters": {
+						"startDate": "07/05/2019",
+						"endDate": "07/05/2019",
+						"isPositivePreference": true
+					}
+				},
+				{
+					"id": 671041141051152800,
+					"priority": 2,
+					"type": "GeneralShiftPreference",
+					"parameters": {
+						"isPositivePreference": true,
+						"day": "Monday",
+						"startTime": "07:00",
+						"endTime": "15:00",
+						"location": "Nursery"
+					}
+				},
+				{
+					"id": 671041141051152801,
+					"priority": 2,
+					"type": "GeneralShiftPreference",
+					"parameters": {
+						"isPositivePreference": true,
+						"day": "Wednesday",
+						"startTime": "07:00",
+						"endTime": "15:00",
+						"location": "Nursery"
+					}
+				}
+			]
+		}
+	],
+	"shifts": [
+		{
+			"startTime": "05/02/2019 07:30",
+			"endTime": "05/02/2019 15:30",
+			"shiftTypes": ["Weekday Morning", "nurse"],
+			"location": "Nursery"
+		},
+		{
+			"startTime": "05/03/2019 07:30",
+			"endTime": "05/03/2019 15:30",
+			"shiftTypes": ["Weekday Morning", "nurse"],
+			"location": "Nursery"
+		},
+		{
+			"startTime": "05/06/2019 07:30",
+			"endTime": "05/06/2019 15:30",
+			"shiftTypes": ["Weekday Morning", "nurse"],
+			"location": "Nursery"
+		},
+		{
+			"startTime": "05/07/2019 07:30",
+			"endTime": "05/07/2019 15:30",
+			"shiftTypes": ["Weekday Morning", "nurse"],
+			"location": "Nursery"
+		}
+	],
+	"scheduleConstraints": []
+}
