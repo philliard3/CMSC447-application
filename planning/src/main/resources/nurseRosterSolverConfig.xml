@@ -26,10 +26,10 @@
                 <cacheType>PHASE</cacheType>
                 <moveListFactoryClass>com.CMSC447.nurseroster.solver.move.factory.ShiftAssignmentSwapMoveFactory</moveListFactoryClass>
             </moveListFactory>
-            <moveListFactory>
+            <!-- <moveListFactory>
                 <cacheType>STEP</cacheType>
                 <moveListFactoryClass>com.CMSC447.nurseroster.Solver.move.factory.ShiftAssignmentPillarPartSwapMoveFactory</moveListFactoryClass>
-            </moveListFactory>
+            </moveListFactory> -->
         </unionMoveSelector>
         <acceptor>
             <entityTabuSize>7</entityTabuSize>

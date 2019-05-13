@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.CMSC447.nurseroster.Solver.move;
+package com.CMSC447.nurseroster.solver.move;
 
 import java.util.Collection;
 import java.util.Collections;

@@ -1,6 +1,6 @@
 
 
-package com.CMSC447.nurseroster.Solver.move;
+package com.CMSC447.nurseroster.solver.move;
 
 
 import com.CMSC447.nurseroster.domain.Employee;

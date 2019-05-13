@@ -14,16 +14,17 @@
  * limitations under the License.
  */
 
-package com.CMSC447.nurseroster.Solver.move.factory;
+package com.CMSC447.nurseroster.solver.move.factory;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
-import com.CMSC447.nurseroster.Solver.move.ShiftAssignmentSwapMove;
 import com.CMSC447.nurseroster.domain.NurseRoster;
 import com.CMSC447.nurseroster.domain.ShiftAssignment;
+import com.CMSC447.nurseroster.solver.move.ShiftAssignmentSwapMove;
+
 import org.optaplanner.core.impl.heuristic.selector.move.factory.MoveListFactory;
 
 

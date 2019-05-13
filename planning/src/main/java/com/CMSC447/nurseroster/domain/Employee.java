@@ -22,8 +22,8 @@ import java.util.List;
 
 import org.optaplanner.core.api.score.buildin.hardsoft.HardSoftScore;
 
-import com.CMSC447.nurseroster.FileIO.Input;
 import com.CMSC447.nurseroster.domain.constraint.PersonalConstraint;
+import com.CMSC447.nurseroster.fileio.Input;
 
 public class Employee  {
 	public ArrayList<PersonalConstraint> constraints;

@@ -1,4 +1,4 @@
-package com.CMSC447.nurseroster.FileIO;
+package com.CMSC447.nurseroster.fileio;
 
 import java.util.ArrayList;
 

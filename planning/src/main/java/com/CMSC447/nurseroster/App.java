@@ -5,10 +5,10 @@ import java.io.File;
 import org.optaplanner.core.api.solver.Solver;
 import org.optaplanner.core.api.solver.SolverFactory;
 
-import com.CMSC447.nurseroster.FileIO.DataLoader;
-import com.CMSC447.nurseroster.FileIO.Input;
-import com.CMSC447.nurseroster.FileIO.SolutionWriter;
 import com.CMSC447.nurseroster.domain.NurseRoster;
+import com.CMSC447.nurseroster.fileio.DataLoader;
+import com.CMSC447.nurseroster.fileio.Input;
+import com.CMSC447.nurseroster.fileio.SolutionWriter;
 /**
  * Hello world!
  *

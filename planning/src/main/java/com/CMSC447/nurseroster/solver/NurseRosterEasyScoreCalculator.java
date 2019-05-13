@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.CMSC447.nurseroster.Solver;
+package com.CMSC447.nurseroster.solver;
 
 
 import com.CMSC447.nurseroster.domain.NurseRoster;
