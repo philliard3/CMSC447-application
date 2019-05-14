@@ -7,8 +7,10 @@
 		"build": "vue-cli-service build",
 		"lint": "vue-cli-service lint",
 		"dev": "vue-cli-service serve",
-		"planner:build": "echo some java command",
+		"clean": "rm -r ./planning/target/* ./dist/* ./dist_electron/*",
+		"planner:build": "node java-build.js",
 		"electron:build": "vue-cli-service electron:build",
+		"build-all": "vue-cli-service electron:build && node java-build.js",
 		"electron:serve": "vue-cli-service electron:serve",
 		"postinstall": "electron-builder install-app-deps",
 		"postuninstall": "electron-builder install-app-deps"

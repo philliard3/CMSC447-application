@@ -29,18 +29,18 @@ yarn-error.log*
 *.sw*
 
 # Eclipse
-.classpath
-.project
-.settings/
+./planning/.classpath
+./planning/.project
+./planning/.settings/
  
 # Intellij
-.idea/
-*.iml
-*.iws
+./planning/.idea/
+./planning/*.iml
+./planning/*.iws
  
 # Mac
-.DS_Store
+./planning/.DS_Store
  
 # Maven
-log/
-target/
+./planning/log/
+./planning/target/
