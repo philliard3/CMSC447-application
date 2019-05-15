@@ -4,64 +4,46 @@ import Vuex from "vuex";
 Vue.use(Vuex);
 
 // set this as an environment variable in later iterations
-const USE_TEST_DATA = true;
-const initial = /** "sample" || **/ 1;
+const USE_TEST_DATA = false;
+
+const emptyState = {
+	settings: {
+		activeFile: null,
+		exportFormat: "ICS"
+	},
+	data: {
+		scheduleBlocks: [],
+		fiscalYears: [],
+		currentScheduleBlock: null,
+		currentFiscalYear: null,
+		employees: [],
+		roles: [],
+		locations: []
+	},
+	generatedSchedule: USE_TEST_DATA
+		? require("./SamplePlanningOutput.json")
+		: undefined
+};
 
 export default new Vuex.Store({
 	/**
-	 * @namespace
-	 *  @property {object} state
-	 * @property {object} state.settings
-	 * @property {string} [state.settings.activeFile]
-	 * @property {string} state.settings.exportFormat
-	 * @property {object} state.data
-	 * @property {array} state.data.scheduleBlocks
-	 * @property {array} state.data.fiscalYears
-	 * @property {any} state.data.currentScheduleBlock
-	 * @property {any} state.data.currentFiscalYear
+	 * Initialize State
 	 */
 	state: USE_TEST_DATA
-		? require("./SampleState.json")
-		: {
-				settings: {
-					activeFile: null,
-					exportFormat: "ICS"
-				},
-				data: {
-					scheduleBlocks: [
-						{
-							sbID: initial,
-							startDate: 0,
-							endDate: 0,
-							name: initial
-						}
-					],
-					fiscalYears: [
-						{
-							fyID: initial,
-							name: initial,
-							scheduleBlocks: [initial],
-							startDate: 0,
-							endDate: 0,
-							shifts: []
-						}
-					],
-					currentScheduleBlock: initial,
-					currentFiscalYear: initial,
-					employees: [],
-					roles: [],
-					locations: []
-				},
-				generatedSchedule: USE_TEST_DATA
-					? require("./SamplePlanningOutput.json")
-					: undefined
-		  },
+		? {
+				generatedSchedule: require("./SamplePlanningOutput.json"),
+				...require("./SampleState.json")
+		  }
+		: emptyState,
 
 	mutations: {
+		clearStore(state) {
+			state.data = { ...emptyState.data };
+			state.settings = { ...emptyState.settings };
+			state.generateSchedule = undefined;
+		},
 		/**
 		 * Inserts into the current application state a past state, usually loaded from a file.
-		 * @param {object} state
-		 * @param {object} loadedState
 		 */
 		insertLoadedState(state, { loadedState, sourceFile }) {
 			state.data = loadedState.data || state.data;
@@ -74,9 +56,6 @@ export default new Vuex.Store({
 		},
 		/**
 		 * Insert an initial schedule block and fiscal year to start the schedule.
-		 * @param {object} state
-		 * @param {object} scheduleBlockData
-		 * @param {object} fiscalYearData
 		 */
 		initialize(state, { scheduleBlockData, fiscalYearData }) {
 			const scheduleBlockToCreate = {
@@ -106,8 +85,6 @@ export default new Vuex.Store({
 		},
 		/**
 		 * Insert a schedule block into the current state.
-		 * @param {object} state
-		 * @param {object} scheduleBlockData
 		 */
 		addScheduleBlock(state, { scheduleBlockData, fiscalYear }) {
 			// first check that this schedule block does not conflict with existing ones
@@ -139,7 +116,9 @@ export default new Vuex.Store({
 				)[0]
 				.scheduleBlocks.push(scheduleBlockToCreate.sbID);
 		},
-
+		/**
+		 * Removes the schedule block with the matching sbID
+		 **/
 		removeScheduleBlock(state, { scheduleBlockData }) {
 			const matchingBlocks = state.data.scheduleBlocks.map(
 				sb => sb.sbID === scheduleBlockData.sbID
@@ -203,9 +182,6 @@ export default new Vuex.Store({
 
 		/**
 		 * Insert a fiscal year into the current state.
-		 * @param {object} state
-		 * @param {object} scheduleBlockData
-		 * @param {object} fiscalYearData
 		 */
 		addFiscalYear(state, { scheduleBlockData, fiscalYearData }) {
 			if (
@@ -316,10 +292,7 @@ export default new Vuex.Store({
 				return;
 			}
 
-			if (
-				!state.data.currentScheduleBlock ||
-				state.data.currentScheduleBlock === initial
-			) {
+			if (state.data.currentScheduleBlock === null) {
 				return;
 			}
 
@@ -419,10 +392,12 @@ export default new Vuex.Store({
 
 		currentFiscalYear(state) {
 			const fyID = state.data.currentFiscalYear;
-			if (
-				state.data.fiscalYears.length === 0 ||
-				(!USE_TEST_DATA && state.data.fiscalYears[0].fyID === initial)
-			) {
+			if (state.data.fiscalYears.length === 0) {
+				if (state.data.currentFiscalYear !== null) {
+					console.error(
+						"FiscalYears are empty but the current fiscal year is not null"
+					);
+				}
 				return null;
 			}
 
@@ -443,15 +418,15 @@ export default new Vuex.Store({
 
 		/**
 		 * Returns the stored schedule block that matches the stored current block.
-		 * @param {object} state
-		 * @returns {object}
 		 */
 		currentScheduleBlock(state) {
 			const sbID = state.data.currentScheduleBlock;
-			if (
-				state.data.scheduleBlocks.length === 0 ||
-				(!USE_TEST_DATA && state.data.scheduleBlocks[0].sbID === initial)
-			) {
+			if (state.data.scheduleBlocks.length === 0) {
+				if (state.data.currentScheduleBlock !== null) {
+					console.error(
+						"ScheduleBlocks are empty but the current schedule block is not null."
+					);
+				}
 				return null;
 			}
 			const filteredScheduleBlocks = state.data.scheduleBlocks.filter(
@@ -476,10 +451,6 @@ export default new Vuex.Store({
 			const currentFiscalYear = state.data.currentFiscalYear;
 			const years = state.data.fiscalYears;
 
-			if (years.length > 0 && years[0].fyID === initial && !USE_TEST_DATA) {
-				return [];
-			}
-
 			const newYears = years.map(fy => ({
 				current: fy.fyID === currentFiscalYear,
 				...fy
@@ -491,14 +462,6 @@ export default new Vuex.Store({
 		scheduleBlocks(state) {
 			const currentScheduleBlock = state.data.currentScheduleBlock;
 			const scheduleBlocks = state.data.scheduleBlocks;
-
-			if (
-				scheduleBlocks.length > 0 &&
-				scheduleBlocks.sbID === initial &&
-				!USE_TEST_DATA
-			) {
-				return [];
-			}
 
 			const newScheduleBLocks = scheduleBlocks.map(sb => ({
 				current: sb.sbID === currentScheduleBlock,
