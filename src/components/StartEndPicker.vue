@@ -85,8 +85,16 @@ export default {
 			nameRules: [v => Boolean(v) || "Name is required"]
 		};
 	},
+	mounted() {
+		this.$emit("picked", {
+			startDate: this.convertStringToLocalDate(this.startDate),
+			endDate: this.convertStringToLocalDate(this.endDate),
+			name: this.name
+		});
+	},
 	methods: {
 		convertStringToLocalDate(dateString) {
+			// consider changing this to use Moment.js
 			const offsetHours = new Date().getTimezoneOffset() / 60;
 			let stringOffsetHours;
 			if (Math.abs(offsetHours) < 10) {

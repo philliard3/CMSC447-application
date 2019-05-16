@@ -46,6 +46,7 @@ export default {
 			// disallow repeat names on fiscal years and schedule blocks
 			const fyID = new Date().getTime();
 			const sbID = new Date().getTime();
+
 			if (
 				this.$store.getters.fiscalYearExists(fyID) === false &&
 				this.$store.getters.fiscalYearExistsWithName(
@@ -54,10 +55,7 @@ export default {
 				this.$store.getters.scheduleBlockExists(sbID) === false
 			) {
 				const currentScheduleBlock = this.$store.getters.currentScheduleBlock;
-				if (
-					currentScheduleBlock === null ||
-					currentScheduleBlock.sbID !== "empty"
-				) {
+				if (currentScheduleBlock === null) {
 					// initialize vuex store data if there are no fiscal years
 					this.$store.commit("initialize", {
 						scheduleBlockData: { sbID, ...this.scheduleBlockData },

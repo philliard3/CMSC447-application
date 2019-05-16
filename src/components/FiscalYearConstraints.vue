@@ -4,7 +4,7 @@
 			<v-card>
 				<v-card-text>
 					<div class="display-1 font-weight-light" id="header-row-1">
-						Fiscal Year: {{ fiscalYears.filter(fy => fy.current)[0].name }}
+						Fiscal Year: {{ currentFiscalYear ? currentFiscalYear.name : "" }}
 					</div>
 					<v-select
 						:items="fiscalYears.map(fy => fy.name)"
@@ -153,7 +153,11 @@ export default {
 	computed: {
 		selectedFiscalYear: {
 			get() {
-				return this.$store.getters.currentFiscalYear.name;
+				try {
+					return this.$store.getters.currentFiscalYear.name;
+				} catch (err) {
+					return null;
+				}
 			},
 			set(newValue) {
 				this.$store.commit("setCurrentFiscalYear", {
@@ -164,7 +168,11 @@ export default {
 		},
 		selectedScheduleBlock: {
 			get() {
-				return this.$store.getters.currentScheduleBlock.name;
+				try {
+					return this.$store.getters.currentScheduleBlock.name;
+				} catch (err) {
+					return null;
+				}
 			},
 			set(newValue) {
 				this.$store.commit("setCurrentScheduleBlock", {
@@ -182,6 +190,11 @@ export default {
 		},
 		currentFiscalYear() {
 			return this.$store.getters.currentFiscalYear;
+		}
+	},
+	created() {
+		if (this.$store.getters.currentFiscalYear === null) {
+			this.$router.push("/fiscalyear/create");
 		}
 	},
 	methods: {
