@@ -375,6 +375,20 @@ export default new Vuex.Store({
 			}
 		},
 
+		addTag(state, tag) {
+			if (!state.data.tags.includes(tag)) {
+				state.data.tags.push(tag);
+			}
+		},
+
+		removeTag(state, tag) {
+			const tags = [...state.data.tags];
+			if (tags.includes(tag)) {
+				tags.splice(tags.indexOf(tag), 1);
+				state.data.tags = tags;
+			}
+		},
+
 		/** schedule gets replaced every time the Java process is called **/
 		replaceSchedule(state, schedule) {
 			state.generatedSchedule = schedule;
@@ -550,6 +564,10 @@ export default new Vuex.Store({
 
 		locations(state) {
 			return [...state.data.locations];
+		},
+
+		tags(state) {
+			return [...state.data.tags];
 		},
 
 		generatedSchedule(state) {

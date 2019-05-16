@@ -990,6 +990,7 @@
 				}
 			}
 		],
-		"locations": ["Nursery", "ICU"]
+		"locations": ["Nursery", "ICU"],
+		"tags": []
 	}
 }
