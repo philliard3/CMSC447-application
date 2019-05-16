@@ -120,11 +120,25 @@
 							></v-text-field>
 						</v-flex>
 						<v-flex>
-							<v-btn color="success">
+							<v-btn color="success" @click="addLocation">
 								<v-icon>add_location</v-icon>&nbsp;New Location
 							</v-btn>
 						</v-flex>
-						<!--- location table -->
+					</v-layout>
+					<!--- location table -->
+					<v-layout>
+						<v-flex>
+							<v-container v-for="name in locations" :key="name">
+								<v-layout>
+									<v-flex class="title">{{ name }}</v-flex>
+									<v-flex>
+										<v-btn color="error" @click="removeLocation(name)">
+											<v-icon>remove_circle</v-icon>&nbsp;Remove
+										</v-btn>
+									</v-flex>
+								</v-layout>
+							</v-container>
+						</v-flex>
 					</v-layout>
 				</v-card-text>
 			</v-card>
@@ -146,8 +160,8 @@ export default {
 			},
 			newLocationData: {
 				name: ""
-			},
-			locations: []
+			}
+			//locations: []
 		};
 	},
 	computed: {
@@ -188,6 +202,12 @@ export default {
 		fiscalYears() {
 			return this.$store.getters.fiscalYears;
 		},
+		roles() {
+			return this.$store.getters.roles;
+		},
+		locations() {
+			return this.$store.getters.locations;
+		},
 		currentFiscalYear() {
 			return this.$store.getters.currentFiscalYear;
 		}
@@ -210,7 +230,17 @@ export default {
 			}
 			// console.log(newShiftData);
 		},
-		createLocation() {}
+		addLocation() {
+			if (
+				this.newLocationData.name.length > 0 &&
+				!this.locations.includes(this.newLocationData.name)
+			) {
+				this.$store.commit("addLocation", this.newLocationData.name);
+			}
+		},
+		removeLocation(locationName) {
+			this.$store.commit("removeLocation", locationName);
+		}
 	}
 };
 </script>

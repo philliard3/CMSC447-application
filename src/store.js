@@ -4,7 +4,7 @@ import Vuex from "vuex";
 Vue.use(Vuex);
 
 // set this as an environment variable in later iterations
-const USE_TEST_DATA = false;
+const USE_TEST_DATA = true;
 
 const emptyState = {
 	settings: {
@@ -352,6 +352,20 @@ export default new Vuex.Store({
 			}
 		},
 
+		addLocation(state, location) {
+			if (!state.data.locations.includes(location)) {
+				state.data.locations.push(location);
+			}
+		},
+
+		removeLocation(state, location) {
+			const locations = [...state.data.locations];
+			if (locations.includes(location)) {
+				locations.splice(locations.indexOf(location), 1);
+				state.data.locations = locations;
+			}
+		},
+
 		/** schedule gets replaced every time the Java process is called **/
 		replaceSchedule(state, schedule) {
 			state.generatedSchedule = schedule;
@@ -510,6 +524,10 @@ export default new Vuex.Store({
 
 		roles(state) {
 			return state.data.roles.map(role => ({ ...role }));
+		},
+
+		locations(state) {
+			return [...state.data.locations];
 		},
 
 		generatedSchedule(state) {
