@@ -11,6 +11,7 @@
 							v-model="newShiftData.name"
 						></v-text-field>
 					</v-flex>
+					<v-flex xs11 sm1></v-flex>
 					<v-flex xs11 sm5>
 						<v-menu
 							ref="menu1"
@@ -42,6 +43,7 @@
 							></v-time-picker>
 						</v-menu>
 					</v-flex>
+					<v-flex xs11 sm1></v-flex>
 					<v-flex xs11 sm5>
 						<v-menu
 							ref="menu2"
@@ -76,6 +78,69 @@
 				</v-layout>
 				<v-layout>
 					<v-flex xs11 sm4>
+						<v-select
+							label="Location"
+							:items="this.$store.getters.locations"
+							v-model="newShiftData.location"
+						></v-select>
+					</v-flex>
+					<v-flex xs11 sm1></v-flex>
+					<v-flex xs11 sm4>
+						<v-combobox
+							v-model="newShiftData.startDays"
+							:items="[
+								'Sunday',
+								'Monday',
+								'Tuesday',
+								'Wednesday',
+								'Thursday',
+								'Friday',
+								'Saturday'
+							]"
+							label="Starting Days"
+							chips
+							clearable
+							solo
+							multiple
+						>
+							<template v-slot:selection="data">
+								<v-chip
+									:selected="data.selected"
+									close
+									@input="removeStartDay(data.item)"
+								>
+									<strong>{{ data.item }}</strong
+									>&nbsp;
+								</v-chip>
+							</template>
+						</v-combobox>
+					</v-flex>
+					<v-flex xs11 sm1></v-flex>
+					<v-flex xs11 sm3>
+						<v-combobox
+							v-model="newShiftData.tags"
+							:items="this.$store.getters.tags"
+							label="Tags"
+							chips
+							clearable
+							solo
+							multiple
+						>
+							<template v-slot:selection="data">
+								<v-chip
+									:selected="data.selected"
+									close
+									@input="removeTag(data.item)"
+								>
+									<strong>{{ data.item }}</strong
+									>&nbsp;
+								</v-chip>
+							</template>
+						</v-combobox>
+					</v-flex>
+				</v-layout>
+				<v-layout>
+					<v-flex xs11 sm4>
 						<v-combobox
 							v-model="newAssignmentData.permittedRoles"
 							:items="roles.map(role => role.name)"
@@ -89,7 +154,7 @@
 								<v-chip
 									:selected="data.selected"
 									close
-									@input="removeRole(data.role)"
+									@input="removeRole(data.item)"
 								>
 									<strong>{{ data.item }}</strong
 									>&nbsp;
@@ -170,7 +235,6 @@ export default {
 		return {
 			menu1: false,
 			menu2: false,
-			roleToAdd: null,
 			newAssignmentData: {
 				min: 0,
 				max: 0,
@@ -180,7 +244,11 @@ export default {
 				name: "",
 				roles: [],
 				startTime: null,
-				endTime: null
+				endTime: null,
+				location: "",
+				duration: 0,
+				startDays: [],
+				tags: []
 			}
 		};
 	},
@@ -205,12 +273,31 @@ export default {
 			}
 		}
 	},
+	watch: {
+		"newShiftData.tags": function(newTags) {
+			const tagToAdd = newTags[newTags.length - 1];
+			this.$store.commit("addTag", tagToAdd);
+		}
+	},
 	methods: {
 		createShift() {
 			const newShiftData = {
 				shiftID: new Date().getTime(),
 				...this.newShiftData
 			};
+
+			// trim out any nonexistent days
+			newShiftData.startDays = newShiftData.startDays.filter(day =>
+				[
+					"Sunday",
+					"Monday",
+					"Tuesday",
+					"Wednesday",
+					"Thursday",
+					"Friday",
+					"Saturday"
+				].includes(day)
+			);
 
 			if (newShiftData.roles.length <= 0) {
 				return;
@@ -221,6 +308,14 @@ export default {
 			}
 
 			if (!newShiftData.startTime || !newShiftData.endTime) {
+				return;
+			}
+
+			if (newShiftData.startDays.length <= 0) {
+				return;
+			}
+
+			if (!newShiftData.location) {
 				return;
 			}
 
@@ -237,6 +332,13 @@ export default {
 				"minutes"
 			);
 
+			newShiftData.roles.forEach(r => {
+				r.permittedRoles = r.permittedRoles.map(
+					roleName =>
+						this.roles.filter(role => role.name === roleName)[0].roleID
+				);
+			});
+
 			const currentScheduleBlock = this.$store.getters.currentScheduleBlock;
 
 			if (currentScheduleBlock) {
@@ -244,13 +346,30 @@ export default {
 					shiftData: newShiftData,
 					scheduleBlock: currentScheduleBlock
 				});
+
+				// clear shift data
 				this.newShiftData = {
 					name: "",
 					roles: [],
 					startTime: null,
-					endTime: null
+					endTime: null,
+					location: "",
+					duration: 0,
+					startDays: [],
+					tags: []
 				};
+
+				this.menu1 = false;
+				this.menu2 = false;
 			}
+		},
+		removeStartDay(day) {
+			this.newShiftData.startDays.splice(
+				this.newShiftData.startDays.indexOf(day),
+				1
+			);
+			// re-assign to assure reactivity
+			this.newShiftData.startDays = [...this.newShiftData.startDays];
 		},
 		removeRole(role) {
 			this.newAssignmentData.permittedRoles.splice(
@@ -261,6 +380,10 @@ export default {
 			this.newAssignmentData.permittedRoles = [
 				...this.newAssignmentData.permittedRoles
 			];
+		},
+		removeTag(tag) {
+			this.newShiftData.tags.splice(this.newShiftData.tags.indexOf(tag), 1);
+			this.newShiftData.tags = [...this.newShiftData.tags];
 		},
 		addAssignment() {
 			const newAssignmentData = {
