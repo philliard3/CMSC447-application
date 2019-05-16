@@ -60,6 +60,7 @@ export default {
 				!this.locations.includes(this.newLocationData.name)
 			) {
 				this.$store.commit("addLocation", this.newLocationData.name);
+				this.newLocationData.name = "";
 			}
 		},
 		removeLocation(locationName) {
