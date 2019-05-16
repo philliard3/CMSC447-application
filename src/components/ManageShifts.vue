@@ -222,6 +222,60 @@
 					</v-btn>
 				</v-container>
 				<!--- shift table -->
+
+				<v-layout>
+					<v-flex>
+						<v-container v-for="shift in shifts" :key="shift.shiftID">
+							<v-layout>
+								<v-flex class="title">{{ shift.name }}</v-flex>
+								<v-flex class="subheading">{{ shift.location }}</v-flex>
+								<v-flex>
+									<v-layout
+										v-for="(roleRestriction, index) in shift.roles"
+										:key="
+											String(index) +
+												'_' +
+												roleRestriction.permittedRoles.join(',') +
+												'_' +
+												String(roleRestriction.min) +
+												'_' +
+												String(roleRestriction.max)
+										"
+									>
+										<v-flex>
+											<v-card-text>
+												{{
+													roleRestriction.min !== roleRestriction.max
+														? `${roleRestriction.min}-${roleRestriction.max}`
+														: roleRestriction.min
+												}}
+												&nbsp;
+												{{
+													roleRestriction.permittedRoles
+														.map(
+															r =>
+																roles.filter(role => role.roleID === r)[0].name
+														)
+														.join(", ")
+												}}
+											</v-card-text>
+										</v-flex>
+									</v-layout>
+								</v-flex>
+								<v-flex>
+									<v-chip v-for="tag in shift.tags" :key="tag">{{
+										tag
+									}}</v-chip>
+								</v-flex>
+								<v-flex>
+									<v-btn color="error" @click="removeShift(shift.name)">
+										<v-icon>remove_circle</v-icon>&nbsp;Remove
+									</v-btn>
+								</v-flex>
+							</v-layout>
+						</v-container>
+					</v-flex>
+				</v-layout>
 			</v-card-text>
 		</v-card>
 	</v-container>
@@ -275,8 +329,11 @@ export default {
 	},
 	watch: {
 		"newShiftData.tags": function(newTags) {
-			const tagToAdd = newTags[newTags.length - 1];
-			this.$store.commit("addTag", tagToAdd);
+			// make sure it only adds new tags
+			if (newTags.length > 0) {
+				const tagToAdd = newTags[newTags.length - 1];
+				this.$store.commit("addTag", tagToAdd);
+			}
 		},
 
 		"newShiftData.startDays": function(newDays) {
@@ -411,17 +468,16 @@ export default {
 				permittedRoles: []
 			};
 			// validate number input
-			if (
-				Number(this.newAssignmentData.min) >= 0 &&
-				Number(this.newAssignmentData.max) >= 0
-			) {
+			const min = Number(this.newAssignmentData.min);
+			const max = Number(this.newAssignmentData.max);
+			if (min >= 0 && max >= 0 && min <= max) {
 				this.newShiftData.roles.push({
 					permittedRoles: this.newAssignmentData.permittedRoles,
-					min: Number(this.newAssignmentData.min),
-					max: Number(this.newAssignmentData.max)
+					min,
+					max
 				});
+				this.newAssignmentData = { ...newAssignmentData };
 			}
-			this.newAssignmentData = { ...newAssignmentData };
 		},
 		removeAssignment(index) {
 			this.newShiftData.roles.splice(index, 1);

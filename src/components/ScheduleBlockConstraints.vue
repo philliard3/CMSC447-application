@@ -25,13 +25,16 @@
 			</v-card>
 		</v-container>
 		<ManageShifts></ManageShifts>
+		<RoleTable></RoleTable>
 	</v-form>
 </template>
 <script>
 import ManageShifts from "./ManageShifts";
+import RoleTable from "./RoleTable";
+
 export default {
 	name: "ScheduleBlockConstraints",
-	components: { ManageShifts },
+	components: { ManageShifts, RoleTable },
 	data() {
 		return {
 			valid: false
