@@ -75,29 +75,37 @@
 					</v-flex>
 				</v-layout>
 				<v-layout>
-					<v-flex xs11 sm3>
-						<span v-for="role in newAssignmentData.permittedRoles" :key="role">
-							{{ role }}
-							<span class="remove-item" @click="removeRole(role)">&times;</span>
-						</span>
-					</v-flex>
-					<v-flex xs11 sm1>
-						<v-select
-							label="+"
+					<v-flex xs11 sm4>
+						<v-combobox
+							v-model="newAssignmentData.permittedRoles"
 							:items="roles.map(role => role.name)"
-							v-model="roleToAdd"
-							@input="addRole"
-						></v-select>
+							label="Roles"
+							chips
+							clearable
+							solo
+							multiple
+						>
+							<template v-slot:selection="data">
+								<v-chip
+									:selected="data.selected"
+									close
+									@input="removeRole(data.role)"
+								>
+									<strong>{{ data.item }}</strong
+									>&nbsp;
+								</v-chip>
+							</template>
+						</v-combobox>
 					</v-flex>
 					<v-flex xs11 sm1></v-flex>
-					<v-flex xs11 sm3>
+					<v-flex xs11 sm2>
 						<v-text-field
 							label="Min. Employees"
 							v-model="newAssignmentData.min"
 						></v-text-field>
 					</v-flex>
 					<v-flex xs11 sm1></v-flex>
-					<v-flex xs11 sm3>
+					<v-flex xs11 sm2>
 						<v-text-field
 							label="Max. Employees"
 							v-model="newAssignmentData.max"
@@ -123,14 +131,14 @@
 							String(role.max)
 					"
 				>
-					<v-flex xs11 sm5 class="title font-weight-light"
-						>Roles:
+					<v-flex xs11 sm5 class="title font-weight-light">
+						Roles:
 						{{
 							role.permittedRoles.length
 								? role.permittedRoles.join(", ")
 								: "Nobody"
-						}}</v-flex
-					>
+						}}
+					</v-flex>
 					<v-flex xs11 sm5 class="title font-weight-light"
 						>Min: {{ role.min }}</v-flex
 					>
@@ -153,7 +161,10 @@
 		</v-card>
 	</v-container>
 </template>
+
 <script>
+import moment from "moment";
+
 export default {
 	data() {
 		return {
@@ -167,13 +178,7 @@ export default {
 			},
 			newShiftData: {
 				name: "",
-				roles: [
-					{
-						permittedRoles: [1, 2, 3, 4, 5],
-						min: 1,
-						max: 1
-					}
-				],
+				roles: [],
 				startTime: null,
 				endTime: null
 			}
@@ -206,23 +211,56 @@ export default {
 				shiftID: new Date().getTime(),
 				...this.newShiftData
 			};
-			for (let value of Object.values(newShiftData)) {
-				if (!value) {
-					return;
-				}
+
+			if (newShiftData.roles.length <= 0) {
+				return;
 			}
-			// console.log(newShiftData);
-		},
-		addRole(role) {
-			if (!this.newAssignmentData.permittedRoles.includes(role))
-				this.newAssignmentData.permittedRoles.push(role);
-			this.roleToAdd = null;
+
+			if (newShiftData.name.length <= 0) {
+				return;
+			}
+
+			if (!newShiftData.startTime || !newShiftData.endTime) {
+				return;
+			}
+
+			if (
+				moment(newShiftData.startTime, "hh:mm").isAfter(
+					moment(newShiftData.endTime, "hh:mm")
+				)
+			) {
+				return;
+			}
+
+			newShiftData.duration = moment(newShiftData.endTime, "hh:mm").diff(
+				moment(newShiftData.startTime, "hh:mm"),
+				"minutes"
+			);
+
+			const currentScheduleBlock = this.$store.getters.currentScheduleBlock;
+
+			if (currentScheduleBlock) {
+				this.$store.commit("addShift", {
+					shiftData: newShiftData,
+					scheduleBlock: currentScheduleBlock
+				});
+				this.newShiftData = {
+					name: "",
+					roles: [],
+					startTime: null,
+					endTime: null
+				};
+			}
 		},
 		removeRole(role) {
 			this.newAssignmentData.permittedRoles.splice(
 				this.newAssignmentData.permittedRoles.indexOf(role),
 				1
 			);
+			// re-assign to assure reactivity
+			this.newAssignmentData.permittedRoles = [
+				...this.newAssignmentData.permittedRoles
+			];
 		},
 		addAssignment() {
 			const newAssignmentData = {
@@ -230,7 +268,17 @@ export default {
 				max: 0,
 				permittedRoles: []
 			};
-			this.newShiftData.roles.push({ ...this.newAssignmentData });
+			// validate number input
+			if (
+				Number(this.newAssignmentData.min) >= 0 &&
+				Number(this.newAssignmentData.max) >= 0
+			) {
+				this.newShiftData.roles.push({
+					permittedRoles: this.newAssignmentData.permittedRoles,
+					min: Number(this.newAssignmentData.min),
+					max: Number(this.newAssignmentData.max)
+				});
+			}
 			this.newAssignmentData = { ...newAssignmentData };
 		},
 		removeAssignment(index) {
@@ -239,6 +287,7 @@ export default {
 	}
 };
 </script>
+
 <style>
 .remove-item:hover {
 	background-color: #555;

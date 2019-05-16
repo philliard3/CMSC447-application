@@ -281,13 +281,21 @@ export default new Vuex.Store({
 		},
 
 		/** **/
-		addShift(state, { shiftData, scheduleBlock }) {
+		addShift(state, { shiftData, scheduleBlockData }) {
 			if (!shiftData.shiftID) {
 				return;
 			}
 			// disallow repeat shiftID values
 			if (
-				state.data.shifts.some(shift => shift.shiftID === shiftData.shiftID)
+				state.data.scheduleBlocks.some(
+					sb =>
+						// disallow shifts with the same shiftID
+						sb.shifts.some(shift => shift.shiftID === shiftData.shiftID) ||
+						// disallow shifts with the same name in the same schedule block
+						(!!scheduleBlockData &&
+							scheduleBlockData.sbID === sb.sbID &&
+							sb.shifts.some(shift => shift.name === shiftData.name))
+				)
 			) {
 				return;
 			}
@@ -296,11 +304,12 @@ export default new Vuex.Store({
 				return;
 			}
 
-			const scheduleBlockIDToUpdate =
-				scheduleBlock || state.data.currentScheduleBlock;
+			const scheduleBlockIDToUpdate = scheduleBlockData
+				? scheduleBlockData.sbID
+				: state.data.currentScheduleBlock;
 
-			const scheduleBlockToUpdate = state.data.fiscalYears.filter(
-				fy => fy.fyID === scheduleBlockIDToUpdate
+			const scheduleBlockToUpdate = state.data.scheduleBlocks.filter(
+				sb => sb.sbID === scheduleBlockIDToUpdate
 			)[0];
 
 			scheduleBlockToUpdate.shifts.push({ ...shiftData });
@@ -524,6 +533,19 @@ export default new Vuex.Store({
 
 		roles(state) {
 			return state.data.roles.map(role => ({ ...role }));
+		},
+
+		shiftExists(state) {
+			return (shiftData, scheduleBlockData) =>
+				state.data.scheduleBlocks.some(
+					sb =>
+						// disallow shifts with the same shiftID
+						sb.shifts.some(shift => shift.shiftID === shiftData.shiftID) ||
+						// disallow shifts with the same name in the same schedule block
+						(!!scheduleBlockData &&
+							scheduleBlockData.sbID === sb.sbID &&
+							sb.shifts.some(shift => shift.name === shiftData.name))
+				);
 		},
 
 		locations(state) {
