@@ -6,7 +6,7 @@
 			</v-card>
 			<v-card v-else>
 				<v-card-text>
-					<v-container>Role id: {{ roleData.roleID }}</v-container>
+					<v-container>Employee Role: {{ roleData.name }}</v-container>
 					<v-container>
 						<swatches v-model="roleData.color" colors="basic" inline></swatches>
 					</v-container>
@@ -24,23 +24,30 @@ export default {
 	name: "EditRole",
 	components: { Swatches },
 	data() {
-		const roleID = this.$route.params.roleID;
-		const roles = this.$store.getters.roles.filter(
-			role => role.roleID === roleID
-		);
-		let roleData = null;
-		if (roles.length) {
-			roleData = roles[0];
-		}
+		return {};
+	},
+	computed: {
+		roleData() {
+			const roleID = Number(this.$route.params.roleID);
+			const roles = this.$store.getters.roles.filter(
+				role => role.roleID === roleID
+			);
+			let roleData = null;
+			if (roles.length) {
+				roleData = roles[0];
+			} else {
+				return null;
+			}
 
-		if (!roleData.color) {
-			roleData.color = "#1FBC9C";
-		}
+			if (!roleData.color) {
+				roleData.color = "#1FBC9C";
+			}
+			return roleData;
+		},
 
-		return {
-			roleData: roleData,
-			error: roleData ? null : "We couldn't find that role."
-		};
+		error() {
+			return this.roleData ? null : "We couldn't find that role.";
+		}
 	}
 };
 </script>
