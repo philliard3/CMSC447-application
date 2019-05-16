@@ -909,6 +909,7 @@
 					"amount": "30"
 				}
 			}
-		]
+		],
+		"locations": ["Nursery", "ICU"]
 	}
 }
