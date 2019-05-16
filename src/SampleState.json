@@ -13,6 +13,7 @@
 				"shifts": [
 					{
 						"name": "Morning Weekday",
+						"tags": [],
 						"startDays": [
 							"Monday",
 							"Tuesday",
@@ -26,12 +27,14 @@
 						"roles": [
 							{
 								"permittedRoles": [1, 2, 3, 4, 5],
-								"amount": 1
+								"min": 1,
+								"max": 1
 							}
 						]
 					},
 					{
 						"name": "Afternoon Weekday",
+						"tags": [],
 						"startDays": [
 							"Monday",
 							"Tuesday",
@@ -45,12 +48,14 @@
 						"roles": [
 							{
 								"permittedRoles": [1, 2, 3, 4, 5],
-								"amount": 1
+								"min": 1,
+								"max": 1
 							}
 						]
 					},
 					{
 						"name": "Night Weekday",
+						"tags": [],
 						"startDays": [
 							"Monday",
 							"Tuesday",
@@ -64,12 +69,14 @@
 						"roles": [
 							{
 								"permittedRoles": [1, 2, 3, 4, 5],
-								"amount": 1
+								"min": 1,
+								"max": 1
 							}
 						]
 					},
 					{
 						"name": "Day Weekend",
+						"tags": [],
 						"startDays": ["Saturday", "Sunday"],
 						"startTime": "07:00",
 						"location": "Nursery",
@@ -77,12 +84,14 @@
 						"roles": [
 							{
 								"permittedRoles": [1, 2, 3, 4, 5],
-								"amount": 1
+								"min": 1,
+								"max": 1
 							}
 						]
 					},
 					{
 						"name": "Night Weekend",
+						"tags": [],
 						"startDays": ["Saturday", "Sunday"],
 						"startTime": "19:00",
 						"location": "Nursery",
@@ -90,12 +99,14 @@
 						"roles": [
 							{
 								"permittedRoles": [1, 2, 3, 4, 5],
-								"amount": 1
+								"min": 1,
+								"max": 1
 							}
 						]
 					},
 					{
 						"name": "Morning Weekday",
+						"tags": [],
 						"startDays": [
 							"Monday",
 							"Tuesday",
@@ -109,12 +120,14 @@
 						"roles": [
 							{
 								"permittedRoles": [1, 2, 3, 4, 5],
-								"amount": 1
+								"min": 1,
+								"max": 1
 							}
 						]
 					},
 					{
 						"name": "Afternoon Weekday",
+						"tags": [],
 						"startDays": [
 							"Monday",
 							"Tuesday",
@@ -128,12 +141,14 @@
 						"roles": [
 							{
 								"permittedRoles": [1, 2, 3, 4, 5],
-								"amount": 1
+								"min": 1,
+								"max": 1
 							}
 						]
 					},
 					{
 						"name": "Night Weekday",
+						"tags": [],
 						"startDays": [
 							"Monday",
 							"Tuesday",
@@ -147,12 +162,14 @@
 						"roles": [
 							{
 								"permittedRoles": [1, 2, 3, 4, 5],
-								"amount": 1
+								"min": 1,
+								"max": 1
 							}
 						]
 					},
 					{
 						"name": "Day Weekend",
+						"tags": [],
 						"startDays": ["Saturday", "Sunday"],
 						"startTime": "07:00",
 						"location": "ICU",
@@ -160,12 +177,14 @@
 						"roles": [
 							{
 								"permittedRoles": [1, 2, 3, 4, 5],
-								"amount": 1
+								"min": 1,
+								"max": 1
 							}
 						]
 					},
 					{
 						"name": "Night Weekend",
+						"tags": [],
 						"startDays": ["Saturday", "Sunday"],
 						"startTime": "19:00",
 						"location": "ICU",
@@ -173,7 +192,8 @@
 						"roles": [
 							{
 								"permittedRoles": [1, 2, 3, 4, 5],
-								"amount": 1
+								"min": 1,
+								"max": 1
 							}
 						]
 					}
@@ -187,6 +207,7 @@
 				"shifts": [
 					{
 						"name": "Morning Weekday",
+						"tags": [],
 						"startDays": [
 							"Monday",
 							"Tuesday",
@@ -200,12 +221,14 @@
 						"roles": [
 							{
 								"permittedRoles": [1, 2, 3, 4, 5],
-								"amount": 1
+								"min": 1,
+								"max": 1
 							}
 						]
 					},
 					{
 						"name": "Afternoon Weekday",
+						"tags": [],
 						"startDays": [
 							"Monday",
 							"Tuesday",
@@ -219,12 +242,14 @@
 						"roles": [
 							{
 								"permittedRoles": [1, 2, 3, 4, 5],
-								"amount": 1
+								"min": 1,
+								"max": 1
 							}
 						]
 					},
 					{
 						"name": "Night Weekday",
+						"tags": [],
 						"startDays": [
 							"Monday",
 							"Tuesday",
@@ -238,12 +263,14 @@
 						"roles": [
 							{
 								"permittedRoles": [1, 2, 3, 4, 5],
-								"amount": 1
+								"min": 1,
+								"max": 1
 							}
 						]
 					},
 					{
 						"name": "Day Weekend",
+						"tags": [],
 						"startDays": ["Saturday", "Sunday"],
 						"startTime": "07:00",
 						"location": "Nursery",
@@ -251,12 +278,14 @@
 						"roles": [
 							{
 								"permittedRoles": [1, 2, 3, 4, 5],
-								"amount": 1
+								"min": 1,
+								"max": 1
 							}
 						]
 					},
 					{
 						"name": "Night Weekend",
+						"tags": [],
 						"startDays": ["Saturday", "Sunday"],
 						"startTime": "19:00",
 						"location": "Nursery",
@@ -264,12 +293,14 @@
 						"roles": [
 							{
 								"permittedRoles": [1, 2, 3, 4, 5],
-								"amount": 1
+								"min": 1,
+								"max": 1
 							}
 						]
 					},
 					{
 						"name": "Morning Weekday",
+						"tags": [],
 						"startDays": [
 							"Monday",
 							"Tuesday",
@@ -283,12 +314,14 @@
 						"roles": [
 							{
 								"permittedRoles": [1, 2, 3, 4, 5],
-								"amount": 1
+								"min": 1,
+								"max": 1
 							}
 						]
 					},
 					{
 						"name": "Afternoon Weekday",
+						"tags": [],
 						"startDays": [
 							"Monday",
 							"Tuesday",
@@ -302,12 +335,14 @@
 						"roles": [
 							{
 								"permittedRoles": [1, 2, 3, 4, 5],
-								"amount": 1
+								"min": 1,
+								"max": 1
 							}
 						]
 					},
 					{
 						"name": "Night Weekday",
+						"tags": [],
 						"startDays": [
 							"Monday",
 							"Tuesday",
@@ -321,12 +356,14 @@
 						"roles": [
 							{
 								"permittedRoles": [1, 2, 3, 4, 5],
-								"amount": 1
+								"min": 1,
+								"max": 1
 							}
 						]
 					},
 					{
 						"name": "Day Weekend",
+						"tags": [],
 						"startDays": ["Saturday", "Sunday"],
 						"startTime": "07:00",
 						"location": "ICU",
@@ -334,12 +371,14 @@
 						"roles": [
 							{
 								"permittedRoles": [1, 2, 3, 4, 5],
-								"amount": 1
+								"min": 1,
+								"max": 1
 							}
 						]
 					},
 					{
 						"name": "Night Weekend",
+						"tags": [],
 						"startDays": ["Saturday", "Sunday"],
 						"startTime": "19:00",
 						"location": "ICU",
@@ -347,7 +386,8 @@
 						"roles": [
 							{
 								"permittedRoles": [1, 2, 3, 4, 5],
-								"amount": 1
+								"min": 1,
+								"max": 1
 							}
 						]
 					}
@@ -361,6 +401,7 @@
 				"shifts": [
 					{
 						"name": "Morning Weekday",
+						"tags": [],
 						"startDays": [
 							"Monday",
 							"Tuesday",
@@ -374,12 +415,14 @@
 						"roles": [
 							{
 								"permittedRoles": [1, 2, 3, 4, 5],
-								"amount": 1
+								"min": 1,
+								"max": 1
 							}
 						]
 					},
 					{
 						"name": "Afternoon Weekday",
+						"tags": [],
 						"startDays": [
 							"Monday",
 							"Tuesday",
@@ -393,12 +436,14 @@
 						"roles": [
 							{
 								"permittedRoles": [1, 2, 3, 4, 5],
-								"amount": 1
+								"min": 1,
+								"max": 1
 							}
 						]
 					},
 					{
 						"name": "Night Weekday",
+						"tags": [],
 						"startDays": [
 							"Monday",
 							"Tuesday",
@@ -412,12 +457,14 @@
 						"roles": [
 							{
 								"permittedRoles": [1, 2, 3, 4, 5],
-								"amount": 1
+								"min": 1,
+								"max": 1
 							}
 						]
 					},
 					{
 						"name": "Day Weekend",
+						"tags": [],
 						"startDays": ["Saturday", "Sunday"],
 						"startTime": "07:00",
 						"location": "Nursery",
@@ -425,12 +472,14 @@
 						"roles": [
 							{
 								"permittedRoles": [1, 2, 3, 4, 5],
-								"amount": 1
+								"min": 1,
+								"max": 1
 							}
 						]
 					},
 					{
 						"name": "Night Weekend",
+						"tags": [],
 						"startDays": ["Saturday", "Sunday"],
 						"startTime": "19:00",
 						"location": "Nursery",
@@ -438,12 +487,14 @@
 						"roles": [
 							{
 								"permittedRoles": [1, 2, 3, 4, 5],
-								"amount": 1
+								"min": 1,
+								"max": 1
 							}
 						]
 					},
 					{
 						"name": "Morning Weekday",
+						"tags": [],
 						"startDays": [
 							"Monday",
 							"Tuesday",
@@ -457,12 +508,14 @@
 						"roles": [
 							{
 								"permittedRoles": [1, 2, 3, 4, 5],
-								"amount": 1
+								"min": 1,
+								"max": 1
 							}
 						]
 					},
 					{
 						"name": "Afternoon Weekday",
+						"tags": [],
 						"startDays": [
 							"Monday",
 							"Tuesday",
@@ -476,12 +529,14 @@
 						"roles": [
 							{
 								"permittedRoles": [1, 2, 3, 4, 5],
-								"amount": 1
+								"min": 1,
+								"max": 1
 							}
 						]
 					},
 					{
 						"name": "Night Weekday",
+						"tags": [],
 						"startDays": [
 							"Monday",
 							"Tuesday",
@@ -495,12 +550,14 @@
 						"roles": [
 							{
 								"permittedRoles": [1, 2, 3, 4, 5],
-								"amount": 1
+								"min": 1,
+								"max": 1
 							}
 						]
 					},
 					{
 						"name": "Day Weekend",
+						"tags": [],
 						"startDays": ["Saturday", "Sunday"],
 						"startTime": "07:00",
 						"location": "ICU",
@@ -508,12 +565,14 @@
 						"roles": [
 							{
 								"permittedRoles": [1, 2, 3, 4, 5],
-								"amount": 1
+								"min": 1,
+								"max": 1
 							}
 						]
 					},
 					{
 						"name": "Night Weekend",
+						"tags": [],
 						"startDays": ["Saturday", "Sunday"],
 						"startTime": "19:00",
 						"location": "ICU",
@@ -521,7 +580,8 @@
 						"roles": [
 							{
 								"permittedRoles": [1, 2, 3, 4, 5],
-								"amount": 1
+								"min": 1,
+								"max": 1
 							}
 						]
 					}
@@ -535,6 +595,7 @@
 				"shifts": [
 					{
 						"name": "Morning Weekday",
+						"tags": [],
 						"startDays": [
 							"Monday",
 							"Tuesday",
@@ -548,12 +609,14 @@
 						"roles": [
 							{
 								"permittedRoles": [1, 2, 3, 4, 5],
-								"amount": 1
+								"min": 1,
+								"max": 1
 							}
 						]
 					},
 					{
 						"name": "Afternoon Weekday",
+						"tags": [],
 						"startDays": [
 							"Monday",
 							"Tuesday",
@@ -567,12 +630,14 @@
 						"roles": [
 							{
 								"permittedRoles": [1, 2, 3, 4, 5],
-								"amount": 1
+								"min": 1,
+								"max": 1
 							}
 						]
 					},
 					{
 						"name": "Night Weekday",
+						"tags": [],
 						"startDays": [
 							"Monday",
 							"Tuesday",
@@ -586,12 +651,14 @@
 						"roles": [
 							{
 								"permittedRoles": [1, 2, 3, 4, 5],
-								"amount": 1
+								"min": 1,
+								"max": 1
 							}
 						]
 					},
 					{
 						"name": "Day Weekend",
+						"tags": [],
 						"startDays": ["Saturday", "Sunday"],
 						"startTime": "07:00",
 						"location": "Nursery",
@@ -599,12 +666,14 @@
 						"roles": [
 							{
 								"permittedRoles": [1, 2, 3, 4, 5],
-								"amount": 1
+								"min": 1,
+								"max": 1
 							}
 						]
 					},
 					{
 						"name": "Night Weekend",
+						"tags": [],
 						"startDays": ["Saturday", "Sunday"],
 						"startTime": "19:00",
 						"location": "Nursery",
@@ -612,12 +681,14 @@
 						"roles": [
 							{
 								"permittedRoles": [1, 2, 3, 4, 5],
-								"amount": 1
+								"min": 1,
+								"max": 1
 							}
 						]
 					},
 					{
 						"name": "Morning Weekday",
+						"tags": [],
 						"startDays": [
 							"Monday",
 							"Tuesday",
@@ -631,12 +702,14 @@
 						"roles": [
 							{
 								"permittedRoles": [1, 2, 3, 4, 5],
-								"amount": 1
+								"min": 1,
+								"max": 1
 							}
 						]
 					},
 					{
 						"name": "Afternoon Weekday",
+						"tags": [],
 						"startDays": [
 							"Monday",
 							"Tuesday",
@@ -650,12 +723,14 @@
 						"roles": [
 							{
 								"permittedRoles": [1, 2, 3, 4, 5],
-								"amount": 1
+								"min": 1,
+								"max": 1
 							}
 						]
 					},
 					{
 						"name": "Night Weekday",
+						"tags": [],
 						"startDays": [
 							"Monday",
 							"Tuesday",
@@ -669,12 +744,14 @@
 						"roles": [
 							{
 								"permittedRoles": [1, 2, 3, 4, 5],
-								"amount": 1
+								"min": 1,
+								"max": 1
 							}
 						]
 					},
 					{
 						"name": "Day Weekend",
+						"tags": [],
 						"startDays": ["Saturday", "Sunday"],
 						"startTime": "07:00",
 						"location": "ICU",
@@ -682,12 +759,14 @@
 						"roles": [
 							{
 								"permittedRoles": [1, 2, 3, 4, 5],
-								"amount": 1
+								"min": 1,
+								"max": 1
 							}
 						]
 					},
 					{
 						"name": "Night Weekend",
+						"tags": [],
 						"startDays": ["Saturday", "Sunday"],
 						"startTime": "19:00",
 						"location": "ICU",
@@ -695,7 +774,8 @@
 						"roles": [
 							{
 								"permittedRoles": [1, 2, 3, 4, 5],
-								"amount": 1
+								"min": 1,
+								"max": 1
 							}
 						]
 					}
