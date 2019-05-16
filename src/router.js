@@ -36,7 +36,7 @@ export default new Router({
 			path: "/scheduleblock/constraints",
 			name: "scheduleblockconstraints",
 			component: () =>
-				import(/* webpackChunkName: "createscheduleblock" */ "./views/CreateScheduleBlock.vue")
+				import(/* webpackChunkName: "createscheduleblock" */ "./views/ScheduleBlockConstraintsPage.vue")
 		},
 		{
 			path: "/fiscalyear/create",
