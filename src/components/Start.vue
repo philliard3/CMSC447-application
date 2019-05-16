@@ -27,7 +27,7 @@
 				</v-container>
 				<v-container id="loading-info" class="title font-weight-medium" v-else>
 					<v-container>You've already started on a calendar.</v-container>
-					<v-btn color="info" to="/fiscalyear/create">New Fiscal Year</v-btn>
+					<v-btn color="info" @click="clearStore">New Fiscal Year</v-btn>
 				</v-container>
 			</v-card-text>
 		</v-card>
@@ -67,6 +67,11 @@ export default {
 				this.$router.push("/manage");
 			};
 			reader.readAsText(files[files.length - 1]);
+		},
+
+		clearStore() {
+			this.$store.commit("clearStore");
+			this.$router.push("/fiscalyear/create");
 		}
 	}
 };
