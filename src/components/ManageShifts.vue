@@ -277,6 +277,25 @@ export default {
 		"newShiftData.tags": function(newTags) {
 			const tagToAdd = newTags[newTags.length - 1];
 			this.$store.commit("addTag", tagToAdd);
+		},
+
+		"newShiftData.startDays": function(newDays) {
+			const daysOfWeek = [
+				"Sunday",
+				"Monday",
+				"Tuesday",
+				"Wednesday",
+				"Thursday",
+				"Friday",
+				"Saturday"
+			];
+
+			// trim out any nonexistent days
+			if (newDays.some(day => !daysOfWeek.includes(day))) {
+				this.newShiftData.startDays = this.newShiftData.startDays.filter(day =>
+					daysOfWeek.includes(day)
+				);
+			}
 		}
 	},
 	methods: {
