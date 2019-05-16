@@ -105,49 +105,17 @@
 				</v-card-text>
 			</v-card>
 		</v-container>
-		<v-container>
-			<v-card>
-				<v-card-text>
-					<div class="display-1 font-weight-light" id="header-row-1">
-						Locations
-					</div>
-					<v-layout>
-						<v-flex>
-							<v-text-field
-								v-model="newLocationData.name"
-								name="Location Name"
-								label="Location Name"
-							></v-text-field>
-						</v-flex>
-						<v-flex>
-							<v-btn color="success" @click="addLocation">
-								<v-icon>add_location</v-icon>&nbsp;New Location
-							</v-btn>
-						</v-flex>
-					</v-layout>
-					<!--- location table -->
-					<v-layout>
-						<v-flex>
-							<v-container v-for="name in locations" :key="name">
-								<v-layout>
-									<v-flex class="title">{{ name }}</v-flex>
-									<v-flex>
-										<v-btn color="error" @click="removeLocation(name)">
-											<v-icon>remove_circle</v-icon>&nbsp;Remove
-										</v-btn>
-									</v-flex>
-								</v-layout>
-							</v-container>
-						</v-flex>
-					</v-layout>
-				</v-card-text>
-			</v-card>
-		</v-container>
+		<LocationList></LocationList>
 	</v-form>
 </template>
 
 <script>
+import LocationList from "./LocationList";
+
 export default {
+	components: {
+		LocationList
+	},
 	data() {
 		return {
 			valid: false,
@@ -157,11 +125,7 @@ export default {
 				name: "",
 				startTime: null,
 				endTime: null
-			},
-			newLocationData: {
-				name: ""
 			}
-			//locations: []
 		};
 	},
 	computed: {
@@ -205,9 +169,6 @@ export default {
 		roles() {
 			return this.$store.getters.roles;
 		},
-		locations() {
-			return this.$store.getters.locations;
-		},
 		currentFiscalYear() {
 			return this.$store.getters.currentFiscalYear;
 		}
@@ -229,17 +190,6 @@ export default {
 				}
 			}
 			// console.log(newShiftData);
-		},
-		addLocation() {
-			if (
-				this.newLocationData.name.length > 0 &&
-				!this.locations.includes(this.newLocationData.name)
-			) {
-				this.$store.commit("addLocation", this.newLocationData.name);
-			}
-		},
-		removeLocation(locationName) {
-			this.$store.commit("removeLocation", locationName);
 		}
 	}
 };
