@@ -85,19 +85,19 @@ export default {
 				{
 					url: "/scheduleblock/create",
 					text: "New Schedule Block",
-					smallText: "New Schedule Block",
+					smallText: "New Schedule",
 					icon: "note_add"
 				},
 				{
 					url: "/scheduleblock/constraints",
 					text: "Schedule Block Rules",
-					smallText: "Schedule Block Rules",
+					smallText: "Schedule Rules",
 					icon: "ballot"
 				},
 				{
 					url: "/manage",
 					text: "Manage Employees",
-					smallText: "Manage Employees",
+					smallText: "Manage",
 					icon: "people"
 				},
 				{
