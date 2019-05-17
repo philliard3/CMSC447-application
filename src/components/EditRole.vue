@@ -23,34 +23,95 @@
 							</v-flex>
 						</v-layout>
 					</v-container>
-					<v-container>
-						<v-layout>
-							<v-flex sm2>
-								<v-select
-									v-model="unit"
-									label="Unit"
-									:items="[
-										'Hours',
-										'Shifts',
-										'Attending weeks',
-										'Nursing weeks'
-									]"
-								></v-select>
-							</v-flex>
-							<v-flex sm2 class="title">required per</v-flex>
-							<v-flex sm2>
-								<v-select
-									v-model="per"
-									label="period"
-									:items="['week', '2 weeks', 'month', 'quarter', 'year']"
-								></v-select>
-							</v-flex>
-							<v-flex sm1 class="title">-</v-flex>
-							<v-flex sm2>
-								<v-text-field v-model="amount" label="Amount"></v-text-field>
-							</v-flex>
-						</v-layout>
-					</v-container>
+					<v-form>
+						<v-container>
+							<v-layout>
+								<v-flex sm1>
+									<v-select
+										v-model="requirementToAdd.type"
+										label="Unit"
+										:items="[
+											'Hours',
+											'Shifts',
+											'Attending weeks',
+											'Nursing weeks'
+										]"
+									></v-select>
+								</v-flex>
+								<v-flex sm2 class="title">required per</v-flex>
+								<v-flex sm2>
+									<v-select
+										v-model="requirementToAdd.per"
+										label="period"
+										:items="['week', '2 weeks', 'month', 'quarter', 'year']"
+									></v-select>
+								</v-flex>
+								<v-flex sm1 class="title">-</v-flex>
+								<v-flex sm2>
+									<v-text-field
+										v-model="requirementToAdd.amount"
+										label="Amount"
+									></v-text-field>
+								</v-flex>
+								<v-flex sm1 class="title">
+									<v-checkbox
+										v-model="requirementToAdd.flexible"
+										label="flexible"
+									></v-checkbox>
+								</v-flex>
+								<v-flex sm1></v-flex>
+								<v-flex sm1>
+									<v-btn color="success" @click="addRequirement">
+										<v-icon>add</v-icon>
+									</v-btn>
+								</v-flex>
+							</v-layout>
+							<v-layout
+								v-for="(requirement, index) in roleData.required"
+								:key="requirement.requirementID"
+							>
+								<v-flex sm1>
+									<v-select
+										v-model="requirement.type"
+										label="Unit"
+										:items="[
+											'Hours',
+											'Shifts',
+											'Attending weeks',
+											'Nursing weeks'
+										]"
+									></v-select>
+								</v-flex>
+								<v-flex sm2 class="title">required per</v-flex>
+								<v-flex sm2>
+									<v-select
+										v-model="requirement.per"
+										label="period"
+										:items="['week', '2 weeks', 'month', 'quarter', 'year']"
+									></v-select>
+								</v-flex>
+								<v-flex sm1 class="title">-</v-flex>
+								<v-flex sm2>
+									<v-text-field
+										v-model="requirement.amount"
+										label="Amount"
+									></v-text-field>
+								</v-flex>
+								<v-flex sm1 class="title">
+									<v-checkbox
+										v-model="requirement.flexible"
+										label="flexible"
+									></v-checkbox>
+								</v-flex>
+								<v-flex sm1></v-flex>
+								<v-flex sm1>
+									<v-btn color="error" @click="removeRequirement(index)">
+										<v-icon>remove</v-icon>
+									</v-btn>
+								</v-flex>
+							</v-layout>
+						</v-container>
+					</v-form>
 				</v-card-text>
 			</v-card>
 		</v-container>
@@ -64,7 +125,14 @@ export default {
 	name: "EditRole",
 	components: { Swatches },
 	data() {
-		return {};
+		return {
+			requirementToAdd: {
+				type: null,
+				per: null,
+				amount: "",
+				flexible: false
+			}
+		};
 	},
 	computed: {
 		roleData() {
@@ -77,6 +145,26 @@ export default {
 				roleData = roles[0];
 			} else {
 				return null;
+			}
+
+			let changed = false;
+			const newRoleData = { ...roleData };
+
+			if (!roleData.color) {
+				newRoleData.color = "#1FBC9C";
+				changed = true;
+			}
+
+			if (!roleData.required) {
+				newRoleData.required = [];
+				changed = true;
+			}
+
+			if (changed) {
+				this.$store.commit("updateRole", { roleData: newRoleData });
+				return this.$store.getters.roles.filter(
+					role => role.roleID === roleID
+				)[0];
 			}
 
 			return roleData;
@@ -107,6 +195,35 @@ export default {
 
 		error() {
 			return this.roleData ? null : "We couldn't find that role.";
+		}
+	},
+	methods: {
+		addRequirement() {
+			const newRoleData = { ...this.roleData };
+			const requirementToAdd = { ...this.requirementToAdd };
+
+			requirementToAdd.amount = Number(requirementToAdd.amount);
+			if (!(requirementToAdd.amount > 0)) {
+				return;
+			}
+			newRoleData.required.push({
+				requirementID: new Date().getTime() % Math.pow(2, 32),
+				...requirementToAdd
+			});
+
+			this.$store.commit("updateRole", { roleData: newRoleData });
+			this.requirementToAdd = {
+				type: null,
+				per: null,
+				amount: "",
+				flexible: false
+			};
+		},
+		removeRequirement(index) {
+			const newRequired = [...this.roleData.required];
+			newRequired.splice(index, 1);
+			const newRoleData = { ...this.roleData, required: newRequired };
+			this.$store.commit("updateRole", { roleData: newRoleData });
 		}
 	}
 };

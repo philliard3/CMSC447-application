@@ -303,10 +303,15 @@ export default new Vuex.Store({
 			const filteredRoles = state.data.roles.filter(
 				role => role.roleID === roleData.roleID
 			);
-			if (filteredRoles.length) {
-				for (let key of Object.keys(roleData)) {
-					filteredRoles[0][key] = roleData[key];
+			if (filteredRoles.length === 1) {
+				const newRoleData = { ...filteredRoles[0], ...roleData };
+				const newRoles = [...state.data.roles];
+				for (let i = 0; i < newRoles.length; i++) {
+					if (newRoles[i].roleID === roleData.roleID) {
+						newRoles[i] = newRoleData;
+					}
 				}
+				state.data.roles = newRoles;
 			}
 		},
 
