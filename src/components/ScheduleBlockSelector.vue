@@ -4,7 +4,7 @@
 			<v-select
 				:items="scheduleBlocks.map(sb => sb.name)"
 				v-model="selectedScheduleBlock"
-				label="Schedule Block to edit"
+				label="Schedule Block"
 			></v-select>
 		</v-flex>
 	</v-layout>

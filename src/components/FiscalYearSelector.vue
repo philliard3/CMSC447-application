@@ -4,7 +4,7 @@
 			<v-select
 				:items="fiscalYears.map(fy => fy.name)"
 				v-model="selectedFiscalYear"
-				label="Fiscal Year to Edit"
+				label="Fiscal Year"
 			></v-select>
 		</v-flex>
 	</v-layout>
