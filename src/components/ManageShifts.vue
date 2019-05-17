@@ -263,9 +263,9 @@
 									</v-layout>
 								</v-flex>
 								<v-flex>
-									<v-chip v-for="tag in shift.tags" :key="tag">{{
-										tag
-									}}</v-chip>
+									<v-chip v-for="tag in shift.tags" :key="tag">
+										{{ tag }}
+									</v-chip>
 								</v-flex>
 								<v-flex>
 									<v-btn color="error" @click="removeShift(shift.name)">
@@ -358,7 +358,7 @@ export default {
 	methods: {
 		createShift() {
 			const newShiftData = {
-				shiftID: new Date().getTime(),
+				shiftID: new Date().getTime() % Math.pow(2, 32),
 				...this.newShiftData
 			};
 

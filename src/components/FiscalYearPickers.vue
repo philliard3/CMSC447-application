@@ -44,8 +44,8 @@ export default {
 	methods: {
 		reportDates() {
 			// disallow repeat names on fiscal years and schedule blocks
-			const fyID = new Date().getTime();
-			const sbID = new Date().getTime();
+			const fyID = new Date().getTime() % Math.pow(2, 32);
+			const sbID = new Date().getTime() % Math.pow(2, 32);
 
 			if (
 				this.$store.getters.fiscalYearExists(fyID) === false &&

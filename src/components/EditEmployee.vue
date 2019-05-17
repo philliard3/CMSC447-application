@@ -48,16 +48,14 @@ import WorkPreferenceTable from "./WorkPreferenceTable";
 const holidays = [{ name: "Christmas", selected: false, preferred: false }];
 
 holidays.forEach(day => {
-	day.dayID = Number(
+	day.dayID =
 		day.name
 			.split("")
 			.splice(0, 5)
 			.reduce((total, chr) => {
-				total.push(chr.charCodeAt(0));
-				return total;
-			}, [])
-			.join("") + String(new Date().getTime() % 1000000)
-	);
+				return total + (chr.charCodeAt(0) - 48);
+			}, 0) +
+		(new Date().getTime() % Math.pow(2, 27));
 });
 
 export default {

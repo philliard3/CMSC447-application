@@ -52,7 +52,7 @@ export default {
 	methods: {
 		reportDates() {
 			// disallow repeat schedule blocks or schedule blocks without a home
-			const sbID = new Date().getTime();
+			const sbID = new Date().getTime() % Math.pow(2, 32);
 			if (
 				this.$store.getters.scheduleBlockExists(sbID) === false &&
 				this.$store.getters.scheduleBlockExistsWithName(
