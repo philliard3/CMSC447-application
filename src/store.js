@@ -249,8 +249,48 @@ export default new Vuex.Store({
 			}
 		},
 
+		matchFiscalYearToScheduleBlock(
+			state,
+			{ fiscalYearData, scheduleBlockData }
+		) {
+			const filteredFiscalYears = state.data.fiscalYears.filter(
+				fy => fy.fyID === fiscalYearData.fyID || fy.name === fiscalYearData.name
+			);
+
+			if (filteredFiscalYears.length !== 1) {
+				return;
+			}
+
+			const blocksInYear = state.data.scheduleBlocks.filter(sb =>
+				filteredFiscalYears[0].scheduleBlocks.includes(sb.sbID)
+			);
+
+			const filteredScheduleBlocks = blocksInYear.filter(
+				sb =>
+					sb.sbID === scheduleBlockData.sbID ||
+					sb.name === scheduleBlockData.name
+			);
+
+			if (filteredScheduleBlocks.length !== 1) {
+				return;
+			}
+
+			const newBlocks = [...blocksInYear];
+			const staticProperties = ["sbID", "name", "startDate", "endDate"];
+			for (let sb of newBlocks) {
+				const realBlock = state.data.scheduleBlocks.filter(
+					block => block.sbID === sb.sbID
+				)[0];
+				for (let key of Object.keys(sb)) {
+					if (!staticProperties.includes(key)) {
+						realBlock[key] = filteredScheduleBlocks[0][key];
+					}
+				}
+			}
+		},
+
 		/** **/
-		addRole(state, roleData) {
+		addRole(state, { roleData }) {
 			if (!roleData.roleID) {
 				return;
 			}
@@ -258,6 +298,17 @@ export default new Vuex.Store({
 				return;
 			}
 			state.data.roles.push({ ...roleData });
+		},
+
+		updateRole(state, { roleData }) {
+			const filteredRoles = state.data.roles.filter(
+				role => role.roleID === roleData.roleID
+			);
+			if (filteredRoles.length) {
+				for (let key of Object.keys(roleData)) {
+					filteredRoles[0][key] = roleData[key];
+				}
+			}
 		},
 
 		removeRole(state, { roleData }) {
@@ -277,6 +328,7 @@ export default new Vuex.Store({
 				});
 
 				// Remove the role from any constraints that reference it
+				/// remove the role from any shifts that reference it
 			}
 		},
 

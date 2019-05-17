@@ -3,24 +3,52 @@
 		<v-container>
 			<v-card>
 				<v-card-text>
-					<div class="display-1 font-weight-light" id="header-row-1">
-						Schedule Block:
-						{{
-							currentScheduleBlock && currentFiscalYear
-								? `${currentFiscalYear.name} - ${currentScheduleBlock.name}`
-								: ""
-						}}
-					</div>
-					<v-select
-						:items="fiscalYears.map(fy => fy.name)"
-						v-model="selectedFiscalYear"
-						label="Fiscal Year to Edit"
-					></v-select>
-					<v-select
-						:items="scheduleBlocks.map(sb => sb.name)"
-						v-model="selectedScheduleBlock"
-						label="Schedule Block to edit"
-					></v-select>
+					<v-layout>
+						<v-flex class="display-1 font-weight-light">
+							Schedule Block:
+							{{
+								currentScheduleBlock && currentFiscalYear
+									? `${currentFiscalYear.name} - ${currentScheduleBlock.name}`
+									: ""
+							}}
+						</v-flex>
+					</v-layout>
+					<v-layout>
+						<v-flex>
+							<v-select
+								:items="fiscalYears.map(fy => fy.name)"
+								v-model="selectedFiscalYear"
+								label="Fiscal Year to Edit"
+							></v-select>
+						</v-flex>
+					</v-layout>
+					<v-layout>
+						<v-flex>
+							<v-select
+								:items="scheduleBlocks.map(sb => sb.name)"
+								v-model="selectedScheduleBlock"
+								label="Schedule Block to edit"
+							></v-select>
+						</v-flex>
+					</v-layout>
+					<v-layout>
+						<v-flex>
+							<v-btn
+								color="warning"
+								flat
+								outline
+								@click="matchFiscalYearToScheduleBlock"
+								>Make all blocks in this Fiscal Year match this setup</v-btn
+							>
+						</v-flex>
+					</v-layout>
+					<!-- This feature is too dangerous and labor-intensive, and is therefore not considered a priority.
+          <v-layout>
+            <v-flex>
+              <v-btn color="error" flat outline>Make all blocks in all Fiscal Years match this setup</v-btn>
+            </v-flex>
+          </v-layout>
+          -->
 				</v-card-text>
 			</v-card>
 		</v-container>
@@ -88,6 +116,18 @@ export default {
 	created() {
 		if (this.$store.getters.currentFiscalYear === null) {
 			this.$router.push("/fiscalyear/create");
+			return;
+		} else if (this.$store.getters.currentScheduleBlock === null) {
+			this.$router.push("/scheduleblock/create");
+			return;
+		}
+	},
+	methods: {
+		matchFiscalYearToScheduleBlock() {
+			this.$store.commit("matchFiscalYearToScheduleBlock", {
+				scheduleBlockData: this.currentScheduleBlock,
+				fiscalYearData: this.currentFiscalYear
+			});
 		}
 	}
 };

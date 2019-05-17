@@ -251,21 +251,24 @@
 												}}
 												&nbsp;
 												{{
-													roleRestriction.permittedRoles
-														.map(
-															r =>
-																roles.filter(role => role.roleID === r)[0].name
-														)
-														.join(", ")
+													roleRestriction.permittedRoles.length
+														? roleRestriction.permittedRoles
+																.map(
+																	r =>
+																		roles.filter(role => role.roleID === r)[0]
+																			.name
+																)
+																.join(", ")
+														: "Nobody"
 												}}
 											</v-card-text>
 										</v-flex>
 									</v-layout>
 								</v-flex>
 								<v-flex>
-									<v-chip v-for="tag in shift.tags" :key="tag">
-										{{ tag }}
-									</v-chip>
+									<v-chip v-for="tag in shift.tags" :key="tag">{{
+										tag
+									}}</v-chip>
 								</v-flex>
 								<v-flex>
 									<v-btn color="error" @click="removeShift(shift.name)">
