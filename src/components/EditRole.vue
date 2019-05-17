@@ -1,6 +1,6 @@
 <template>
 	<v-form>
-		<v-container class="display-1 font-weight-light">
+		<v-container>
 			<v-card v-if="error">
 				<v-card-text>{{ error }}</v-card-text>
 			</v-card>
@@ -8,7 +8,12 @@
 				<v-card-text>
 					<v-container>
 						<v-layout>
-							<v-flex>Employee Role: {{ roleData.name }}</v-flex>
+							<v-flex class="display-1 font-weight-light"
+								>Employee Role: {{ roleData.name }}</v-flex
+							>
+						</v-layout>
+						<v-layout>
+							<v-text-field label="Name" v-model="name"></v-text-field>
 						</v-layout>
 					</v-container>
 					<v-container>
@@ -68,6 +73,7 @@
 							</v-layout>
 							<v-layout
 								v-for="(requirement, index) in roleData.required"
+								@input="updateRequirement(index)"
 								:key="requirement.requirementID"
 							>
 								<v-flex sm1>
@@ -135,6 +141,17 @@ export default {
 		};
 	},
 	computed: {
+		name: {
+			get() {
+				return this.roleData ? this.roleData.name : "";
+			},
+			set(newName) {
+				if (newName.length > 0 && !this.$store.getters.roleExists(newName)) {
+					const newRoleData = { ...this.roleData, name: newName };
+					this.$store.commit("updateRole", { roleData: newRoleData });
+				}
+			}
+		},
 		roleData() {
 			const roleID = Number(this.$route.params.roleID);
 			const roles = this.$store.getters.roles.filter(
@@ -199,11 +216,14 @@ export default {
 	},
 	methods: {
 		addRequirement() {
+			if (!(this.requirementToAdd.type && this.requirementToAdd.per)) {
+				return;
+			}
 			const newRoleData = { ...this.roleData };
 			const requirementToAdd = { ...this.requirementToAdd };
 
 			requirementToAdd.amount = Number(requirementToAdd.amount);
-			if (!(requirementToAdd.amount > 0)) {
+			if (!(requirementToAdd.amount >= 0)) {
 				return;
 			}
 			newRoleData.required.push({
@@ -218,6 +238,22 @@ export default {
 				amount: "",
 				flexible: false
 			};
+		},
+		updateRequirement(index) {
+			const newRequirementData = { ...this.roleData.required[index] };
+			if (!(newRequirementData.type && newRequirementData.per)) {
+				return;
+			}
+
+			newRequirementData.amount = Number(newRequirementData.amount);
+			if (!(newRequirementData.amount >= 0)) {
+				return;
+			}
+
+			const newRoleData = { ...this.roleData };
+			newRoleData.required.splice(index, 1, newRequirementData);
+
+			this.$store.commit("updateRole", { roleData: newRoleData });
 		},
 		removeRequirement(index) {
 			const newRequired = [...this.roleData.required];

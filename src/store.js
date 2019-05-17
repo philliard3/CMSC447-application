@@ -598,7 +598,9 @@ export default new Vuex.Store({
 		},
 
 		roleExists(state) {
-			return roleID => state.data.roles.filter(r => r.roleID === roleID) > 0;
+			return roleID =>
+				state.data.roles.filter(r => r.roleID === roleID || r.name === roleID)
+					.length > 0;
 		},
 
 		roles(state) {
