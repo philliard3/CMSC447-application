@@ -6,11 +6,7 @@
 					<div class="display-1 font-weight-light" id="header-row-1">
 						Fiscal Year: {{ currentFiscalYear ? currentFiscalYear.name : "" }}
 					</div>
-					<v-select
-						:items="fiscalYears.map(fy => fy.name)"
-						v-model="selectedFiscalYear"
-						label="Fiscal Year to Edit"
-					></v-select>
+					<FiscalYearSelector></FiscalYearSelector>
 				</v-card-text>
 			</v-card>
 		</v-container>
@@ -19,11 +15,13 @@
 </template>
 
 <script>
+import FiscalYearSelector from "./FiscalYearSelector";
 import LocationList from "./LocationList";
 
 export default {
 	components: {
-		LocationList
+		LocationList,
+		FiscalYearSelector
 	},
 	data() {
 		return {
@@ -31,21 +29,6 @@ export default {
 		};
 	},
 	computed: {
-		selectedFiscalYear: {
-			get() {
-				try {
-					return this.$store.getters.currentFiscalYear.name;
-				} catch (err) {
-					return null;
-				}
-			},
-			set(newValue) {
-				this.$store.commit("setCurrentFiscalYear", {
-					fiscalYearData: { name: newValue }
-				});
-				return this.$store.getters.currentFiscalYear.name;
-			}
-		},
 		fiscalYears() {
 			return this.$store.getters.fiscalYears;
 		},

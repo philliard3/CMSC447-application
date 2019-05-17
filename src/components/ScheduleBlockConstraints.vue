@@ -13,24 +13,8 @@
 							}}
 						</v-flex>
 					</v-layout>
-					<v-layout>
-						<v-flex>
-							<v-select
-								:items="fiscalYears.map(fy => fy.name)"
-								v-model="selectedFiscalYear"
-								label="Fiscal Year to Edit"
-							></v-select>
-						</v-flex>
-					</v-layout>
-					<v-layout>
-						<v-flex>
-							<v-select
-								:items="scheduleBlocks.map(sb => sb.name)"
-								v-model="selectedScheduleBlock"
-								label="Schedule Block to edit"
-							></v-select>
-						</v-flex>
-					</v-layout>
+					<FiscalYearSelector></FiscalYearSelector>
+					<ScheduleBlockSelector></ScheduleBlockSelector>
 					<v-layout>
 						<v-flex>
 							<v-btn
@@ -57,49 +41,25 @@
 	</v-form>
 </template>
 <script>
+import ScheduleBlockSelector from "./ScheduleBlockSelector";
+import FiscalYearSelector from "./FiscalYearSelector";
 import ManageShifts from "./ManageShifts";
 import RoleTable from "./RoleTable";
 
 export default {
 	name: "ScheduleBlockConstraints",
-	components: { ManageShifts, RoleTable },
+	components: {
+		ManageShifts,
+		RoleTable,
+		ScheduleBlockSelector,
+		FiscalYearSelector
+	},
 	data() {
 		return {
 			valid: false
 		};
 	},
 	computed: {
-		selectedFiscalYear: {
-			get() {
-				try {
-					return this.$store.getters.currentFiscalYear.name;
-				} catch (err) {
-					return null;
-				}
-			},
-			set(newValue) {
-				this.$store.commit("setCurrentFiscalYear", {
-					fiscalYearData: { name: newValue }
-				});
-				return this.$store.getters.currentFiscalYear.name;
-			}
-		},
-		selectedScheduleBlock: {
-			get() {
-				try {
-					return this.$store.getters.currentScheduleBlock.name;
-				} catch (err) {
-					return null;
-				}
-			},
-			set(newValue) {
-				this.$store.commit("setCurrentScheduleBlock", {
-					fiscalYearData: { name: this.selectedFiscalYear },
-					scheduleBlockData: { name: newValue }
-				});
-				return this.$store.getters.currentScheduleBlock.name;
-			}
-		},
 		scheduleBlocks() {
 			return this.$store.getters.scheduleBlocks;
 		},
