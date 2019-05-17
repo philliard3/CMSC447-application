@@ -23,7 +23,34 @@
 							</v-flex>
 						</v-layout>
 					</v-container>
-					<v-container id="bad"></v-container>
+					<v-container>
+						<v-layout>
+							<v-flex sm2>
+								<v-select
+									v-model="unit"
+									label="Unit"
+									:items="[
+										'Hours',
+										'Shifts',
+										'Attending weeks',
+										'Nursing weeks'
+									]"
+								></v-select>
+							</v-flex>
+							<v-flex sm2 class="title">required per</v-flex>
+							<v-flex sm2>
+								<v-select
+									v-model="per"
+									label="period"
+									:items="['week', '2 weeks', 'month', 'quarter', 'year']"
+								></v-select>
+							</v-flex>
+							<v-flex sm1 class="title">-</v-flex>
+							<v-flex sm2>
+								<v-text-field v-model="amount" label="Amount"></v-text-field>
+							</v-flex>
+						</v-layout>
+					</v-container>
 				</v-card-text>
 			</v-card>
 		</v-container>
@@ -89,8 +116,9 @@ export default {
 *:focus {
 	outline: none;
 }
-/*
-#bad {
-  height: 500px;
-}*/
+.title {
+	text-align: center;
+	align-content: center;
+	vertical-align: middle;
+}
 </style>
