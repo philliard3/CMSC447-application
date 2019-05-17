@@ -59,11 +59,10 @@ export default new Vuex.Store({
 		 */
 		initialize(state, { scheduleBlockData, fiscalYearData }) {
 			const scheduleBlockToCreate = {
-				name: scheduleBlockData.name,
 				sbID: new Date().getTime() % Math.pow(2, 32),
+				...scheduleBlockData,
 				startDate: scheduleBlockData.startDate.getTime(),
-				endDate: scheduleBlockData.endDate.getTime(),
-				...scheduleBlockData
+				endDate: scheduleBlockData.endDate.getTime()
 			};
 			state.data.scheduleBlocks[0] = scheduleBlockToCreate;
 			state.data.currentScheduleBlock = scheduleBlockToCreate.sbID;
@@ -71,10 +70,10 @@ export default new Vuex.Store({
 			const fiscalYearToCreate = {
 				name: fiscalYearData.name,
 				fyID: new Date().getTime() % Math.pow(2, 32),
+				...fiscalYearData,
 				startDate: fiscalYearData.startDate.getTime(),
 				endDate: fiscalYearData.endDate.getTime(),
-				scheduleBlocks: [scheduleBlockToCreate.sbID],
-				...fiscalYearData
+				scheduleBlocks: [scheduleBlockToCreate.sbID]
 			};
 			state.data.fiscalYears[0] = fiscalYearToCreate;
 			state.data.currentFiscalYear = fiscalYearToCreate.fyID;
@@ -100,10 +99,10 @@ export default new Vuex.Store({
 			const scheduleBlockToCreate = {
 				name: scheduleBlockData.name,
 				sbID: new Date().getTime() % Math.pow(2, 32),
+				...scheduleBlockData,
 				startDate: scheduleBlockData.startDate.getTime(),
 				endDate: scheduleBlockData.endDate.getTime(),
-				shifts: [],
-				...scheduleBlockData
+				shifts: []
 			};
 			state.data.scheduleBlocks.push(scheduleBlockToCreate);
 			state.data.currentScheduleBlock = scheduleBlockToCreate.sbID;
@@ -195,10 +194,10 @@ export default new Vuex.Store({
 			const scheduleBlockToCreate = {
 				name: scheduleBlockData.name,
 				sbID: new Date().getTime() % Math.pow(2, 32),
+				...scheduleBlockData,
 				startDate: scheduleBlockData.startDate.getTime(),
 				endDate: scheduleBlockData.endDate.getTime(),
-				shifts: [],
-				...scheduleBlockData
+				shifts: []
 			};
 			state.data.scheduleBlocks.push(scheduleBlockToCreate);
 			state.data.currentScheduleBlock = scheduleBlockToCreate.sbID;
@@ -208,10 +207,10 @@ export default new Vuex.Store({
 			// create fiscal year
 			const fiscalYearToCreate = {
 				fyID: new Date().getTime() % Math.pow(2, 32),
+				...fiscalYearData,
 				startDate: fiscalYearData.startDate.getTime(),
 				endDate: fiscalYearData.endDate.getTime(),
-				scheduleBlocks: [scheduleBlockToCreate.sbID],
-				...fiscalYearData
+				scheduleBlocks: [scheduleBlockToCreate.sbID]
 			};
 			state.data.fiscalYears.push(fiscalYearToCreate);
 			state.data.currentFiscalYear = fiscalYearToCreate.fyID;
