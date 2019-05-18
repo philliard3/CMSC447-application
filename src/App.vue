@@ -35,7 +35,13 @@
 					</v-btn>
 				</v-toolbar-items>
 				<v-toolbar-items v-if="$mq === 'md' || $mq === 'lg'">
-					<v-btn v-for="link in navLinks" :key="link.url" :to="link.url" flat>
+					<v-btn
+						class="spaced-button"
+						v-for="link in navLinks"
+						:key="link.url"
+						:to="link.url"
+						flat
+					>
 						<v-icon dark>{{ link.icon }}</v-icon>
 						<!-- adjust the size of the navigation bar text when smaller than fullscreen -->
 						<v-list-tile-title
@@ -76,12 +82,13 @@ export default {
 					smallText: "New FY",
 					icon: "library_add"
 				},
-				{
-					url: "/fiscalyear/constraints",
-					text: "Fiscal Year Rules",
-					smallText: "FY Rules",
-					icon: "ballot"
-				},
+				/* Fiscal Year constraints were found to be superfluous
+        {
+          url: "/fiscalyear/constraints",
+          text: "Fiscal Year Rules",
+          smallText: "FY Rules",
+          icon: "ballot"
+        },*/
 				{
 					url: "/scheduleblock/create",
 					text: "New Schedule Block",
@@ -96,7 +103,7 @@ export default {
 				},
 				{
 					url: "/manage",
-					text: "Manage Employees",
+					text: "Manage",
 					smallText: "Manage",
 					icon: "people"
 				},

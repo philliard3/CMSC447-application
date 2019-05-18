@@ -13,8 +13,8 @@
 							}}
 						</v-flex>
 					</v-layout>
-					<FiscalYearSelector></FiscalYearSelector>
-					<ScheduleBlockSelector></ScheduleBlockSelector>
+					<FiscalYearSelector />
+					<ScheduleBlockSelector />
 					<v-layout>
 						<v-flex>
 							<v-btn
@@ -26,18 +26,14 @@
 							>
 						</v-flex>
 					</v-layout>
-					<!-- This feature is too dangerous and labor-intensive, and is therefore not considered a priority.
-          <v-layout>
-            <v-flex>
-              <v-btn color="error" flat outline>Make all blocks in all Fiscal Years match this setup</v-btn>
-            </v-flex>
-          </v-layout>
-          -->
 				</v-card-text>
 			</v-card>
 		</v-container>
-		<ManageShifts></ManageShifts>
-		<RoleTable></RoleTable>
+		<ManageShifts />
+		<RoleTable />
+		<LocationList />
+		<!-- shift patterns and how often they appear -->
+		<!-- example: attending weeks per week/block -->
 	</v-form>
 </template>
 <script>
@@ -45,6 +41,7 @@ import ScheduleBlockSelector from "./ScheduleBlockSelector";
 import FiscalYearSelector from "./FiscalYearSelector";
 import ManageShifts from "./ManageShifts";
 import RoleTable from "./RoleTable";
+import LocationList from "./LocationList";
 
 export default {
 	name: "ScheduleBlockConstraints",
@@ -52,7 +49,8 @@ export default {
 		ManageShifts,
 		RoleTable,
 		ScheduleBlockSelector,
-		FiscalYearSelector
+		FiscalYearSelector,
+		LocationList
 	},
 	data() {
 		return {
