@@ -1,10 +1,14 @@
 <template>
-	<v-form>
+	<v-form v-if="error">
 		<v-container>
-			<v-card v-if="error">
+			<v-card>
 				<v-card-text>{{ error }}</v-card-text>
 			</v-card>
-			<v-card v-else>
+		</v-container>
+	</v-form>
+	<v-form v-else>
+		<v-container>
+			<v-card>
 				<v-card-text>
 					<v-container>
 						<v-layout>
@@ -16,10 +20,18 @@
 							<v-text-field label="Name" v-model="name"></v-text-field>
 						</v-layout>
 					</v-container>
+				</v-card-text>
+			</v-card>
+		</v-container>
+		<v-container>
+			<v-card>
+				<v-card-text>
 					<v-container>
 						<v-layout>
 							<v-flex>
-								<v-card-text class="title">Colors</v-card-text>
+								<v-card-text class="display-1 font-weight-light"
+									>Color</v-card-text
+								>
 							</v-flex>
 						</v-layout>
 						<v-layout>
@@ -28,8 +40,22 @@
 							</v-flex>
 						</v-layout>
 					</v-container>
+				</v-card-text>
+			</v-card>
+		</v-container>
+		<v-container>
+			<v-card>
+				<v-card-text>
 					<v-form>
 						<v-container>
+							<v-layout>
+								<v-flex>
+									<v-card-text class="display-1 font-weight-light"
+										>Requirements</v-card-text
+									>
+								</v-flex>
+							</v-layout>
+
 							<v-layout>
 								<v-flex sm1>
 									<v-select

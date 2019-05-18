@@ -5,20 +5,22 @@
 				<div class="display-1 font-weight-light" id="header-row-1">
 					Locations
 				</div>
-				<v-layout>
-					<v-flex>
-						<v-text-field
-							v-model="newLocationData.name"
-							name="Location Name"
-							label="Location Name"
-						></v-text-field>
-					</v-flex>
-					<v-flex>
-						<v-btn color="success" @click="addLocation">
-							<v-icon>add_location</v-icon>&nbsp;New Location
-						</v-btn>
-					</v-flex>
-				</v-layout>
+				<v-container>
+					<v-layout>
+						<v-flex>
+							<v-text-field
+								v-model="newLocationData.name"
+								name="Location Name"
+								label="Location Name"
+							></v-text-field>
+						</v-flex>
+						<v-flex>
+							<v-btn color="success" @click="addLocation">
+								<v-icon>add_location</v-icon>&nbsp;New Location
+							</v-btn>
+						</v-flex>
+					</v-layout>
+				</v-container>
 				<!--- location table -->
 				<v-layout>
 					<v-flex>
