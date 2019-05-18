@@ -140,13 +140,13 @@ export default {
 				return this.employeeData.roles.map(role => role.roleID);
 			},
 			set(newValue) {
-				const roles = this.$store.getters.roles.filter(role =>
-					newValue.includes(role.roleID)
-				);
+				const roles = this.$store.getters.roles
+					.filter(role => newValue.includes(role.roleID))
+					.map(role => ({ roleID: role.roleID, name: role.name }));
 				this.$store.commit("updateEmployee", {
 					employeeData: {
 						...this.employeeData,
-						roles: roles
+						roles
 					}
 				});
 			}

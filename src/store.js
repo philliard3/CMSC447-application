@@ -293,7 +293,11 @@ export default new Vuex.Store({
 			if (!roleData.roleID) {
 				return;
 			}
-			if (state.data.roles.some(role => role.roleID === roleData.roleID)) {
+			if (
+				state.data.roles.some(
+					role => role.roleID === roleData.roleID || role.name === roleData.name
+				)
+			) {
 				return;
 			}
 			state.data.roles.push({ ...roleData });
@@ -402,6 +406,26 @@ export default new Vuex.Store({
 				return;
 			}
 			state.data.employees.push({ ...employeeData });
+		},
+
+		updateEmployee(state, { employeeData }) {
+			const filteredEmployees = state.data.employees.filter(
+				employee => employee.employeeID === employeeData.employeeID
+			);
+			const matchingEmployees = state.data.employees.map(
+				employee => employee.employeeID === employeeData.employeeID
+			);
+			if (filteredEmployees.length === 1) {
+				// remove the employee
+				const newEmployees = [...state.data.employees];
+				const newEmployeeData = { ...filteredEmployees[0], ...employeeData };
+				newEmployees.splice(
+					matchingEmployees.indexOf(true),
+					1,
+					newEmployeeData
+				);
+				state.data.employees = newEmployees;
+			}
 		},
 
 		removeEmployee(state, { employeeData }) {
