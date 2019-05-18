@@ -34,6 +34,7 @@
 							<v-checkbox
 								v-for="day in dayList"
 								v-model="shifts[shiftIndex].selected"
+								@change="triggerShiftUpdate"
 								:key="day"
 								:label="day"
 								:value="day"
@@ -53,6 +54,11 @@ export default {
 	props: { shifts: Array },
 	data() {
 		return {};
+	},
+	methods: {
+		triggerShiftUpdate() {
+			this.$emit("input", this.shifts);
+		}
 	}
 };
 </script>

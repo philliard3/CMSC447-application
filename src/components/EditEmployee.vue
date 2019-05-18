@@ -1,41 +1,48 @@
 <template>
-	<v-form v-model="valid">
+	<v-container v-if="error">
+		<v-card>
+			<v-card-text class="title">We couldn't find that employee.</v-card-text>
+		</v-card>
+	</v-container>
+	<v-form v-model="valid" v-else>
 		<v-container class="display-2 font-weight-light">
-			{{ employeeData.name }}
+			{{ name }}
 			<v-container>
 				<v-card>
-					<v-card-text></v-card-text>
-					<v-layout xs12>
-						<v-flex xs5>
-							<v-container>
-								<v-text-field
-									v-model="employeeData.name"
-									label="Name"
-									name="Name"
-								></v-text-field>
-							</v-container>
-						</v-flex>
-						<v-flex xs1></v-flex>
-						<v-flex xs5>
-							<v-container>
-								<v-text-field
-									v-model="employeeData.email"
-									label="Email"
-									name="Email"
-								></v-text-field>
-							</v-container>
-						</v-flex>
-					</v-layout>
+					<v-card-text>
+						<v-layout xs12>
+							<v-flex xs5>
+								<v-container>
+									<v-text-field
+										v-model="name"
+										label="Name"
+										name="Name"
+									></v-text-field>
+								</v-container>
+							</v-flex>
+							<v-flex xs1></v-flex>
+							<v-flex xs5>
+								<v-container>
+									<v-text-field
+										v-model="email"
+										label="Email"
+										name="Email"
+									></v-text-field>
+								</v-container>
+							</v-flex>
+						</v-layout>
+					</v-card-text>
 				</v-card>
 			</v-container>
 
 			<RoleTable :roleIDs="roleIDs" @input="roleIDs = $event" />
 
-			<ShiftSelection :shifts="shifts" @input="$emit('input', shifts)" />
+			<ShiftSelection :shifts="shifts" @input="shifts = $event" />
 
 			<WorkPreferenceTable :dayName="dayName" :preferredDays="preferredDays" />
-
-			<v-btn @click="save" color="info">Save</v-btn>
+			<!-- save button is redundant now that all components update the state automatically
+      <v-btn @click="save" color="info">Save</v-btn>
+      -->
 		</v-container>
 	</v-form>
 </template>
@@ -45,7 +52,16 @@ import RoleTable from "./RoleTable";
 import ShiftSelection from "./ShiftSelection";
 import WorkPreferenceTable from "./WorkPreferenceTable";
 
-const holidays = [{ name: "Christmas", selected: false, preferred: false }];
+const holidays = [
+	{
+		name: "Christmas",
+		repeating: true,
+		startDate: "12/25",
+		endDate: "12/25",
+		selected: false,
+		preferred: false
+	}
+];
 
 holidays.forEach(day => {
 	day.dayID =
@@ -66,27 +82,109 @@ export default {
 		WorkPreferenceTable
 	},
 	data() {
-		const employee = this.$store.getters.employees.filter(
-			e => e.employeeID === Number(this.$route.params.employeeID)
-		)[0];
 		return {
+			error: false,
 			valid: false,
-			employeeData: { ...employee },
-			roleIDs: employee.roles.map(role => role.roleID),
-			shifts:
-				employee.shifts ||
-				this.$store.getters.currentScheduleBlock.shifts.map(shift => {
-					const selected = employee.shifts
-						? employee.shifts.filter(s => s.name === shift.name)
-						: null;
-					return {
-						selected: selected && selected.length > 0 ? selected[0] : [],
-						...shift
-					};
-				}),
 			preferredDays: [...holidays],
 			dayName: ""
 		};
+	},
+	computed: {
+		employeeData() {
+			const filteredEmployees = this.$store.getters.employees.filter(
+				e => e.employeeID === Number(this.$route.params.employeeID)
+			);
+			if (filteredEmployees.length === 1) {
+				return { ...filteredEmployees[0] };
+			} else {
+				return null;
+			}
+		},
+		email: {
+			get() {
+				if (this.employeeData) {
+					return this.employeeData.email || "";
+				}
+				return null;
+			},
+			set(newValue) {
+				const isEmail = true; // replace this with a regex match
+				if (isEmail) {
+					this.$store.commit("updateEmployee", {
+						employeeData: {
+							...this.employeeData,
+							email: newValue
+						}
+					});
+				}
+			}
+		},
+		name: {
+			get() {
+				if (this.employeeData) {
+					return this.employeeData.name || "";
+				}
+				return null;
+			},
+			set(newValue) {
+				this.$store.commit("updateEmployee", {
+					employeeData: {
+						...this.employeeData,
+						name: newValue
+					}
+				});
+			}
+		},
+		roleIDs: {
+			get() {
+				return this.employeeData.roles.map(role => role.roleID);
+			},
+			set(newValue) {
+				const roles = this.$store.getters.roles.filter(role =>
+					newValue.includes(role.roleID)
+				);
+				this.$store.commit("updateEmployee", {
+					employeeData: {
+						...this.employeeData,
+						roles: roles
+					}
+				});
+			}
+		},
+		shifts: {
+			get() {
+				const employee = this.employeeData;
+				return (
+					employee.shifts ||
+					this.$store.getters.currentScheduleBlock.shifts.map(shift => {
+						const selected = employee.shifts
+							? employee.shifts.filter(s => s.name === shift.name)
+							: null;
+						return {
+							selected: selected && selected.length > 0 ? selected[0] : [],
+							...shift
+						};
+					})
+				);
+			},
+			set(newValue) {
+				this.$store.commit("updateEmployee", {
+					employeeData: {
+						...this.employeeData,
+						shifts: [...newValue]
+					}
+				});
+			}
+		}
+	},
+	created() {
+		if (
+			this.$store.getters.employees.filter(
+				e => e.employeeID === Number(this.$route.params.employeeID)
+			).length === 0
+		) {
+			this.error = true;
+		}
 	},
 	methods: {
 		save() {

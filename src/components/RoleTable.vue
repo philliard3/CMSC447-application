@@ -60,9 +60,9 @@
 									></v-checkbox>
 								</td>
 								<td>
-									<router-link :to="'/manage/roles/' + props.item.roleID">
-										{{ props.item.name }}
-									</router-link>
+									<router-link :to="'/manage/roles/' + props.item.roleID">{{
+										props.item.name
+									}}</router-link>
 								</td>
 								<td class="text-xs-right">
 									<v-icon :color="props.item.color">work</v-icon>
@@ -129,7 +129,17 @@ export default {
 			// const roleID = this.$store.dispatch("createEmployee")
 
 			// placeholder while store functions are implemented
-			const roleID = "doctor";
+			const roleID = new Date().getTime() % Math.pow(2, 32);
+
+			this.$store.commit("addRole", {
+				roleData: {
+					roleID,
+					name: `New Role (${roleID})`,
+					color: null,
+					shifts: [],
+					required: []
+				}
+			});
 
 			this.$router.push("/manage/roles/" + roleID);
 		}
