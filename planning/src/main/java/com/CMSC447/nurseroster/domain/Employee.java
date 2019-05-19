@@ -25,10 +25,10 @@ import org.optaplanner.core.api.score.buildin.hardsoft.HardSoftScore;
 import com.CMSC447.nurseroster.domain.constraint.PersonalConstraint;
 import com.CMSC447.nurseroster.fileio.Input;
 
-public class Employee  {
-	public ArrayList<PersonalConstraint> constraints;
+public class Employee {
+	private ArrayList<PersonalConstraint> constraints;
 	public ArrayList<Role> roles;
-	public int id;
+	public final int id;
 
     //constructor
 	public Employee(int id, ArrayList<Role> roles, ArrayList<PersonalConstraint> constraints){
@@ -37,15 +37,15 @@ public class Employee  {
 		this.roles = roles;
 	}
 
-    public HardSoftScore score(ArrayList<ShiftAssignment> shiftAssignments){
+    public HardSoftScore score(ArrayList<Shift> shifts){
     	HardSoftScore score = HardSoftScore.ZERO;
 
         for(PersonalConstraint constraint : constraints){
-        	score.add(constraint.score(shiftAssignments, this));
+        	score.add(constraint.score(shifts, this));
         }
         for(Role role : roles){
             for(PersonalConstraint constraint : role.constraints) {
-            	score.add(constraint.score(shiftAssignments, this));
+            	score.add(constraint.score(shifts, this));
             }
         }
 
@@ -57,6 +57,10 @@ public class Employee  {
     		return false;
     	}
     	return this.id == ((Employee)other).id;
+    }
+    
+    public int hashCode() {
+    	return id;
     }
     
     public static Employee NULL() {

@@ -30,9 +30,9 @@ import org.optaplanner.core.impl.heuristic.selector.move.factory.MoveListFactory
 public class EmployeeChangeMoveFactory implements MoveListFactory<NurseRoster> {
 
     @Override
-    public List<EmployeeChangeMove> createMoveList(NurseRoster nurseRoster) {
-        List<EmployeeChangeMove> moveList = new ArrayList<>();
-        List<Employee> employeeList = nurseRoster.getEmployees();
+    public ArrayList<EmployeeChangeMove> createMoveList(NurseRoster nurseRoster) {
+        ArrayList<EmployeeChangeMove> moveList = new ArrayList<EmployeeChangeMove>();
+        ArrayList<Employee> employeeList = nurseRoster.getEmployees();
         for (ShiftAssignment shiftAssignment : nurseRoster.getShiftAssignments()) {
             for (Employee employee : employeeList) {
                 moveList.add(new EmployeeChangeMove(shiftAssignment, employee));

@@ -41,7 +41,7 @@ public class ShiftAssignmentSwapMove extends AbstractMove<NurseRoster> {
 
     @Override
     public boolean isMoveDoable(ScoreDirector<NurseRoster> scoreDirector) {
-        return !Objects.equals(leftShiftAssignment.getEmployee(), rightShiftAssignment.getEmployee());
+        return !Objects.equals(leftShiftAssignment.employee, rightShiftAssignment.employee);
     }
 
     @Override
@@ -51,8 +51,8 @@ public class ShiftAssignmentSwapMove extends AbstractMove<NurseRoster> {
 
     @Override
     protected void doMoveOnGenuineVariables(ScoreDirector<NurseRoster> scoreDirector) {
-        Employee oldLeftEmployee = leftShiftAssignment.getEmployee();
-        Employee oldRightEmployee = rightShiftAssignment.getEmployee();
+        Employee oldLeftEmployee = leftShiftAssignment.employee;
+        Employee oldRightEmployee = rightShiftAssignment.employee;
         NurseRosterMoveHelper.moveEmployee(scoreDirector, leftShiftAssignment, oldRightEmployee);
         NurseRosterMoveHelper.moveEmployee(scoreDirector, rightShiftAssignment, oldLeftEmployee);
     }
@@ -70,7 +70,7 @@ public class ShiftAssignmentSwapMove extends AbstractMove<NurseRoster> {
 
     @Override
     public Collection<? extends Object> getPlanningValues() {
-        return Arrays.asList(leftShiftAssignment.getEmployee(), rightShiftAssignment.getEmployee());
+        return Arrays.asList(leftShiftAssignment.employee, rightShiftAssignment.employee);
     }
 
     @Override
@@ -98,8 +98,8 @@ public class ShiftAssignmentSwapMove extends AbstractMove<NurseRoster> {
 
     @Override
     public String toString() {
-        return leftShiftAssignment + " {" + leftShiftAssignment.getEmployee() + "} <-> "
-                + rightShiftAssignment + " {" + rightShiftAssignment.getEmployee() + "}";
+        return leftShiftAssignment + " {" + leftShiftAssignment.employee + "} <-> "
+                + rightShiftAssignment + " {" + rightShiftAssignment.employee + "}";
     }
 
 }

@@ -1,13 +1,13 @@
 package com.CMSC447.nurseroster.domain.constraint;
 
-import java.util.List;
+import java.util.ArrayList;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.optaplanner.core.api.score.buildin.hardsoft.HardSoftScore;
 
 import com.CMSC447.nurseroster.domain.Employee;
-import com.CMSC447.nurseroster.domain.ShiftAssignment;
+import com.CMSC447.nurseroster.domain.Shift;
 
 public abstract class PersonalConstraint extends Constraint{
 	
@@ -15,6 +15,6 @@ public abstract class PersonalConstraint extends Constraint{
 		super(id, priority, isHard, params);
 	}
 
-	public abstract HardSoftScore score(List<ShiftAssignment> shiftAssignments, Employee employee);
+	public abstract HardSoftScore score(ArrayList<Shift> shifts, Employee employee);
 
 }

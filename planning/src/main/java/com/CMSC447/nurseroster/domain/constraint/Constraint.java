@@ -5,9 +5,9 @@ import org.json.JSONObject;
 import org.optaplanner.core.api.score.buildin.hardsoft.HardSoftScore;
 
 public abstract class Constraint {
-	public int id;
-	public int priority;
-    public boolean isHard;
+	public final int id;
+	public final int priority;
+    public final boolean isHard;
     
     public Constraint(int id, int priority, boolean isHard, JSONObject params) throws JSONException {
     	this.id = id;
@@ -25,12 +25,12 @@ public abstract class Constraint {
      * @param score The score to be converted
      * @return A HardSoftScore with score in its Hard or Soft value depending on if this is a hard or soft constraint
      */
-    public HardSoftScore toScore(int score) {
+    protected HardSoftScore toScore(int score) {
     	if (this.isHard) {
-    		return HardSoftScore.ofHard(score);
+    		return HardSoftScore.ofHard(score * priority);
     	}
     	else {
-    		return HardSoftScore.ofSoft(score);
+    		return HardSoftScore.ofSoft(score * priority);
     	}
     }
 }

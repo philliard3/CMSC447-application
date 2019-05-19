@@ -32,14 +32,14 @@ public class ShiftAssignmentSwapMoveFactory implements MoveListFactory<NurseRost
 
 
     @Override
-    public List<ShiftAssignmentSwapMove> createMoveList(NurseRoster nurseRoster) {
+    public ArrayList<ShiftAssignmentSwapMove> createMoveList(NurseRoster nurseRoster) {
         // Filter out every immovable ShiftAssignment
-        List<ShiftAssignment> shiftAssignmentList = new ArrayList<>(
+        ArrayList<ShiftAssignment> shiftAssignmentList = new ArrayList<ShiftAssignment>(
                 nurseRoster.getShiftAssignments());
         for (Iterator<ShiftAssignment> it = shiftAssignmentList.iterator(); it.hasNext(); ) {
             ShiftAssignment shiftAssignment = it.next();
         }
-        List<ShiftAssignmentSwapMove> moveList = new ArrayList<>();
+        ArrayList<ShiftAssignmentSwapMove> moveList = new ArrayList<ShiftAssignmentSwapMove>();
         for (ListIterator<ShiftAssignment> leftIt = shiftAssignmentList.listIterator(); leftIt.hasNext();) {
             ShiftAssignment leftShiftAssignment = leftIt.next();
             for (ListIterator<ShiftAssignment> rightIt = shiftAssignmentList.listIterator(leftIt.nextIndex()); rightIt.hasNext();) {

@@ -15,4 +15,12 @@ public class Role {
     	this.id = id;
     	this.constraints = constraints;
     }
+    
+    public boolean equals(Role other) {
+    	return this.id == other.id;
+    }
+    
+    public int hashCode() {
+    	return id;
+    }
 }

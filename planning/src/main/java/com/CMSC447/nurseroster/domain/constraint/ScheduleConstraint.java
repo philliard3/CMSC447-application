@@ -1,6 +1,6 @@
 package com.CMSC447.nurseroster.domain.constraint;
 
-import java.util.List;
+import java.util.ArrayList;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -14,6 +14,6 @@ public abstract class ScheduleConstraint extends Constraint{
 		super(id, priority, isHard, params);
 	}
 
-	public abstract HardSoftScore score(List<ShiftAssignment> shiftAssignments);
+	public abstract HardSoftScore score(ArrayList<ShiftAssignment> shiftAssignments);
 
 }

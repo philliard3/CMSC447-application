@@ -18,6 +18,7 @@ package com.CMSC447.nurseroster.domain;
 
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
@@ -33,21 +34,26 @@ import com.CMSC447.nurseroster.domain.constraint.ScheduleConstraint;
 @PlanningSolution
 public class NurseRoster {
 
-    @ProblemFactCollectionProperty
-    public ArrayList<ScheduleConstraint> scheduleConstraints;
+	public static final int NULL_EMPLOYEE_ID = -1;
+    
+	@ProblemFactCollectionProperty
+    private ArrayList<ScheduleConstraint> scheduleConstraints;
 
     public HardSoftScore score;
 
-    @PlanningEntityCollectionProperty
-    public ArrayList<ShiftAssignment> shiftAssignments;
+
+	private ArrayList<ShiftAssignment> shiftAssignments;
+	
+	@ProblemFactCollectionProperty
+	private ArrayList<Shift> shifts;
     
-    
-    public ArrayList<Employee> employees;
+    private ArrayList<Employee> employees;
     
     public NurseRoster(ArrayList<Employee> employees, ArrayList<Shift> shifts) {
     	this.employees = employees;
     	Random rand = new Random();
     	
+    	this.shifts = shifts;
     	this.shiftAssignments = new ArrayList<ShiftAssignment>();
     	
     	for(Shift shift: shifts) {
@@ -58,14 +64,29 @@ public class NurseRoster {
     	
     }
     
+    private HashMap<Integer, ArrayList<Shift>> getShiftsByEmployeeID(){
+    	HashMap<Integer, ArrayList<Shift>> shiftsByEmployeeID = new HashMap<Integer, ArrayList<Shift>>();
+    	
+    	for (Employee employee: employees) {
+    		shiftsByEmployeeID.put(employee.id, new ArrayList<Shift>());
+    	}
+    	
+    	for (ShiftAssignment assignment: shiftAssignments) {
+    		shiftsByEmployeeID.get(assignment.employee).add(assignment.shift);
+    	}
+    	
+    	return shiftsByEmployeeID;
+    }
 
     @PlanningScore
     public HardSoftScore getScore() {
-        HardSoftScore score = HardSoftScore.ZERO;
+        score = HardSoftScore.ZERO;
+        
+        HashMap<Integer, ArrayList<Shift>> shiftsByEmployeeID = getShiftsByEmployeeID();
         
         // Sum of employee scores
         for (Employee employee: employees) {
-        	score.add(employee.score(shiftAssignments));
+        	score.add(employee.score(shiftsByEmployeeID.get(employee.id)));
         }
 
         // Sum of schedule scores
@@ -77,13 +98,21 @@ public class NurseRoster {
     }
 
     @PlanningEntityCollectionProperty
-    public List<ShiftAssignment> getShiftAssignments() {
+    public ArrayList<ShiftAssignment> getShiftAssignments() {
         return shiftAssignments;
     }
 
     @ValueRangeProvider(id="employeeRange")
-    public List<Employee> getEmployees() {
+    public ArrayList<Employee> getEmployees() {
         return employees;
     }
+    
+    /**
+	 * @return the scheduleConstraints
+	 */
+    @ProblemFactCollectionProperty
+	public ArrayList<ScheduleConstraint> getScheduleConstraints() {
+		return scheduleConstraints;
+	}
 
 }

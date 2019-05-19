@@ -1,4 +1,4 @@
-package com.CMSC447.nurseroster.domain;
+package com.CMSC447.nurseroster.domain.constraint.pattern;
 
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
@@ -7,6 +7,9 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 
 import org.javatuples.Pair;
+
+import com.CMSC447.nurseroster.domain.Role;
+import com.CMSC447.nurseroster.domain.Shift;
 
 
 public class ShiftPattern {
@@ -38,9 +41,6 @@ public class ShiftPattern {
 
     // The locations that are allowed
     private ArrayList<String> allowedLocations;
-    
-    // The roles that are allowed
-    private ArrayList<Role> allowedRoles;
 
     public ShiftPattern(
         ArrayList<DayOfWeek> allowedDaysOfWeek,
@@ -186,6 +186,15 @@ public class ShiftPattern {
     }
 
     private boolean atAllowedLocation(Shift shift){
+        for(int i = 0; i < allowedLocations.size(); i++){
+            if (shift.location.equals(allowedLocations.get(i))){
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    private boolean Allowed(Shift shift){
         for(int i = 0; i < allowedLocations.size(); i++){
             if (shift.location.equals(allowedLocations.get(i))){
                 return true;

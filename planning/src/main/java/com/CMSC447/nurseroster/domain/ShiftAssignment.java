@@ -23,7 +23,7 @@ import org.optaplanner.core.api.domain.variable.PlanningVariable;
 import java.util.Comparator;
 
 @PlanningEntity
-public class ShiftAssignment{
+public class ShiftAssignment implements Comparable<ShiftAssignment>{
 
     // constructor
 	public ShiftAssignment(Employee employee, Shift shift){
@@ -32,29 +32,16 @@ public class ShiftAssignment{
 	}
 
     @PlanningVariable(valueRangeProviderRefs = {"employeeRange"})
-    public Employee getEmployee() {
-        return employee;
-    }
-
-    public void setEmployee(Employee employee) {
-        this.employee = employee;
-    }
-
-    public Shift getShift() {
-        return shift;
-    }
-
-    public void setShift(Shift shift) {
-        this.shift = shift;
-    }
-
-
     public Employee employee;
 
-    public Shift shift;
+    public final Shift shift;
 
 
     public int getShiftDateDayIndex() {
         return shift.startTime.getDayOfMonth();
+    }
+    
+    public int compareTo(ShiftAssignment other) {
+    	return this.shift.compareTo(other.shift);
     }
 }

@@ -56,9 +56,9 @@ public class EmployeeMultipleChangeMove extends AbstractMove<NurseRoster> {
     @Override
     protected void doMoveOnGenuineVariables(ScoreDirector<NurseRoster> scoreDirector) {
         for (ShiftAssignment shiftAssignment : shiftAssignmentList) {
-            if (!shiftAssignment.getEmployee().equals(fromEmployee)) {
+            if (!shiftAssignment.employee.equals(fromEmployee)) {
                 throw new IllegalStateException("The shiftAssignment (" + shiftAssignment + ") should have the same employee ("
-                        + shiftAssignment.getEmployee() + ") as the fromEmployee (" + fromEmployee + ").");
+                        + shiftAssignment.employee + ") as the fromEmployee (" + fromEmployee + ").");
             }
             NurseRosterMoveHelper.moveEmployee(scoreDirector, shiftAssignment, toEmployee);
         }

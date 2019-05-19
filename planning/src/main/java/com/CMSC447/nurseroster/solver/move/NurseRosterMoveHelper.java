@@ -12,7 +12,7 @@ public class NurseRosterMoveHelper {
 
     public static void moveEmployee(ScoreDirector<NurseRoster> scoreDirector, ShiftAssignment shiftAssignment, Employee toEmployee) {
         scoreDirector.beforeVariableChanged(shiftAssignment, "employee");
-        shiftAssignment.setEmployee(toEmployee);
+        shiftAssignment.employee = toEmployee;
         scoreDirector.afterVariableChanged(shiftAssignment, "employee");
     }
 

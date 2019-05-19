@@ -23,12 +23,12 @@ import java.util.ArrayList;
 
 public class Shift implements Comparable<Shift>{
 
-    public LocalDateTime startTime;
-    public LocalDateTime endTime;
-    public ArrayList<String> types;
-    public String location;
-    public boolean mandatory;
-    public ArrayList<Role> roles;
+    public final LocalDateTime startTime;
+    public final LocalDateTime endTime;
+    public final ArrayList<String> types;
+    public final String location;
+    public final boolean mandatory;
+    public final ArrayList<Role> roles;
 
     public Shift(LocalDateTime startTime, LocalDateTime endTime, ArrayList<String> shiftTypes, String location, boolean mandatory, ArrayList<Role> roles) {
         this.startTime = startTime;
@@ -50,5 +50,14 @@ public class Shift implements Comparable<Shift>{
     
     public int compareTo(Shift other) {
     	return (int)Duration.between(startTime, ((Shift)other).startTime).getSeconds();
+    }
+    
+    public boolean equals(Shift other) {
+    	boolean sameTime = this.startTime.equals(other.startTime) && this.endTime.equals(other.endTime);
+    	boolean sameTypes = this.types.containsAll(other.types) && other.types.containsAll(this.types);
+    	boolean sameLocation = this.location == other.location;
+    	boolean sameMandatory = this.mandatory == other.mandatory;
+    	boolean sameRoles = this.roles.containsAll(other.roles) && other.roles.containsAll(this.roles);
+    	return sameTime && sameTypes && sameLocation && sameMandatory && sameRoles;
     }
 }

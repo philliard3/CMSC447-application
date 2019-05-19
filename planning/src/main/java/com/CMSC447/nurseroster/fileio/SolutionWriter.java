@@ -16,7 +16,7 @@ import com.CMSC447.nurseroster.domain.Shift;
 import com.CMSC447.nurseroster.domain.ShiftAssignment;
 
 public class SolutionWriter {
-	public static JSONObject toJSON(HardSoftScore score, ArrayList<ShiftAssignment> assignments) throws JSONException {
+	private static JSONObject toJSON(HardSoftScore score, ArrayList<ShiftAssignment> assignments) throws JSONException {
 		JSONObject output = new JSONObject();
 		if (score.isFeasible()) {
 			output.put("score", score.getSoftScore());
@@ -58,7 +58,7 @@ public class SolutionWriter {
 		try {
 			FileWriter outputWriter = new FileWriter(filename);
 			JSONWriter writer = new JSONWriter(outputWriter);
-			JSONObject object = toJSON(bestScore, bestSolution.shiftAssignments);
+			JSONObject object = toJSON(bestScore, bestSolution.getShiftAssignments());
 			writer.value(object);
 			outputWriter.close();
 			return true;

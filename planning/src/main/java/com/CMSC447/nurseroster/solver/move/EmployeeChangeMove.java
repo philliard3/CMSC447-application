@@ -41,12 +41,12 @@ public class EmployeeChangeMove extends AbstractMove<NurseRoster> {
 
     @Override
     public boolean isMoveDoable(ScoreDirector<NurseRoster> scoreDirector) {
-        return !Objects.equals(shiftAssignment.getEmployee(), toEmployee);
+        return !Objects.equals(shiftAssignment.employee, toEmployee);
     }
 
     @Override
     public EmployeeChangeMove createUndoMove(ScoreDirector<NurseRoster> scoreDirector) {
-        return new EmployeeChangeMove(shiftAssignment, shiftAssignment.getEmployee());
+        return new EmployeeChangeMove(shiftAssignment, shiftAssignment.employee);
     }
 
     @Override
@@ -95,7 +95,7 @@ public class EmployeeChangeMove extends AbstractMove<NurseRoster> {
 
     @Override
     public String toString() {
-        return shiftAssignment + " {" + shiftAssignment.getEmployee() + " -> " + toEmployee + "}";
+        return shiftAssignment + " {" + shiftAssignment.employee + " -> " + toEmployee + "}";
     }
 
 }

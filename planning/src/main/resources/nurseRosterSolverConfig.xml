@@ -17,7 +17,13 @@
         <constructionHeuristicType>WEAKEST_FIT</constructionHeuristicType>
     </constructionHeuristic>
     <localSearch>
-        <unionMoveSelector>
+    	<unionMoveSelector>
+    		<changeMoveSelector/>
+    		<swapMoveSelector/>
+    		<pillarChangeMoveSelector/>
+    		<pillarSwapMoveSelector/>
+    	</unionMoveSelector>
+        <!-- <unionMoveSelector>
             <moveListFactory>
                 <cacheType>PHASE</cacheType>
                 <moveListFactoryClass>com.CMSC447.nurseroster.Solver.move.factory.EmployeeChangeMoveFactory</moveListFactoryClass>
@@ -26,11 +32,11 @@
                 <cacheType>PHASE</cacheType>
                 <moveListFactoryClass>com.CMSC447.nurseroster.solver.move.factory.ShiftAssignmentSwapMoveFactory</moveListFactoryClass>
             </moveListFactory>
-            <!-- <moveListFactory>
+            <moveListFactory>
                 <cacheType>STEP</cacheType>
                 <moveListFactoryClass>com.CMSC447.nurseroster.Solver.move.factory.ShiftAssignmentPillarPartSwapMoveFactory</moveListFactoryClass>
-            </moveListFactory> -->
-        </unionMoveSelector>
+            </moveListFactory>
+        </unionMoveSelector> -->
         <acceptor>
             <entityTabuSize>7</entityTabuSize>
         </acceptor>
