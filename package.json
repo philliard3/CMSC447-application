@@ -9,6 +9,7 @@
 		"dev": "vue-cli-service serve",
 		"clean": "rm -r ./planning/target/* ./dist/* ./dist_electron/*",
 		"planner:build": "node java-build.js",
+		"planning:build": "node java-build.js",
 		"electron:build": "vue-cli-service electron:build",
 		"build-all": "vue-cli-service electron:build && node java-build.js",
 		"electron:serve": "vue-cli-service electron:serve",
