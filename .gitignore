@@ -44,3 +44,4 @@ yarn-error.log*
 # Maven
 ./planning/log/
 ./planning/target/
+./planning/bin/

@@ -25,8 +25,8 @@ public class App {
 		
 	
     public static void main( String[] args ) {
-        String inFile = "input.json";//args[0];
-        String outFile = "output.json";//args[1];
+        String inFile = args[0];
+        String outFile = args[1];
         if (DataLoader.loadFile(inFile)) {
         	NurseRoster randomSolution = new NurseRoster(Input.employees, Input.shifts);
         	Solver<NurseRoster> solver = solve(randomSolution);
