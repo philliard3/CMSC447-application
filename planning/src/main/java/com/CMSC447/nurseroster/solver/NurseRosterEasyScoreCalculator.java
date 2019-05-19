@@ -17,15 +17,44 @@
 package com.CMSC447.nurseroster.solver;
 
 
+import com.CMSC447.nurseroster.domain.Employee;
 import com.CMSC447.nurseroster.domain.NurseRoster;
+import com.CMSC447.nurseroster.domain.Shift;
+import com.CMSC447.nurseroster.domain.constraint.ScheduleConstraint;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+
 import org.optaplanner.core.api.score.buildin.hardsoft.HardSoftScore;
 import org.optaplanner.core.impl.score.director.easy.EasyScoreCalculator;
 
 
 public class NurseRosterEasyScoreCalculator implements EasyScoreCalculator<NurseRoster> {
 
+	static long a = 0;
+	
     @Override
     public HardSoftScore calculateScore(NurseRoster solution) {
-        return solution.getScore();
+    	HardSoftScore score = HardSoftScore.ZERO;
+        
+        HashMap<Integer, ArrayList<Shift>> shiftsByEmployeeID = solution.getShiftsByEmployeeID();
+        
+        // Sum of employee scores
+        for (Employee employee: solution.getEmployees()) {
+        	score = score.add(employee.score(shiftsByEmployeeID.get(employee.id)));
+        	if(!score.isFeasible()) {
+        		return score;
+        	}
+        }
+
+        // Sum of schedule scores
+        for(ScheduleConstraint scheduleConstraint : solution.getScheduleConstraints() ) {
+            score = score.add(scheduleConstraint.score(solution.getShiftAssignments()));
+            if(!score.isFeasible()) {
+        		return score;
+        	}
+        }
+        
+        return score;
     }
 }

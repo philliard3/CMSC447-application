@@ -49,7 +49,7 @@ public class Shift implements Comparable<Shift>{
     }
     
     public int compareTo(Shift other) {
-    	return (int)Duration.between(startTime, ((Shift)other).startTime).getSeconds();
+    	return startTime.getNano() - other.startTime.getNano();
     }
     
     public boolean equals(Shift other) {

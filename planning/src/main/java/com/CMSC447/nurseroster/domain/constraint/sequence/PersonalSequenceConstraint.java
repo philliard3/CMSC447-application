@@ -30,7 +30,7 @@ public class PersonalSequenceConstraint extends PersonalConstraint{
 		super(id, priority, isHard, params);
 	}
 
-    SequenceConstraintInfo info;
+    public SequenceConstraintInfo info;
 
 	@Override
 	protected void buildFromJSON(JSONObject params) throws JSONException {

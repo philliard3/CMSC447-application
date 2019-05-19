@@ -32,8 +32,8 @@ public class ScheduleSequenceConstraint extends ScheduleConstraint{
 		super(id, priority, isHard, params);
 	}
 
-	SequenceConstraintInfo info;
-	ArrayList<Role> roles;
+	public SequenceConstraintInfo info;
+	public ArrayList<Role> roles;
 
     @Override
     public HardSoftScore score(ArrayList<ShiftAssignment> shiftAssignments) {

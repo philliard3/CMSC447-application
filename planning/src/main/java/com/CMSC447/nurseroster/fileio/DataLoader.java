@@ -23,7 +23,7 @@ import com.CMSC447.nurseroster.domain.constraint.basic.MandatoryShiftConstraint;
 
 public class DataLoader {
 	
-	private static Constraint processConstraint(JSONObject rawConstraint) throws JSONException{
+	public static Constraint processConstraint(JSONObject rawConstraint) throws JSONException{
 		int id = rawConstraint.getInt("id");
 		int priority = rawConstraint.getInt("priority");
 		boolean isHard = rawConstraint.getBoolean("isHard");
@@ -33,7 +33,7 @@ public class DataLoader {
 		return ConstraintFactory.getConstraint(id, priority, isHard, type, params);
 	}
 	
-	private static Role processRole(JSONObject rawRole) throws JSONException {
+	public static Role processRole(JSONObject rawRole) throws JSONException {
 		int id = rawRole.getInt("id");
 		ArrayList<PersonalConstraint> constraints = new ArrayList<PersonalConstraint>();
 		
@@ -52,7 +52,7 @@ public class DataLoader {
 		return new Role(id, constraints);
 	}
 	
-	private static Employee processEmployee(JSONObject rawEmployee) throws JSONException {
+	public static Employee processEmployee(JSONObject rawEmployee) throws JSONException {
 		int id = rawEmployee.getInt("id");
 		ArrayList<PersonalConstraint> constraints = new ArrayList<PersonalConstraint>();
 		
@@ -78,7 +78,7 @@ public class DataLoader {
 		return new Employee(id, roles, constraints);
 	}
 	
-	private static Shift processShift(JSONObject rawShift) throws JSONException {
+	public static Shift processShift(JSONObject rawShift) throws JSONException {
 		String startTimeString = rawShift.getString("startTime");
 		String endTimeString = rawShift.getString("endTime");
 		JSONArray rawTypes = rawShift.getJSONArray("shiftTypes");
@@ -108,6 +108,7 @@ public class DataLoader {
             content = new String(Files.readAllBytes(Paths.get(filename)));
         }
         catch(IOException ex){
+        	System.out.println(Paths.get(filename));
         	ex.printStackTrace();
             return false;
         }
@@ -143,7 +144,9 @@ public class DataLoader {
 	        Input.employees = new ArrayList<Employee>();
 	        
 	        // Create the null employee which represents an unassigned shift
-	        Input.employees.add(Employee.NULL());
+	        Input.nullEmployee = Employee.NULL();
+	        Input.employees.add(Input.nullEmployee);
+	        
 	        		
 	        for(int i = 0; i < rawEmployees.length(); i++) {
 	        	Input.employees.add(processEmployee(rawEmployees.getJSONObject(i)));

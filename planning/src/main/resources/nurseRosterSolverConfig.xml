@@ -7,11 +7,11 @@
     <entityClass>com.CMSC447.nurseroster.domain.ShiftAssignment</entityClass>
 
     <scoreDirectorFactory>
-        <easyScoreCalculatorClass>com.CMSC447.nurseroster.Solver.NurseRosterEasyScoreCalculator</easyScoreCalculatorClass>
+        <easyScoreCalculatorClass>com.CMSC447.nurseroster.solver.NurseRosterEasyScoreCalculator</easyScoreCalculatorClass>
     </scoreDirectorFactory>
 
     <termination>
-        <minutesSpentLimit>5</minutesSpentLimit>
+        <minutesSpentLimit>1</minutesSpentLimit>
     </termination>
     <constructionHeuristic>
         <constructionHeuristicType>WEAKEST_FIT</constructionHeuristicType>
@@ -20,8 +20,6 @@
     	<unionMoveSelector>
     		<changeMoveSelector/>
     		<swapMoveSelector/>
-    		<pillarChangeMoveSelector/>
-    		<pillarSwapMoveSelector/>
     	</unionMoveSelector>
         <!-- <unionMoveSelector>
             <moveListFactory>

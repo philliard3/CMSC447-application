@@ -47,9 +47,12 @@ public class SolutionWriter {
 			shiftJSON.put("shiftTypes", shiftTypes);
 			
 			shiftJSON.put("location", shift.location);
-						
+			
+			shiftAssignment.put("shift", shiftJSON);
+			
 			outputAssignments.put(shiftAssignment);
 		}
+		output.put("assignments", outputAssignments);
 		return output;
 	}
 	
@@ -57,14 +60,19 @@ public class SolutionWriter {
 		HardSoftScore bestScore = bestSolution.getScore();
 		try {
 			FileWriter outputWriter = new FileWriter(filename);
-			JSONWriter writer = new JSONWriter(outputWriter);
 			JSONObject object = toJSON(bestScore, bestSolution.getShiftAssignments());
-			writer.value(object);
+			String jsonString = object.toString();
+			if(jsonString == null) {
+				return false;
+			}
+			outputWriter.write(jsonString);
 			outputWriter.close();
 			return true;
 		} catch (IOException e) {
+			e.printStackTrace();
 			return false;
 		} catch (JSONException e) {
+			e.printStackTrace();
 			return false;
 		}
 	}
