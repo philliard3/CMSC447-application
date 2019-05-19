@@ -15,8 +15,8 @@ import com.CMSC447.nurseroster.fileio.Input;
 
 public class RolePriorityConstraint extends ScheduleConstraint {
 	
-	private ArrayList<String> types;
-	private HashMap<Role, Float> priorities;
+	public ArrayList<String> types;
+	public HashMap<Role, Float> priorities;
 
 	public RolePriorityConstraint(int id, int priority, boolean isHard, JSONObject params) throws JSONException {
 		// Cannot be hard constraint
@@ -40,7 +40,7 @@ public class RolePriorityConstraint extends ScheduleConstraint {
 		
 		for(int i = 0; i < numRoles; i++) {
 			Role role = Input.getRole(rawRoles.getInt(i));
-			priorities.put(role, (float) rawPriorities.getInt(i));
+			priorities.put(role, (float) rawPriorities.getDouble(i));
 		}
 	}
 

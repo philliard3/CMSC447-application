@@ -29,7 +29,8 @@ public class App {
         String outFile = args[1];
         String nurseRosterXML = args[2];
         if (DataLoader.loadFile(inFile)) {
-        	NurseRoster randomSolution = new NurseRoster(Input.employees, Input.shifts);
+        	NurseRoster randomSolution = new NurseRoster(Input.employees, Input.shifts, Input.scheduleConstraints);
+        	SolutionWriter.write("basicOutput.json", randomSolution);
         	Solver<NurseRoster> solver = solve(randomSolution, nurseRosterXML);
         	SolutionWriter.write(outFile, solver.getBestSolution());
         }

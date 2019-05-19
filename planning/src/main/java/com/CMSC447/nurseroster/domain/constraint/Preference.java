@@ -23,8 +23,8 @@ public class Preference extends PersonalConstraint {
 		super(id, priority, isHard, params);
 	}
 
-	private boolean isPositive;
-	private ShiftPattern pattern;
+	public boolean isPositive;
+	public ShiftPattern pattern;
 	
 	@Override
 	protected void buildFromJSON(JSONObject params) throws JSONException {

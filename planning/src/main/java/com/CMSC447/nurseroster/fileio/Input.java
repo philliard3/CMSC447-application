@@ -17,6 +17,8 @@ public class Input {
 	public static ArrayList<Employee> employees;
 	public static ArrayList<Shift> shifts;
 	public static ArrayList<ScheduleConstraint> scheduleConstraints;
+
+	public static Employee nullEmployee;
 	
 	public static Role getRole(int id) {
 		for (Role role: roles) {

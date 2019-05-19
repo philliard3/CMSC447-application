@@ -19,7 +19,7 @@ package com.CMSC447.nurseroster.domain;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Random;
 
 import org.optaplanner.core.api.domain.solution.PlanningEntityCollectionProperty;
@@ -36,11 +36,9 @@ public class NurseRoster {
 
 	public static final int NULL_EMPLOYEE_ID = -1;
     
-	@ProblemFactCollectionProperty
     private ArrayList<ScheduleConstraint> scheduleConstraints;
 
     public HardSoftScore score;
-
 
 	private ArrayList<ShiftAssignment> shiftAssignments;
 	
@@ -49,22 +47,59 @@ public class NurseRoster {
     
     private ArrayList<Employee> employees;
     
-    public NurseRoster(ArrayList<Employee> employees, ArrayList<Shift> shifts) {
+    public NurseRoster() {
+    	this.scheduleConstraints = new ArrayList<ScheduleConstraint>();
+    	this.score = HardSoftScore.ZERO;
+    	this.shiftAssignments = new ArrayList<ShiftAssignment>();
+    	this.shifts = new ArrayList<Shift>();
+    	this.employees = new ArrayList<Employee>();
+    }
+    
+    public NurseRoster(ArrayList<Employee> employees, ArrayList<Shift> shifts, ArrayList<ScheduleConstraint> scheduleConstraints) {
+    	this.score = HardSoftScore.ZERO;
+    	
     	this.employees = employees;
     	Random rand = new Random();
     	
     	this.shifts = shifts;
     	this.shiftAssignments = new ArrayList<ShiftAssignment>();
     	
+    	HashMap<Integer, HashSet<Employee>> employeesByRole = new HashMap<Integer, HashSet<Employee>>();
+    	for(Employee employee: employees) {
+    		for(Role role: employee.roles) {
+    			if(!employeesByRole.containsKey(role.id)) {
+    				employeesByRole.put(role.id, new HashSet<Employee>());
+    			}
+    			employeesByRole.get(role.id).add(employee);
+    		}
+    	}
+    	
+    	
     	for(Shift shift: shifts) {
-    		Employee employee = employees.get(rand.nextInt(employees.size()));
+    		HashSet<Employee> usableEmployeesSet = new HashSet<Employee>();
+    		for(Role role: shift.roles) {
+    			usableEmployeesSet.addAll(employeesByRole.get(role.id));
+    		}
+    		ArrayList<Employee> usableEmployees = new ArrayList<Employee>(usableEmployeesSet);
+    		
+    		Employee employee = usableEmployees.get(rand.nextInt(usableEmployees.size()));
+    		
+    		if(shift.mandatory) {
+    			while(employee.id == NurseRoster.NULL_EMPLOYEE_ID) {
+    				employee = usableEmployees.get(rand.nextInt(usableEmployees.size()));
+    			}
+    		}
+    		
+    		
     		ShiftAssignment assignment = new ShiftAssignment(employee, shift);
+    		
     		this.shiftAssignments.add(assignment);
     	}
     	
+    	this.scheduleConstraints = scheduleConstraints;
     }
     
-    private HashMap<Integer, ArrayList<Shift>> getShiftsByEmployeeID(){
+    public HashMap<Integer, ArrayList<Shift>> getShiftsByEmployeeID(){
     	HashMap<Integer, ArrayList<Shift>> shiftsByEmployeeID = new HashMap<Integer, ArrayList<Shift>>();
     	
     	for (Employee employee: employees) {
@@ -72,7 +107,7 @@ public class NurseRoster {
     	}
     	
     	for (ShiftAssignment assignment: shiftAssignments) {
-    		shiftsByEmployeeID.get(assignment.employee).add(assignment.shift);
+    		shiftsByEmployeeID.get(assignment.employee.id).add(assignment.shift);
     	}
     	
     	return shiftsByEmployeeID;
@@ -86,15 +121,25 @@ public class NurseRoster {
         
         // Sum of employee scores
         for (Employee employee: employees) {
-        	score.add(employee.score(shiftsByEmployeeID.get(employee.id)));
+        	score = score.add(employee.score(shiftsByEmployeeID.get(employee.id)));
+        	if(!score.isFeasible()) {
+        		return score;
+        	}
         }
 
         // Sum of schedule scores
-        for(ScheduleConstraint scheduleConstraint :scheduleConstraints ) {
-            score.add(scheduleConstraint.score(shiftAssignments));
+        for(ScheduleConstraint scheduleConstraint : scheduleConstraints ) {
+            score = score.add(scheduleConstraint.score(shiftAssignments));
+            if(!score.isFeasible()) {
+        		return score;
+        	}
         }
 
         return score;
+    }
+    
+    public void setScore(HardSoftScore score) {
+    	this.score = score;
     }
 
     @PlanningEntityCollectionProperty

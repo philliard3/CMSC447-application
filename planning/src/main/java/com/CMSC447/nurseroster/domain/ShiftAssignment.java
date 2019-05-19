@@ -20,18 +20,25 @@ package com.CMSC447.nurseroster.domain;
 import org.optaplanner.core.api.domain.entity.PlanningEntity;
 import org.optaplanner.core.api.domain.variable.PlanningVariable;
 
-import java.util.Comparator;
+import com.CMSC447.nurseroster.fileio.Input;
+import com.CMSC447.nurseroster.solver.EmployeeStrengthComparator;
+import com.CMSC447.nurseroster.solver.ShiftAssignmentDifficultyComparator;
 
-@PlanningEntity
+@PlanningEntity(difficultyComparatorClass = ShiftAssignmentDifficultyComparator.class) 
 public class ShiftAssignment implements Comparable<ShiftAssignment>{
 
+	public ShiftAssignment() {
+		this.employee = Input.nullEmployee;
+		this.shift = Input.shifts.get(0);
+	}
+	
     // constructor
 	public ShiftAssignment(Employee employee, Shift shift){
 		this.employee = employee; 
 		this.shift = shift;
 	}
 
-    @PlanningVariable(valueRangeProviderRefs = {"employeeRange"})
+    @PlanningVariable(valueRangeProviderRefs = {"employeeRange"}, strengthComparatorClass = EmployeeStrengthComparator.class)
     public Employee employee;
 
     public final Shift shift;

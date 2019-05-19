@@ -7,6 +7,7 @@ import org.json.JSONObject;
 import org.optaplanner.core.api.score.buildin.hardsoft.HardSoftScore;
 
 import com.CMSC447.nurseroster.domain.NurseRoster;
+import com.CMSC447.nurseroster.domain.Role;
 import com.CMSC447.nurseroster.domain.ShiftAssignment;
 import com.CMSC447.nurseroster.domain.constraint.ScheduleConstraint;
 
@@ -20,6 +21,15 @@ public class MandatoryShiftConstraint extends ScheduleConstraint {
 	public HardSoftScore score(ArrayList<ShiftAssignment> shiftAssignments) {
 		for(ShiftAssignment assignment: shiftAssignments) {
 			if (assignment.shift.mandatory && assignment.employee.id == NurseRoster.NULL_EMPLOYEE_ID) {
+				return this.toScore(-1);
+			}
+			boolean foundMatchingRole = false;
+			for(Role role: assignment.employee.roles) {
+				if (assignment.shift.roles.contains(role)) {
+					foundMatchingRole = true;
+				}
+			}
+			if(!foundMatchingRole) {
 				return this.toScore(-1);
 			}
 		}

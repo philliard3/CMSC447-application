@@ -26,7 +26,7 @@ import com.CMSC447.nurseroster.domain.constraint.PersonalConstraint;
 import com.CMSC447.nurseroster.fileio.Input;
 
 public class Employee {
-	private ArrayList<PersonalConstraint> constraints;
+	public ArrayList<PersonalConstraint> constraints;
 	public ArrayList<Role> roles;
 	public final int id;
 

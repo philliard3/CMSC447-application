@@ -21,8 +21,8 @@ public class HoursRequiredConstraint extends PersonalConstraint{
 		super(id, priority, isHard, params);
 	}
 
-	private double amount; 
-	private Period period;
+	public double amount; 
+	public Period period;
 	
 
 	@Override
@@ -39,13 +39,17 @@ public class HoursRequiredConstraint extends PersonalConstraint{
 
 	@Override
 	public HardSoftScore score(ArrayList<Shift> shifts, Employee employee) {
-Collections.sort(shifts);
+		Collections.sort(shifts);
         
         double sumSquaredError = 0;
         
         LocalDate periodStart = Input.shifts.get(0).startTime.toLocalDate();
         LocalDate periodEnd = periodStart.plus(period);
         int shiftIndex = 0;
+        
+        if(shifts.size() == 0) {
+        	return toScore((int) -(amount*amount));
+        }
         
         // While the last shift starts after the current period begins
         while(shifts.get(shifts.size()-1).startTime.isAfter(periodStart.atStartOfDay())) {
@@ -58,11 +62,11 @@ Collections.sort(shifts);
         		shiftIndex++;
         	}
         	
-        	double error = Math.abs(totalHours - this.amount);
+        	double error = totalHours - this.amount;
         	sumSquaredError += error * error;
         	
         	periodStart = periodEnd;
-        	periodStart.plus(period);
+        	periodEnd = periodStart.plus(period);
         }
         
         return toScore((int) -sumSquaredError);
