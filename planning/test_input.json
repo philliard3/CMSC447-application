@@ -1,0 +1,210 @@
+{
+  "shifts": [
+    {
+      "mandatory": true,
+      "permittedRoles": [2],
+      "shiftTypes": ["Morning Weekday"],
+      "location": "Nursery",
+      "startTime": "07/01/2018 07:00",
+      "endTime": "07/01/2018 15:00"
+    },
+    {
+      "mandatory": true,
+      "permittedRoles": [1, 3],
+      "shiftTypes": ["Afternoon Weekday"],
+      "location": "Nursery",
+      "startTime": "10/24/2018 15:00",
+      "endTime": "10/24/2018 23:00"
+    },
+    {
+      "mandatory": false,
+      "permittedRoles": [2, 1, 3],
+      "shiftTypes": ["Night Weekend", "Night", "Weekend"],
+      "location": "ICU",
+      "startTime": "07/06/2018 19:00",
+      "endTime": "07/07/2018 07:00"
+    }
+  ],
+  "roles": [
+    { "id": 2, "constraints": [
+        {
+            "id": 1,
+            "priority": 1,
+            "isHard": false,
+            "type": "HoursRequiredConstraint",
+            "parameters": {
+                "amount": 40,
+                "period": {
+                    "days": 7,
+                    "months": 0
+                }
+            }
+        },
+        {
+            "id": 2,
+            "priority": 3,
+            "isHard": false,
+            "type": "PersonalSequenceConstraint",
+            "parameters": {
+                "sequence": {
+                    "timeDiffs": [[1440, 1440], [1440, 1440], [1440, 1440], [1440, 1440]],
+                    "timeDiffMode": "start",
+                    "patterns":[
+                        {
+                            "daysOfWeek": [1],
+                            "startTimeRanges": [["07:00", "07:00"]],
+                            "endTimeRanges": [["15:00", "15:00"]],
+                            "allowedLocations": ["ICU"]
+                        },
+                        {
+                            "daysOfWeek": [2],
+                            "startTimeRanges": [["07:00", "07:00"]],
+                            "endTimeRanges":[["15:00", "15:00"]],
+                            "allowedLocations": ["ICU"]
+                        },
+                        {
+                            "daysOfWeek": [3],
+                            "startTimeRanges": [["07:00", "07:00"]],
+                            "endTimeRanges": [["15:00", "15:00"]],
+                            "allowedLocations": ["ICU"]
+                        },
+                        {
+                            "daysOfWeek": [4],
+                            "startTimeRanges": [["07:00", "07:00"]],
+                            "endTimeRanges": [["15:00", "15:00"]],
+                            "allowedLocations": ["ICU"]
+                        },
+                        {
+                            "daysOfWeek": [5],
+                            "startTimeRanges": [["07:00", "07:00"]],
+                            "endTimeRanges": [["15:00", "15:00"]],
+                            "allowedLocations": ["ICU"]
+                        }
+                    ]
+                },
+                "minMatches": 1,
+                "maxMatches": 1,
+                "repeatStart": "07/01/2018",
+                "repeatEnd": "08/01/2019",
+                "repeatPeriod":{
+                    "days": 0,
+                    "months": 3
+                }
+            }
+        }
+    ] },
+    { "id": 1, "constraints": [
+        {
+            "id": 4,
+            "priority": 1,
+            "isHard": false,
+            "type": "HoursRequiredConstraint",
+            "parameters": {
+                "amount": 160,
+                "period": {
+                    "days": 0,
+                    "months": 1
+                }
+            }
+        }
+    ] },
+    { "id": 3, "constraints": []}
+  ],
+  "employees": [
+    { "id": 1, "constraints": [
+        {
+            "id": 5,
+            "priority": 1,
+            "isHard": true,
+            "type": "Preference",
+            "parameters": {
+                "isPositive": false,
+                "pattern": {
+                    "daysOfWeek": [5]
+                }
+            }
+        }
+    ], "roles": [1] },
+    { "id": 2, "constraints": [
+        {
+            "id": 7,
+            "priority": 1,
+            "isHard": false,
+            "type": "Preference",
+            "parameters": {
+                "isPositive": true,
+                "pattern": {
+                    "startTimeRanges": [["15:00", "23:00"]]
+                }
+            }
+        }
+    ], "roles": [2] },
+    { "id": 3, "constraints": [], "roles": [1, 3] }
+  ],
+  "scheduleConstraints": [
+    {
+        "id": 9,
+        "priority": 1,
+        "isHard": false,
+        "type": "RolePriorityConstraint",
+        "parameters": {
+            "types": ["Morning Weekday", "Weekday"],
+            "roles": [2, 3],
+            "priorities": [1, -2.5]
+        }
+    },
+    {
+        "id": 10,
+        "priority": 2,
+        "isHard": false,
+        "type": "ScheduleSequenceConstraint",
+        "parameters": {
+            "roles": [1, 2],
+            "sequence": {
+                "timeDiffs": [[1440, 1440], [1440, 1440], [1440, 1440], [1440, 1440]],
+                "timeDiffMode": "start",
+                "patterns":[
+                    {
+                        "daysOfWeek": [1],
+                        "startTimeRanges": [["07:00", "07:00"]],
+                        "endTimeRanges": [["15:00", "15:00"]],
+                        "allowedLocations": ["ICU"]
+                    },
+                    {
+                        "daysOfWeek": [2],
+                        "startTimeRanges": [["07:00", "07:00"]],
+                        "endTimeRanges":[["15:00", "15:00"]],
+                        "allowedLocations": ["ICU"]
+                    },
+                    {
+                        "daysOfWeek": [3],
+                        "startTimeRanges": [["07:00", "07:00"]],
+                        "endTimeRanges": [["15:00", "15:00"]],
+                        "allowedLocations": ["ICU"]
+                    },
+                    {
+                        "daysOfWeek": [4],
+                        "startTimeRanges": [["07:00", "07:00"]],
+                        "endTimeRanges": [["15:00", "15:00"]],
+                        "allowedLocations": ["ICU"]
+                    },
+                    {
+                        "daysOfWeek": [5],
+                        "startTimeRanges": [["07:00", "07:00"]],
+                        "endTimeRanges": [["15:00", "15:00"]],
+                        "allowedLocations": ["ICU"]
+                    }
+                ]
+            },
+            "minMatches": 1,
+            "maxMatches": 1,
+            "repeatStart": "07/01/2018",
+            "repeatEnd": "08/01/2019",
+            "repeatPeriod":{
+                "days": 7,
+                "months": 0
+            }
+        }
+    }
+  ]
+}
