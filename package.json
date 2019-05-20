@@ -7,12 +7,14 @@
 		"build": "vue-cli-service build",
 		"lint": "vue-cli-service lint",
 		"dev": "vue-cli-service serve",
+		"test": "cd ./testing && jest && cd ../",
 		"clean": "rm -r ./planning/target/* ./dist/* ./dist_electron/*",
 		"planner:build": "node java-build.js",
+		"planning:build": "node java-build.js",
 		"electron:build": "vue-cli-service electron:build",
 		"build-all": "vue-cli-service electron:build && node java-build.js",
 		"electron:serve": "vue-cli-service electron:serve",
-		"postinstall": "electron-builder install-app-deps",
+		"postinstall": "electron-builder install-app-deps && cd ./testing && npm install && npm install --only=dev && cd ../",
 		"postuninstall": "electron-builder install-app-deps"
 	},
 	"dependencies": {
@@ -33,10 +35,15 @@
 		"@vue/cli-plugin-eslint": "^3.7.0",
 		"@vue/cli-service": "^3.7.0",
 		"@vue/eslint-config-prettier": "^4.0.1",
+		"@babel/core": "*",
+		"@babel/preset-env": "*",
+		"babel-core": "7.0.0-bridge.0",
+		"babel-jest": "*",
 		"babel-eslint": "^10.0.1",
 		"electron": "^3.1.9",
 		"eslint": "^5.16.0",
 		"eslint-plugin-vue": "^5.0.0",
+		"jest": "^24.8.0",
 		"lint-staged": "^8.1.6",
 		"stylus": "^0.54.5",
 		"stylus-loader": "^3.0.1",
@@ -48,7 +55,8 @@
 	"eslintConfig": {
 		"root": true,
 		"env": {
-			"node": true
+			"node": true,
+			"jest": true
 		},
 		"extends": [
 			"plugin:vue/essential",

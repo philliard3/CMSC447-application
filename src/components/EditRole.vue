@@ -17,7 +17,15 @@
 							>
 						</v-layout>
 						<v-layout>
-							<v-text-field label="Name" v-model="name"></v-text-field>
+							<v-flex>
+								<v-text-field label="Name" v-model="name"></v-text-field>
+							</v-flex>
+							<v-flex>
+								<v-checkbox
+									label="This is a moonlighter role"
+									v-model="isMoonlighter"
+								></v-checkbox>
+							</v-flex>
 						</v-layout>
 					</v-container>
 				</v-card-text>
@@ -176,6 +184,15 @@ export default {
 					const newRoleData = { ...this.roleData, name: newName };
 					this.$store.commit("updateRole", { roleData: newRoleData });
 				}
+			}
+		},
+		isMoonlighter: {
+			get() {
+				return this.roleData ? !!this.roleData.isMoonlighter : false;
+			},
+			set(newValue) {
+				const newRoleData = { ...this.roleData, isMoonlighter: newValue };
+				this.$store.commit("updateRole", { roleData: newRoleData });
 			}
 		},
 		roleData() {

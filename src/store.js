@@ -31,7 +31,7 @@ export default new Vuex.Store({
 	 */
 	state: USE_TEST_DATA
 		? {
-				generatedSchedule: require("./SamplePlanningOutput.json"),
+				generatedSchedule: require("../planning/output.json"), // require("./SamplePlanningOutput.json"),
 				...require("./SampleState.json")
 		  }
 		: emptyState,
@@ -40,7 +40,7 @@ export default new Vuex.Store({
 		clearStore(state) {
 			state.data = { ...emptyState.data };
 			state.settings = { ...emptyState.settings };
-			state.generateSchedule = undefined;
+			state.generatedSchedule = undefined;
 		},
 		/**
 		 * Inserts into the current application state a past state, usually loaded from a file.
@@ -476,28 +476,30 @@ export default new Vuex.Store({
 	},
 
 	actions: {
-		async generateSchedule(state) {
+		async generateSchedule({ state, commit }) {
 			const isElectron = !(process.title === "browser");
 			if (isElectron) {
 				// There are two feasible locations that the executables could be stored, both of which can be reached programmatically
 				// location 1
-				const distDirectory = process.execPath.split(/[\\/]electron\.exe/)[0];
+				// const distDirectory = process.execPath.split(/[\\/]electron\.exe/)[0];
 				// location 2
-				// const distDirectory = require("electron").remote.app.getAppPath()
+				const distDirectory = require("electron").remote.app.getAppPath();
 
 				// establish connection between background (Electron) and render (Vue) processes
 				const remote = require("electron").remote;
 
 				const fs = remote.require("fs");
 				const cp = remote.require("child_process");
+				const path = remote.require("path");
 				const schedule = await require("./calendarActions.js").generateSchedule(
 					state,
 					{ forCurrentFiscalYear: true, forCurrentScheduleBlock: false },
 					distDirectory,
 					fs,
-					cp
+					cp,
+					path
 				);
-				this.commit("replaceSchedule", schedule);
+				commit("replaceSchedule", schedule);
 			}
 		}
 	},

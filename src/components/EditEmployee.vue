@@ -39,40 +39,23 @@
 
 			<ShiftSelection :shifts="shifts" @input="shifts = $event" />
 
-			<WorkPreferenceTable :dayName="dayName" :preferredDays="preferredDays" />
+			<WorkPreferenceTable
+				:preferredDays="preferredDays"
+				@input="preferredDays = $event"
+				:defaultDays="defaultDays"
+			/>
 			<!-- save button is redundant now that all components update the state automatically
-      <v-btn @click="save" color="info">Save</v-btn>
+		      <v-btn @click="save" color="info">Save</v-btn>
       -->
 		</v-container>
 	</v-form>
 </template>
 
 <script>
+import moment from "moment";
 import RoleTable from "./RoleTable";
 import ShiftSelection from "./ShiftSelection";
 import WorkPreferenceTable from "./WorkPreferenceTable";
-
-const holidays = [
-	{
-		name: "Christmas",
-		repeating: true,
-		startDate: "12/25",
-		endDate: "12/25",
-		selected: false,
-		preferred: false
-	}
-];
-
-holidays.forEach(day => {
-	day.dayID =
-		day.name
-			.split("")
-			.splice(0, 5)
-			.reduce((total, chr) => {
-				return total + (chr.charCodeAt(0) - 48);
-			}, 0) +
-		(new Date().getTime() % Math.pow(2, 27));
-});
 
 export default {
 	name: "EditEmployee",
@@ -82,11 +65,35 @@ export default {
 		WorkPreferenceTable
 	},
 	data() {
+		const defaultDays = [
+			{
+				name: "Christmas",
+				repeating: true,
+				startDate: moment("12/25", "MM/DD")
+					.toDate()
+					.getTime(),
+				endDate: moment("12/25", "MM/DD")
+					.toDate()
+					.getTime(),
+				selected: false,
+				preferred: null
+			}
+		];
+
+		defaultDays.forEach(day => {
+			day.dayID =
+				day.name
+					.split("")
+					.splice(0, 5)
+					.reduce((total, chr) => {
+						return total + (chr.charCodeAt(0) - 48);
+					}, 0) +
+				(new Date().getTime() % Math.pow(2, 27));
+		});
 		return {
 			error: false,
 			valid: false,
-			preferredDays: [...holidays],
-			dayName: ""
+			defaultDays
 		};
 	},
 	computed: {
@@ -156,15 +163,26 @@ export default {
 				const employee = this.employeeData;
 				return (
 					employee.shifts ||
-					this.$store.getters.currentScheduleBlock.shifts.map(shift => {
-						const selected = employee.shifts
-							? employee.shifts.filter(s => s.name === shift.name)
-							: null;
-						return {
-							selected: selected && selected.length > 0 ? selected[0] : [],
-							...shift
-						};
-					})
+					this.$store.getters.currentScheduleBlock.shifts
+						.filter(shift => {
+							const permittedRoles = shift.roles.reduce(
+								(arr, r) => arr.concat(r.permittedRoles),
+								[]
+							);
+							return employee.roles.some(r =>
+								permittedRoles.includes(r.roleID)
+							);
+						})
+						.map(shift => {
+							const selected = employee.shifts
+								? employee.shifts.filter(s => s.name === shift.name)
+								: null;
+							return {
+								selected: selected && selected.length > 0 ? selected[0] : [],
+								hard: false,
+								...shift
+							};
+						})
 				);
 			},
 			set(newValue) {
@@ -172,6 +190,22 @@ export default {
 					employeeData: {
 						...this.employeeData,
 						shifts: [...newValue]
+					}
+				});
+			}
+		},
+		preferredDays: {
+			get() {
+				if (this.employeeData && this.employeeData.preferredDays) {
+					return this.employeeData.preferredDays;
+				}
+				return [...this.defaultDays];
+			},
+			set(newValue) {
+				this.$store.commit("updateEmployee", {
+					employeeData: {
+						...this.employeeData,
+						preferredDays: [...newValue]
 					}
 				});
 			}
