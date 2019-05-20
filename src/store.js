@@ -31,7 +31,7 @@ export default new Vuex.Store({
 	 */
 	state: USE_TEST_DATA
 		? {
-				generatedSchedule: require("./SamplePlanningOutput.json"),
+				generatedSchedule: require("../planning/output.json"), // require("./SamplePlanningOutput.json"),
 				...require("./SampleState.json")
 		  }
 		: emptyState,
