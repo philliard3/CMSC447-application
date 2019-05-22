@@ -75,7 +75,6 @@ test("Shifts contain the correct values", () => {
 			.toDate()
 			.getTime()
 	);
-	// console.log(shiftOutput);
 	expect(shiftOutput).toBeInstanceOf(Array);
 	for (let s of shiftOutput) {
 		expect(s.shiftTypes.length).toBe(1);

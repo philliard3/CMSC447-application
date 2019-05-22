@@ -1,6 +1,7 @@
 // The Moment and ICS packages are universal in their Node and web implementations.
 const moment = require("moment");
 const ics = require("ics");
+const util = require("util");
 
 const DEFAULT_CONSTRAINT_PRIORITY = 1;
 const moonlighterAliases = ["moonlighter", "moon", "moonlight", "ml"];
@@ -19,50 +20,55 @@ async function generateICal(
 	path = require("path")
 ) {
 	// create events from schedule object
-	const events = schedule.assignments.map(assignment => {
-		// get the corresponding employee
-		const employee = employees.filter(
-			employee => employee.employeeID === assignment.employee
-		)[0];
+	const events = schedule.assignments
+		// ignore events with the null employee
+		.filter(assignment => assignment.employee !== -1)
+		.map(assignment => {
+			// get the corresponding employee
+			const employeeList = employees.filter(
+				employee => employee.employeeID === assignment.employee
+			);
 
-		// Google will automatically center it on our timezone, so we need to assume a neutral timezone.
-		const offset = 0;
-		const startTime = moment(
-			assignment.shift.startTime,
-			"MM/DD/YYYY HH:mm"
-		).utcOffset(offset);
+			const employee = employeeList[0];
 
-		const endTime = moment(
-			assignment.shift.endTime,
-			"MM/DD/YYYY HH:mm"
-		).utcOffset(offset);
+			// Google will automatically center it on our timezone, so we need to assume a neutral timezone.
+			const offset = 0;
+			const startTime = moment(
+				assignment.shift.startTime,
+				"MM/DD/YYYY HH:mm"
+			).utcOffset(offset);
 
-		return {
-			// title of the form "John Doe @ICU"
-			title: `${employee.name} @${assignment.shift.location}`,
-			start: [
-				startTime.year(),
-				startTime.month() + 1,
-				startTime.date(),
-				startTime.hour(),
-				startTime.minute()
-			],
-			end: [
-				endTime.year(),
-				endTime.month() + 1,
-				endTime.date(),
-				endTime.hour(),
-				endTime.minute()
-			],
-			// description of the form "John Doe (Doctor, Full Time) working Morning Shift, Weekdays at ICU"
-			description: `${employee.name} (${employee.roles
-				.map(role => role.name)
-				.join(", ")}) working ${assignment.shift.shiftTypes.join(", ")} at ${
-				assignment.shift.location
-			}${employee.email ? `\nemployee's email: ${employee.email}` : ""}`,
-			categories: assignment.shift.shiftTypes
+			const endTime = moment(
+				assignment.shift.endTime,
+				"MM/DD/YYYY HH:mm"
+			).utcOffset(offset);
 
-			/*
+			return {
+				// title of the form "John Doe @ICU"
+				title: `${employee.name} @${assignment.shift.location}`,
+				start: [
+					startTime.year(),
+					startTime.month() + 1,
+					startTime.date(),
+					startTime.hour(),
+					startTime.minute()
+				],
+				end: [
+					endTime.year(),
+					endTime.month() + 1,
+					endTime.date(),
+					endTime.hour(),
+					endTime.minute()
+				],
+				// description of the form "John Doe (Doctor, Full Time) working Morning Shift, Weekdays at ICU"
+				description: `${employee.name} (${employee.roles
+					.map(role => role.name)
+					.join(", ")}) working ${assignment.shift.shiftTypes.join(", ")} at ${
+					assignment.shift.location
+				}${employee.email ? `\nemployee's email: ${employee.email}` : ""}`,
+				categories: assignment.shift.shiftTypes
+
+				/*
             // Attendees currently don't show up on Google Calendar so this has been commented out so it won't cause any trouble
 			attendees: employee.email
 				? [
@@ -75,8 +81,8 @@ async function generateICal(
 				  ]
                 : undefined
             */
-		};
-	});
+			};
+		});
 
 	try {
 		const { err, value } = await ics.createEvents(events);
@@ -84,16 +90,20 @@ async function generateICal(
 			throw err;
 		}
 
-		const wd = path.join(directory, "calendars");
+		const wd = path.join(directory, "..", "..", "calendars");
 
 		if (!fs.existsSync(wd)) {
 			fs.mkdirSync(wd);
 		}
 
 		// write it to the ics file
-		const filename = path.join(wd, "calendar", `${new Date().getTime()}.ics`);
+		const fn = `calendar_${new Date().getTime()}.ics`;
+		const filename = path.join(wd, fn);
 		await fs.writeFileSync(filename, value);
-		return filename;
+		var iCalFile = new File([value], fn, {
+			type: "text/plain"
+		});
+		return { file: iCalFile, text: value };
 	} catch (err) {
 		console.error(err);
 		return err;
@@ -198,11 +208,11 @@ function createSchedulingEmployee(employeeData, locations, startDate, endDate) {
 								[
 									moment(startDate)
 										.startOf("day")
-										.format("MM/DD/YY HH:mm"),
+										.format("MM/DD/YYYY HH:mm"),
 									// 23:59 on the last day
 									moment(endDate)
 										.endOf("day")
-										.format("MM/DD/YY HH:mm")
+										.format("MM/DD/YYYY HH:mm")
 								]
 							],
 							allowedLocations: locations
@@ -260,11 +270,11 @@ function createSchedulingEmployee(employeeData, locations, startDate, endDate) {
 											[
 												moment(startDate)
 													.startOf("day")
-													.format("MM/DD/YY HH:mm"),
+													.format("MM/DD/YYYY HH:mm"),
 												// 23:59 on the last day
 												moment(endDate)
 													.endOf("day")
-													.format("MM/DD/YY HH:mm")
+													.format("MM/DD/YYYY HH:mm")
 											]
 										],
 										// shifts may be 4 to 12 hours
@@ -425,8 +435,8 @@ function createSchedulingEmployee(employeeData, locations, startDate, endDate) {
 			shift.startDays.forEach(day => {
 				constraints.push({
 					id: Number(
-						`${new Date().getTime() % Math.pow(2, 29)}${daysOfWeek.indexOf(
-							day
+						`${new Date().getTime() % Math.pow(2, 27)}${Math.abs(
+							daysOfWeek.indexOf(day)
 						)}`
 					),
 					priority: DEFAULT_CONSTRAINT_PRIORITY,
@@ -453,11 +463,11 @@ function createSchedulingEmployee(employeeData, locations, startDate, endDate) {
 							],
 							dateTimeRanges: [
 								[
-									moment(startDate).format("MM/DD/YY HH:mm"),
+									moment(startDate).format("MM/DD/YYYY HH:mm"),
 									// 23:59 on the last day
 									moment(endDate)
 										.add("1439", "minutes")
-										.format("MM/DD/YY HH:mm")
+										.format("MM/DD/YYYY HH:mm")
 								]
 							],
 							lengthRanges: [[shift.duration, shift.duration]],
@@ -488,44 +498,49 @@ function createSchedulingEmployee(employeeData, locations, startDate, endDate) {
 						[
 							moment(dateMoment)
 								.subtract(1, "year")
-								.startOf("day"),
+								.startOf("day")
+								.format("MM/DD/YYYY HH:mm"),
 							// 23:59 on the last day
 							moment(dateMoment)
 								.subtract(1, "year")
 								.endOf("day")
-								.format("MM/DD/YY HH:mm")
+								.format("MM/DD/YYYY HH:mm")
 						],
 						// the date during that year
 						[
-							dateMoment.startOf("day").format("MM/DD/YY HH:mm"),
-							dateMoment.endOf("day").format("MM/DD/YY HH:mm")
+							dateMoment.startOf("day").format("MM/DD/YYYY HH:mm"),
+							dateMoment.endOf("day").format("MM/DD/YYYY HH:mm")
 						],
 						// a year after
 						[
 							moment(dateMoment)
 								.add(1, "year")
-								.startOf("day"),
+								.startOf("day")
+								.format("MM/DD/YYYY HH:mm"),
 							// 23:59 on the last day
 							moment(dateMoment)
 								.add(1, "year")
 								.endOf("day")
-								.format("MM/DD/YY HH:mm")
+								.format("MM/DD/YYYY HH:mm")
 						]
 					];
 				} else {
 					// only the explicit date
 					dateTimeRanges = [
 						[
-							dateMoment.format("MM/DD/YY HH:mm"),
-							dateMoment.format("MM/DD/YY HH:mm")
+							dateMoment.format("MM/DD/YYYY HH:mm"),
+							dateMoment.format("MM/DD/YYYY HH:mm")
 						]
 					];
 				}
 
 				constraints.push({
 					id: Number(
-						`${new Date().getTime() % Math.pow(2, 16)}${day.dayID %
-							Math.pow(2, 16)}`
+						`${new Date().getTime() % Math.pow(2, 15)}${
+							day.dayID
+								? day.dayID % Math.pow(2, 15)
+								: (new Date().getTime() - Math.pow(2, 16)) % Math.pow(2, 15)
+						}`
 					),
 					priority: day.priority || DEFAULT_CONSTRAINT_PRIORITY,
 					isHard: false,
@@ -603,12 +618,12 @@ function createSchedulingRole(roleData, locations, startDate, endDate) {
 											[
 												moment(startDate)
 													.startOf("day")
-													.format("MM/DD/YY HH:mm"),
+													.format("MM/DD/YYYY HH:mm"),
 												// 23:59 on the last day
 												moment(endDate)
 													.endOf("day")
 													.add("1439", "minutes")
-													.format("MM/DD/YY HH:mm")
+													.format("MM/DD/YYYY HH:mm")
 											]
 										],
 										// shifts may be 4 to 12 hours
@@ -769,8 +784,8 @@ function createSchedulingRole(roleData, locations, startDate, endDate) {
 			shift.startDays.forEach(day => {
 				constraints.push({
 					id: Number(
-						`${new Date().getTime() % Math.pow(2, 29)}${daysOfWeek.indexOf(
-							day
+						`${new Date().getTime() % Math.pow(2, 27)}${Math.abs(
+							daysOfWeek.indexOf(day)
 						)}`
 					),
 					priority: DEFAULT_CONSTRAINT_PRIORITY,
@@ -799,11 +814,11 @@ function createSchedulingRole(roleData, locations, startDate, endDate) {
 								[
 									moment(startDate)
 										.startOf("day")
-										.format("MM/DD/YY HH:mm"),
+										.format("MM/DD/YYYY HH:mm"),
 									// 23:59 on the last day
 									moment(endDate)
 										.endOf("day")
-										.format("MM/DD/YY HH:mm")
+										.format("MM/DD/YYYY HH:mm")
 								]
 							],
 							lengthRanges: [[shift.duration, shift.duration]],
@@ -877,7 +892,7 @@ async function generateSchedule(
 		)[0];
 	} else if (forCurrentScheduleBlock) {
 		periodOfInterest = state.data.scheduleBlocks.filter(
-			sb => state.data.currentScheduleBlock.sbID === sb.sbID
+			sb => state.data.currentScheduleBlock === sb.sbID
 		)[0];
 	} else {
 		throw new Error(
@@ -966,12 +981,15 @@ async function generateSchedule(
 	);
 
 	// Run the scheduling program and wait for results
-	// It may be necessary to use a .bat batch file instead of directly running the .jar
-	// in the case of process.platform === "win32"
 	const executable = "roster-1.0.jar";
 	// command line execution of the form "c:downloads/create_schedule.jar input_constraints1255556850.json"
 	const outputFile = `output_schedule${new Date().getTime()}.json`;
 	wd = path.join(directory, "..", "..", "outputs");
+
+	if (!fs.existsSync(wd)) {
+		fs.mkdirSync(wd);
+	}
+
 	const command = `java -jar "${path.join(
 		directory,
 		"..",
@@ -982,29 +1000,12 @@ async function generateSchedule(
 		"..",
 		"nurseRosterSolverConfig.xml"
 	)}"`;
-	// console.log(command);
-	cp.execSync(command);
-
-	// get all files in the schedules folder
-	wd = path.join(directory, "..", "..", "schedules");
-
-	if (!fs.existsSync(wd)) {
-		fs.mkdirSync(wd);
-	}
-
-	const files = fs.readdirSync(wd);
-
-	// get the last file edited
-	let correctFile = files.sort((f1, f2) => {
-		return (
-			new Date(fs.statSync(path.join(wd, f2)).mtime).getTime() -
-			new Date(fs.statSync(path.join(wd, f1)).mtime).getTime()
-		);
-	})[0];
+	await util.promisify(cp.exec)(command);
 
 	// return evaluated JSON
-	// console.log(path.join(wd, correctFile));
-	return require(path.join(wd, correctFile));
+	const resultsFile = path.join(wd, outputFile);
+	const res = JSON.parse(await util.promisify(fs.readFile)(resultsFile));
+	return res;
 }
 
 export {
