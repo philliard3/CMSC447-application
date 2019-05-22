@@ -4,7 +4,7 @@ import Vuex from "vuex";
 Vue.use(Vuex);
 
 // set this as an environment variable in later iterations
-const USE_TEST_DATA = true;
+const USE_TEST_DATA = false;
 
 const emptyState = {
 	settings: {
@@ -18,10 +18,11 @@ const emptyState = {
 		currentFiscalYear: null,
 		employees: [],
 		roles: [],
-		locations: []
+		locations: [],
+		tags: []
 	},
 	generatedSchedule: USE_TEST_DATA
-		? require("./SamplePlanningOutput.json")
+		? undefined //require("./SamplePlanningOutput.json")
 		: undefined
 };
 
@@ -31,7 +32,7 @@ export default new Vuex.Store({
 	 */
 	state: USE_TEST_DATA
 		? {
-				generatedSchedule: require("../planning/output.json"), // require("./SamplePlanningOutput.json"),
+				generatedSchedule: undefined, // require("../planning/output.json"), // require("./SamplePlanningOutput.json"),
 				...require("./SampleState.json")
 		  }
 		: emptyState,
@@ -59,17 +60,20 @@ export default new Vuex.Store({
 		 */
 		initialize(state, { scheduleBlockData, fiscalYearData }) {
 			const scheduleBlockToCreate = {
-				sbID: new Date().getTime() % Math.pow(2, 32),
+				name: scheduleBlockData.name,
+				sbID: new Date().getTime() % Math.pow(2, 31),
 				...scheduleBlockData,
 				startDate: scheduleBlockData.startDate.getTime(),
-				endDate: scheduleBlockData.endDate.getTime()
+				endDate: scheduleBlockData.endDate.getTime(),
+				shifts: []
 			};
+
 			state.data.scheduleBlocks[0] = scheduleBlockToCreate;
 			state.data.currentScheduleBlock = scheduleBlockToCreate.sbID;
 
 			const fiscalYearToCreate = {
 				name: fiscalYearData.name,
-				fyID: new Date().getTime() % Math.pow(2, 32),
+				fyID: new Date().getTime() % Math.pow(2, 31),
 				...fiscalYearData,
 				startDate: fiscalYearData.startDate.getTime(),
 				endDate: fiscalYearData.endDate.getTime(),
@@ -98,7 +102,7 @@ export default new Vuex.Store({
 			// create schedule block
 			const scheduleBlockToCreate = {
 				name: scheduleBlockData.name,
-				sbID: new Date().getTime() % Math.pow(2, 32),
+				sbID: new Date().getTime() % Math.pow(2, 31),
 				...scheduleBlockData,
 				startDate: scheduleBlockData.startDate.getTime(),
 				endDate: scheduleBlockData.endDate.getTime(),
@@ -193,7 +197,7 @@ export default new Vuex.Store({
 			// create schedule block
 			const scheduleBlockToCreate = {
 				name: scheduleBlockData.name,
-				sbID: new Date().getTime() % Math.pow(2, 32),
+				sbID: new Date().getTime() % Math.pow(2, 31),
 				...scheduleBlockData,
 				startDate: scheduleBlockData.startDate.getTime(),
 				endDate: scheduleBlockData.endDate.getTime(),
@@ -206,7 +210,7 @@ export default new Vuex.Store({
 
 			// create fiscal year
 			const fiscalYearToCreate = {
-				fyID: new Date().getTime() % Math.pow(2, 32),
+				fyID: new Date().getTime() % Math.pow(2, 31),
 				...fiscalYearData,
 				startDate: fiscalYearData.startDate.getTime(),
 				endDate: fiscalYearData.endDate.getTime(),
@@ -375,9 +379,9 @@ export default new Vuex.Store({
 			scheduleBlockToUpdate.shifts.push({ ...shiftData });
 		},
 
-		removeShift(state, { shiftData, scheduleBlock }) {
+		removeShift(state, { shiftData, scheduleBlockData }) {
 			const filteredBlocks = state.data.scheduleBlocks.filter(
-				sb => scheduleBlock.sbID === sb.sbID
+				sb => scheduleBlockData.sbID === sb.sbID
 			);
 			if (filteredBlocks.length > 0) {
 				const scheduleBlockOfInterest = filteredBlocks[0];
@@ -388,12 +392,13 @@ export default new Vuex.Store({
 					const newShifts = [...scheduleBlockOfInterest.shifts];
 					newShifts.splice(matchingShifts.indexOf(true), 1);
 					scheduleBlockOfInterest.shifts = newShifts;
+					state.data.scheduleBlocks = [...state.data.scheduleBlocks];
 				}
 			}
 		},
 
 		/** **/
-		addEmployee(state, employeeData) {
+		addEmployee(state, { employeeData }) {
 			if (!employeeData.employeeID) {
 				return;
 			}
@@ -493,7 +498,7 @@ export default new Vuex.Store({
 				const path = remote.require("path");
 				const schedule = await require("./calendarActions.js").generateSchedule(
 					state,
-					{ forCurrentFiscalYear: true, forCurrentScheduleBlock: false },
+					{ forCurrentFiscalYear: false, forCurrentScheduleBlock: true },
 					distDirectory,
 					fs,
 					cp,
