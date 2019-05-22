@@ -15,12 +15,14 @@ let win;
 protocol.registerStandardSchemes(["app"], { secure: true });
 function createWindow() {
 	// Create the browser window.
-	win = new BrowserWindow({ width: 1000, height: 600 });
+	win = new BrowserWindow({ width: 1000, height: 600, show: false });
+	win.maximize();
 
 	// start Java server instance
 
 	win.setMenu(null);
-
+	// this line isn't in the final verision. used only for development
+	// win.webContents.openDevTools();
 	if (process.env.WEBPACK_DEV_SERVER_URL) {
 		// Load the url of the dev server if in development mode
 		win.loadURL(process.env.WEBPACK_DEV_SERVER_URL);
@@ -33,8 +35,9 @@ function createWindow() {
 
 	win.on("closed", () => {
 		win = null;
-		// close Java server instance
 	});
+
+	win.show();
 }
 
 // Quit when all windows are closed.
