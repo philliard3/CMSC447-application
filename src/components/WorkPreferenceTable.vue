@@ -62,12 +62,10 @@
 				<v-container>
 					<v-layout v-for="(day, index) in preferredDays" :key="day.dayID">
 						<v-flex class="title">{{ day.name }}</v-flex>
-						<v-flex class="subheading">
-							{{ formatDate(day) }}
-						</v-flex>
+						<v-flex class="subheading">{{ formatDate(day) }}</v-flex>
 						<v-flex>
 							<v-checkbox
-								:value="day.preferred === false ? true : false"
+								:input-value="day.preferred === false"
 								@change="
 									day.preferred = $event ? false : null;
 									$emit('input', preferredDays);
@@ -77,7 +75,7 @@
 						</v-flex>
 						<v-flex>
 							<v-checkbox
-								:value="day.preferred === true ? true : false"
+								:input-value="day.preferred === true"
 								@change="
 									day.preferred = $event ? true : null;
 									$emit('input', preferredDays);
@@ -120,20 +118,25 @@ export default {
 			]
 		};
 	},
+	computed: {},
 	methods: {
 		addDay() {
 			const dayToAdd = {
 				name: this.dayToAdd.name,
+				repeating: this.dayToAdd.repeating,
 				startDate: moment(this.dayToAdd.startDate)
 					.toDate()
 					.getTime(),
-				location: this.dayToAdd.location ? this.dayToAdd.location : undefined
+				location: this.dayToAdd.location ? this.dayToAdd.location : undefined,
+				preferred: false
 			};
+
 			this.preferredDays.push(dayToAdd);
 			this.dayToAdd = {
 				name: "",
 				location: null,
 				startDatePicker: false,
+				repeating: false,
 				startDate: new Date().toISOString().substr(0, 10)
 			};
 			this.$emit("input", this.preferredDays);

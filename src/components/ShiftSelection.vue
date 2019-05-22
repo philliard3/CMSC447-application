@@ -3,11 +3,20 @@
 		<v-card>
 			<v-card-text>
 				<div class="display-1 font-weight-light">Shift Preferences</div>
-				<v-form>
+				<div v-if="!shifts || !shifts.length">
+					<v-container>
+						<v-layout>
+							<v-flex class="title"
+								>Please select a role in order to use preferences for that
+								role.</v-flex
+							>
+						</v-layout>
+					</v-container>
+				</div>
+				<div v-else>
 					<v-container
 						fluid
-						v-for="(shift, shiftIndex) in $store.getters.currentScheduleBlock
-							.shifts"
+						v-for="(shift, shiftIndex) in shifts"
 						:key="shift.name + shift.location + shift.time"
 						class="headline font-weight-medium"
 					>
@@ -44,7 +53,7 @@
 							</v-flex>
 						</v-layout>
 					</v-container>
-				</v-form>
+				</div>
 			</v-card-text>
 		</v-card>
 	</v-container>

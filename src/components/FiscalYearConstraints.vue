@@ -1,5 +1,5 @@
 <template>
-	<v-form v-model="valid">
+	<div>
 		<v-container>
 			<v-card>
 				<v-card-text>
@@ -11,7 +11,7 @@
 			</v-card>
 		</v-container>
 		<LocationList></LocationList>
-	</v-form>
+	</div>
 </template>
 
 <script>
@@ -24,9 +24,7 @@ export default {
 		FiscalYearSelector
 	},
 	data() {
-		return {
-			valid: false
-		};
+		return {};
 	},
 	computed: {
 		fiscalYears() {

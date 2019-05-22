@@ -1,24 +1,22 @@
 <template>
-	<v-form>
-		<v-container>
-			<v-card>
-				<v-card-text>
-					<StartEndPicker
-						title="Create new Schedule Block"
-						@picked="recordScheduleBlockData"
-					/>
-					<v-container>
-						<v-layout>
-							<v-flex xs12 sm6 d-flex>
-								<FiscalYearSelector></FiscalYearSelector>
-							</v-flex>
-						</v-layout>
-					</v-container>
-					<v-btn @click="reportDates" color="success">Submit</v-btn>
-				</v-card-text>
-			</v-card>
-		</v-container>
-	</v-form>
+	<v-container>
+		<v-card>
+			<v-card-text>
+				<StartEndPicker
+					title="Create new Schedule Block"
+					@picked="recordScheduleBlockData"
+				/>
+				<v-container>
+					<v-layout>
+						<v-flex xs12 sm6 d-flex>
+							<FiscalYearSelector></FiscalYearSelector>
+						</v-flex>
+					</v-layout>
+				</v-container>
+				<v-btn @click="reportDates" color="success">Submit</v-btn>
+			</v-card-text>
+		</v-card>
+	</v-container>
 </template>
 
 <script>
@@ -46,7 +44,7 @@ export default {
 	methods: {
 		reportDates() {
 			// disallow repeat schedule blocks or schedule blocks without a home
-			const sbID = new Date().getTime() % Math.pow(2, 32);
+			const sbID = new Date().getTime() % Math.pow(2, 31);
 			if (
 				this.$store.getters.scheduleBlockExists(sbID) === false &&
 				this.$store.getters.scheduleBlockExistsWithName(

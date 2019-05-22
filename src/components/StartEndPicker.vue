@@ -1,5 +1,5 @@
 <template>
-	<v-form v-model="valid">
+	<div>
 		<v-container>
 			<div>
 				<h2 class="title">{{ title }}</h2>
@@ -65,10 +65,12 @@
 				</v-flex>
 			</v-layout>
 		</v-container>
-	</v-form>
+	</div>
 </template>
 
 <script>
+import moment from "moment";
+
 export default {
 	name: "StartEndPicker",
 	props: {
@@ -76,9 +78,15 @@ export default {
 	},
 	data() {
 		return {
-			valid: false,
-			startDate: new Date().toISOString().substr(0, 10),
-			endDate: new Date().toISOString().substr(0, 10),
+			startDate: moment(new Date())
+				.toDate()
+				.toISOString()
+				.substr(0, 10),
+			endDate: moment(new Date())
+				.add(1, "year")
+				.toDate()
+				.toISOString()
+				.substr(0, 10),
 			startDatePicker: false,
 			endDatePicker: false,
 			name: "",
@@ -120,6 +128,15 @@ export default {
 		},
 		closeEndDatePicker() {
 			this.endDatePicker = false;
+			this.$emit("picked", {
+				startDate: this.convertStringToLocalDate(this.startDate),
+				endDate: this.convertStringToLocalDate(this.endDate),
+				name: this.name
+			});
+		}
+	},
+	watch: {
+		name: function() {
 			this.$emit("picked", {
 				startDate: this.convertStringToLocalDate(this.startDate),
 				endDate: this.convertStringToLocalDate(this.endDate),

@@ -1,108 +1,105 @@
 <template>
-	<v-form>
-		<v-container>
-			<v-card>
-				<v-card-text>
-					<v-container>
-						<div class="display-1 font-weight-light" id="header-row-1">
-							Employees
-							<v-btn color="success" @click="createEmployee">
-								<v-icon flat>person_add</v-icon>&nbsp;New Employee
-							</v-btn>
-						</div>
-						<v-layout row wrap class="header-row-2" align-center>
-							<v-flex xs2>
-								<h2 class="title font-weight-light">Search by&nbsp;</h2>
-							</v-flex>
-							<v-flex xs3>
-								<v-select
-									v-model="searchBy"
-									:items="headers.map(header => header.text)"
-								></v-select> </v-flex
-							>&nbsp;
-							<v-flex xs5>
-								<v-text-field v-model="searchText" clearable></v-text-field>
-							</v-flex>
-						</v-layout>
-					</v-container>
-					<v-data-table
-						v-model="selected"
-						:headers="headers"
-						:items="filteredEmployees"
-						:pagination.sync="pagination"
-						select-all
-						item-key="name"
-						class="elevation-1 table"
-					>
-						<template v-slot:headers="props">
-							<tr>
-								<th>
-									<v-checkbox
-										:input-value="props.all"
-										:indeterminate="props.indeterminate"
-										primary
-										hide-details
-										@click.stop="toggleAll"
-									></v-checkbox>
-								</th>
-								<th
-									v-for="header in props.headers"
-									:key="header.text"
-									:class="[
-										'column sortable',
-										pagination.descending ? 'desc' : 'asc',
-										header.value === pagination.sortBy ? 'active' : ''
-									]"
-									@click="changeSort(header.value)"
-								>
-									<v-icon small>arrow_upward</v-icon>
-									{{ header.text }}
-								</th>
-							</tr>
-						</template>
-						<template v-slot:items="props">
-							<tr
-								:active="props.selected"
-								@click="props.selected = !props.selected"
+	<v-container>
+		<v-card>
+			<v-card-text>
+				<v-container>
+					<div class="display-1 font-weight-light" id="header-row-1">
+						Employees
+						<v-btn color="success" @click="createEmployee">
+							<v-icon flat>person_add</v-icon>&nbsp;New Employee
+						</v-btn>
+					</div>
+					<v-layout row wrap class="header-row-2" align-center>
+						<v-flex xs2>
+							<h2 class="title font-weight-light">Search by&nbsp;</h2>
+						</v-flex>
+						<v-flex xs3>
+							<v-select
+								v-model="searchBy"
+								:items="headers.map(header => header.text)"
+							></v-select> </v-flex
+						>&nbsp;
+						<v-flex xs5>
+							<v-text-field v-model="searchText" clearable></v-text-field>
+						</v-flex>
+					</v-layout>
+				</v-container>
+				<v-data-table
+					v-model="selected"
+					:headers="headers"
+					:items="filteredEmployees"
+					:pagination.sync="pagination"
+					select-all
+					item-key="name"
+					class="elevation-1 table"
+				>
+					<template v-slot:headers="props">
+						<tr>
+							<th>
+								<v-checkbox
+									:input-value="props.all"
+									:indeterminate="props.indeterminate"
+									primary
+									hide-details
+									@click.stop="toggleAll"
+								></v-checkbox>
+							</th>
+							<th
+								v-for="header in props.headers"
+								:key="header.text"
+								:class="[
+									'column sortable',
+									pagination.descending ? 'desc' : 'asc',
+									header.value === pagination.sortBy ? 'active' : ''
+								]"
+								@click="changeSort(header.value)"
 							>
-								<td>
-									<v-checkbox
-										:input-value="props.selected"
-										primary
-										hide-details
-									></v-checkbox>
-								</td>
-								<td>
-									<router-link
-										:to="'/manage/employees/' + props.item.employeeID"
-										>{{ props.item.name }}</router-link
+								<v-icon small>arrow_upward</v-icon>
+								{{ header.text }}
+							</th>
+						</tr>
+					</template>
+					<template v-slot:items="props">
+						<tr
+							:active="props.selected"
+							@click="props.selected = !props.selected"
+						>
+							<td>
+								<v-checkbox
+									:input-value="props.selected"
+									primary
+									hide-details
+								></v-checkbox>
+							</td>
+							<td>
+								<router-link
+									:to="'/manage/employees/' + props.item.employeeID"
+									>{{ props.item.name }}</router-link
+								>
+							</td>
+							<td class="text-xs-right">
+								<span v-for="(role, index) in props.item.roles" :key="index">
+									<router-link :to="'/manage/roles/' + role.roleID">
+										{{ role.name }}
+									</router-link>
+									<span v-if="index < props.item.roles.length - 1"
+										>,&nbsp;</span
 									>
-								</td>
-								<td class="text-xs-right">
-									<span v-for="(role, index) in props.item.roles" :key="index">
-										<router-link :to="'/manage/roles/' + role.roleID">{{
-											role.name
-										}}</router-link>
-										<span v-if="index < props.item.roles.length - 1"
-											>,&nbsp;</span
-										>
-									</span>
-								</td>
-								<td class="text-xs-right">{{ props.item.hours }}</td>
-								<td class="text-xs-right">
-									<v-btn
-										color="primary"
-										:to="'/manage/employees/' + props.item.employeeID"
-										>Edit</v-btn
-									>
-								</td>
-							</tr>
-						</template>
-					</v-data-table>
-				</v-card-text>
-			</v-card>
-		</v-container>
-	</v-form>
+								</span>
+							</td>
+							<td class="text-xs-right">
+								<v-btn
+									color="primary"
+									:to="'/manage/employees/' + props.item.employeeID"
+									>Edit</v-btn
+								>
+							</td>
+						</tr>
+					</template>
+				</v-data-table>
+			</v-card-text>
+		</v-card>
+	</v-container>
 </template>
 
 <script>
@@ -171,7 +168,15 @@ export default {
 			// const employeeID = this.$store.dispatch("createEmployee")
 
 			// placeholder while store functions are implemented
-			const employeeID = "johndoe";
+			const employeeID = new Date().getTime() % Math.pow(2, 31);
+
+			this.$store.commit("addEmployee", {
+				employeeData: {
+					employeeID,
+					name: `New Employee (${employeeID})`,
+					roles: []
+				}
+			});
 
 			this.$router.push("/manage/employees/" + employeeID);
 		}

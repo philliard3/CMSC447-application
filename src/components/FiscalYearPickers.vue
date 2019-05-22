@@ -1,21 +1,19 @@
 <template>
-	<v-form>
-		<v-container>
-			<v-card>
-				<v-card-text>
-					<StartEndPicker
-						title="Create new Fiscal Year"
-						@picked="recordFiscalYearData"
-					/>
-					<StartEndPicker
-						title="Create new Schedule Block"
-						@picked="recordScheduleBlockData"
-					/>
-					<v-btn @click="reportDates" color="success">Submit</v-btn>
-				</v-card-text>
-			</v-card>
-		</v-container>
-	</v-form>
+	<v-container>
+		<v-card>
+			<v-card-text>
+				<StartEndPicker
+					title="Create new Fiscal Year"
+					@picked="recordFiscalYearData"
+				/>
+				<StartEndPicker
+					title="First Schedule Block for this Fiscal Year"
+					@picked="recordScheduleBlockData"
+				/>
+				<v-btn @click="reportDates" color="success">Submit</v-btn>
+			</v-card-text>
+		</v-card>
+	</v-container>
 </template>
 
 <script>
@@ -44,8 +42,8 @@ export default {
 	methods: {
 		reportDates() {
 			// disallow repeat names on fiscal years and schedule blocks
-			const fyID = new Date().getTime() % Math.pow(2, 32);
-			const sbID = new Date().getTime() % Math.pow(2, 32);
+			const fyID = new Date().getTime() % Math.pow(2, 31);
+			const sbID = new Date().getTime() % Math.pow(2, 31);
 
 			if (
 				this.$store.getters.fiscalYearExists(fyID) === false &&
@@ -62,7 +60,7 @@ export default {
 						fiscalYearData: { fyID, ...this.fiscalYearData }
 					});
 					// reroute once the changes are committed
-					this.$router.push("/fiscalyear/constraints");
+					this.$router.push("/scheduleblock/constraints");
 				} else {
 					// make a new fiscal year if the store has been initialized
 					this.$store.commit("addFiscalYear", {
@@ -70,7 +68,7 @@ export default {
 						fiscalYearData: { fyID, ...this.fiscalYearData }
 					});
 					// reroute once the changes are committed
-					this.$router.push("/fiscalyear/constraints");
+					this.$router.push("/scheduleblock/constraints");
 				}
 			}
 		},

@@ -1,5 +1,5 @@
 <template>
-	<v-form v-model="valid">
+	<div>
 		<v-container>
 			<v-card>
 				<v-card-text>
@@ -34,7 +34,7 @@
 		<LocationList />
 		<!-- shift patterns and how often they appear -->
 		<!-- example: attending weeks per week/block -->
-	</v-form>
+	</div>
 </template>
 <script>
 import ScheduleBlockSelector from "./ScheduleBlockSelector";
@@ -53,9 +53,7 @@ export default {
 		LocationList
 	},
 	data() {
-		return {
-			valid: false
-		};
+		return {};
 	},
 	computed: {
 		scheduleBlocks() {

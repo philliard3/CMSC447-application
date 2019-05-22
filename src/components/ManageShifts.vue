@@ -184,6 +184,17 @@
 						</v-card-text>
 					</v-flex>
 				</v-layout>
+				<v-layout v-if="!newShiftData.roles || !newShiftData.roles.length">
+					<v-flex>
+						<v-container>
+							<v-layout>
+								<v-flex class="title"
+									>Please click New Assignment to add to the list.</v-flex
+								>
+							</v-layout>
+						</v-container>
+					</v-flex>
+				</v-layout>
 				<v-layout
 					v-for="(role, index) in newShiftData.roles"
 					:key="
@@ -227,9 +238,12 @@
 					<v-flex>
 						<v-container v-for="shift in shifts" :key="shift.shiftID">
 							<v-layout>
-								<v-flex class="title">{{ shift.name }}</v-flex>
-								<v-flex class="subheading">{{ shift.location }}</v-flex>
-								<v-flex>
+								<v-flex class="title" sm2>{{ shift.name }}</v-flex>
+								<v-flex class="subheading" sm2>{{
+									moment(shift.startTime, "HH:mm").format("hh:mm a")
+								}}</v-flex>
+								<v-flex class="subheading" sm2>{{ shift.location }}</v-flex>
+								<v-flex sm2>
 									<v-layout
 										v-for="(roleRestriction, index) in shift.roles"
 										:key="
@@ -265,13 +279,13 @@
 										</v-flex>
 									</v-layout>
 								</v-flex>
-								<v-flex>
-									<v-chip v-for="tag in shift.tags" :key="tag">{{
-										tag
-									}}</v-chip>
+								<v-flex v-if="shift.tags && shift.tags.length > 0">
+									<v-chip v-for="tag in shift.tags" :key="tag">
+										{{ tag }}
+									</v-chip>
 								</v-flex>
 								<v-flex>
-									<v-btn color="error" @click="removeShift(shift.name)">
+									<v-btn color="error" @click="removeShift(shift)">
 										<v-icon>remove_circle</v-icon>&nbsp;Remove
 									</v-btn>
 								</v-flex>
@@ -294,7 +308,7 @@ export default {
 			menu2: false,
 			newAssignmentData: {
 				min: 0,
-				max: 0,
+				max: 1,
 				permittedRoles: []
 			},
 			newShiftData: {
@@ -359,9 +373,10 @@ export default {
 		}
 	},
 	methods: {
+		moment,
 		createShift() {
 			const newShiftData = {
-				shiftID: new Date().getTime() % Math.pow(2, 32),
+				shiftID: new Date().getTime() % Math.pow(2, 31),
 				...this.newShiftData
 			};
 
@@ -467,7 +482,7 @@ export default {
 		addAssignment() {
 			const newAssignmentData = {
 				min: 0,
-				max: 0,
+				max: 1,
 				permittedRoles: []
 			};
 			// validate number input
@@ -484,6 +499,13 @@ export default {
 		},
 		removeAssignment(index) {
 			this.newShiftData.roles.splice(index, 1);
+		},
+		removeShift(shift) {
+			const currentScheduleBlock = this.$store.getters.currentScheduleBlock;
+			this.$store.commit("removeShift", {
+				shiftData: { ...shift },
+				scheduleBlockData: currentScheduleBlock
+			});
 		}
 	}
 };

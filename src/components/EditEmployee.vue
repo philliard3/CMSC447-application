@@ -4,9 +4,11 @@
 			<v-card-text class="title">We couldn't find that employee.</v-card-text>
 		</v-card>
 	</v-container>
-	<v-form v-model="valid" v-else>
-		<v-container class="display-2 font-weight-light">
-			{{ name }}
+	<div v-else>
+		<v-container>
+			<v-layout>
+				<v-flex class="display-2 font-weight-light">{{ name }}</v-flex>
+			</v-layout>
 			<v-container>
 				<v-card>
 					<v-card-text>
@@ -48,7 +50,7 @@
 		      <v-btn @click="save" color="info">Save</v-btn>
       -->
 		</v-container>
-	</v-form>
+	</div>
 </template>
 
 <script>
@@ -92,7 +94,6 @@ export default {
 		});
 		return {
 			error: false,
-			valid: false,
 			defaultDays
 		};
 	},
@@ -161,10 +162,13 @@ export default {
 		shifts: {
 			get() {
 				const employee = this.employeeData;
-				return (
-					employee.shifts ||
+				let shifts = employee.shifts || [];
+				shifts = shifts.concat(
 					this.$store.getters.currentScheduleBlock.shifts
 						.filter(shift => {
+							if (shifts.some(s => s.shiftID === shift.shiftID)) {
+								return false;
+							}
 							const permittedRoles = shift.roles.reduce(
 								(arr, r) => arr.concat(r.permittedRoles),
 								[]
@@ -184,6 +188,7 @@ export default {
 							};
 						})
 				);
+				return shifts;
 			},
 			set(newValue) {
 				this.$store.commit("updateEmployee", {

@@ -13,10 +13,12 @@
 							</v-btn>
 						</template>
 						<v-list>
+							<!--
 							<v-list-tile @click="lastPage">
 								<v-icon>arrow_back_ios</v-icon>
 								<v-list-tile-title>Last Page</v-list-tile-title>
 							</v-list-tile>
+              -->
 							<v-list-tile
 								v-for="link in navLinks"
 								:key="link.url"
@@ -30,9 +32,11 @@
 				</v-toolbar-items>
 				<v-toolbar-items v-if="$mq === 'md' || $mq === 'lg'">
 					<!-- add an extra back button in the Electron mode -->
+					<!--
 					<v-btn v-if="electron" @click="lastPage" flat>
 						<v-icon size="18px">arrow_back_ios</v-icon>
 					</v-btn>
+          -->
 				</v-toolbar-items>
 				<v-toolbar-items v-if="$mq === 'md' || $mq === 'lg'">
 					<v-btn
@@ -52,13 +56,15 @@
 				</v-toolbar-items>
 			</v-toolbar>
 			<router-view />
-			<v-container>
-				<v-flex xs6>
-					<v-btn @click="lastPage" color="primary">
-						<v-icon dark small>arrow_back_ios</v-icon>Last Page
-					</v-btn>
-				</v-flex>
-			</v-container>
+			<!--
+      <v-container>
+        <v-flex xs6>
+          <v-btn @click="lastPage" color="primary">
+            <v-icon dark small>arrow_back_ios</v-icon>Last Page
+          </v-btn>
+        </v-flex>
+      </v-container>
+      -->
 		</v-app>
 	</div>
 </template>
@@ -115,6 +121,9 @@ export default {
 				}
 			]
 		};
+	},
+	created() {
+		if (!this.$router.currentRoute.name) this.$router.push("/");
 	},
 	methods: {
 		// This is a back command, which is helpful in the Electron app

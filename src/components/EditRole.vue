@@ -1,12 +1,10 @@
 <template>
-	<v-form v-if="error">
-		<v-container>
-			<v-card>
-				<v-card-text>{{ error }}</v-card-text>
-			</v-card>
-		</v-container>
-	</v-form>
-	<v-form v-else>
+	<v-container v-if="error">
+		<v-card>
+			<v-card-text>{{ error }}</v-card-text>
+		</v-card>
+	</v-container>
+	<div v-else>
 		<v-container>
 			<v-card>
 				<v-card-text>
@@ -54,108 +52,106 @@
 		<v-container>
 			<v-card>
 				<v-card-text>
-					<v-form>
-						<v-container>
-							<v-layout>
-								<v-flex>
-									<v-card-text class="display-1 font-weight-light"
-										>Requirements</v-card-text
-									>
-								</v-flex>
-							</v-layout>
+					<v-container>
+						<v-layout>
+							<v-flex>
+								<v-card-text class="display-1 font-weight-light"
+									>Requirements</v-card-text
+								>
+							</v-flex>
+						</v-layout>
 
-							<v-layout>
-								<v-flex sm1>
-									<v-select
-										v-model="requirementToAdd.type"
-										label="Unit"
-										:items="[
-											'Hours',
-											'Shifts',
-											'Attending weeks',
-											'Nursing weeks'
-										]"
-									></v-select>
-								</v-flex>
-								<v-flex sm2 class="title">required per</v-flex>
-								<v-flex sm2>
-									<v-select
-										v-model="requirementToAdd.per"
-										label="period"
-										:items="['week', '2 weeks', 'month', 'quarter', 'year']"
-									></v-select>
-								</v-flex>
-								<v-flex sm1 class="title">-</v-flex>
-								<v-flex sm2>
-									<v-text-field
-										v-model="requirementToAdd.amount"
-										label="Amount"
-									></v-text-field>
-								</v-flex>
-								<v-flex sm1 class="title">
-									<v-checkbox
-										v-model="requirementToAdd.flexible"
-										label="flexible"
-									></v-checkbox>
-								</v-flex>
-								<v-flex sm1></v-flex>
-								<v-flex sm1>
-									<v-btn color="success" @click="addRequirement">
-										<v-icon>add</v-icon>
-									</v-btn>
-								</v-flex>
-							</v-layout>
-							<v-layout
-								v-for="(requirement, index) in roleData.required"
-								@input="updateRequirement(index)"
-								:key="requirement.requirementID"
-							>
-								<v-flex sm1>
-									<v-select
-										v-model="requirement.type"
-										label="Unit"
-										:items="[
-											'Hours',
-											'Shifts',
-											'Attending weeks',
-											'Nursing weeks'
-										]"
-									></v-select>
-								</v-flex>
-								<v-flex sm2 class="title">required per</v-flex>
-								<v-flex sm2>
-									<v-select
-										v-model="requirement.per"
-										label="period"
-										:items="['week', '2 weeks', 'month', 'quarter', 'year']"
-									></v-select>
-								</v-flex>
-								<v-flex sm1 class="title">-</v-flex>
-								<v-flex sm2>
-									<v-text-field
-										v-model="requirement.amount"
-										label="Amount"
-									></v-text-field>
-								</v-flex>
-								<v-flex sm1 class="title">
-									<v-checkbox
-										v-model="requirement.flexible"
-										label="flexible"
-									></v-checkbox>
-								</v-flex>
-								<v-flex sm1></v-flex>
-								<v-flex sm1>
-									<v-btn color="error" @click="removeRequirement(index)">
-										<v-icon>remove</v-icon>
-									</v-btn>
-								</v-flex>
-							</v-layout>
-						</v-container>
-					</v-form>
+						<v-layout>
+							<v-flex sm1>
+								<v-select
+									v-model="requirementToAdd.type"
+									label="Unit"
+									:items="[
+										'Hours',
+										'Shifts',
+										'Attending weeks',
+										'Nursing weeks'
+									]"
+								></v-select>
+							</v-flex>
+							<v-flex sm2 class="title">required per</v-flex>
+							<v-flex sm2>
+								<v-select
+									v-model="requirementToAdd.per"
+									label="period"
+									:items="['week', '2 weeks', 'month', 'quarter', 'year']"
+								></v-select>
+							</v-flex>
+							<v-flex sm1 class="title">-</v-flex>
+							<v-flex sm2>
+								<v-text-field
+									v-model="requirementToAdd.amount"
+									label="Amount"
+								></v-text-field>
+							</v-flex>
+							<v-flex sm1 class="title">
+								<v-checkbox
+									v-model="requirementToAdd.flexible"
+									label="flexible"
+								></v-checkbox>
+							</v-flex>
+							<v-flex sm1></v-flex>
+							<v-flex sm1>
+								<v-btn color="success" @click="addRequirement">
+									<v-icon>add</v-icon>
+								</v-btn>
+							</v-flex>
+						</v-layout>
+						<v-layout
+							v-for="(requirement, index) in roleData.required"
+							@input="updateRequirement(index)"
+							:key="requirement.requirementID"
+						>
+							<v-flex sm1>
+								<v-select
+									v-model="requirement.type"
+									label="Unit"
+									:items="[
+										'Hours',
+										'Shifts',
+										'Attending weeks',
+										'Nursing weeks'
+									]"
+								></v-select>
+							</v-flex>
+							<v-flex sm2 class="title">required per</v-flex>
+							<v-flex sm2>
+								<v-select
+									v-model="requirement.per"
+									label="period"
+									:items="['week', '2 weeks', 'month', 'quarter', 'year']"
+								></v-select>
+							</v-flex>
+							<v-flex sm1 class="title">-</v-flex>
+							<v-flex sm2>
+								<v-text-field
+									v-model="requirement.amount"
+									label="Amount"
+								></v-text-field>
+							</v-flex>
+							<v-flex sm1 class="title">
+								<v-checkbox
+									v-model="requirement.flexible"
+									label="flexible"
+								></v-checkbox>
+							</v-flex>
+							<v-flex sm1></v-flex>
+							<v-flex sm1>
+								<v-btn color="error" @click="removeRequirement(index)">
+									<v-icon>remove</v-icon>
+								</v-btn>
+							</v-flex>
+						</v-layout>
+					</v-container>
 				</v-card-text>
 			</v-card>
 		</v-container>
-	</v-form>
+	</div>
 </template>
 
 <script>
@@ -270,7 +266,7 @@ export default {
 				return;
 			}
 			newRoleData.required.push({
-				requirementID: new Date().getTime() % Math.pow(2, 32),
+				requirementID: new Date().getTime() % Math.pow(2, 31),
 				...requirementToAdd
 			});
 

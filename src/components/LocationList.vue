@@ -12,6 +12,7 @@
 								v-model="newLocationData.name"
 								name="Location Name"
 								label="Location Name"
+								@keypress="enterCheck"
 							></v-text-field>
 						</v-flex>
 						<v-flex>
@@ -56,6 +57,11 @@ export default {
 		}
 	},
 	methods: {
+		enterCheck(e) {
+			if (e.key === "Enter" && this.newLocationData.name) {
+				this.addLocation();
+			}
+		},
 		addLocation() {
 			if (
 				this.newLocationData.name.length > 0 &&
